@@ -24,51 +24,10 @@ public class CloudMethods {
         return SingleMethods.COCOS_MANGER;
     }
 
-    public List<CloudUserClinic> getDoctorOrgList(String token){
-        String s = HttpUtils.sendGetWithToken(ApiConstant.DoctorOrgList, null, token);
-        List<CloudUserClinic> list = new ArrayList<>();
-        JSONObject jsonObject = JSONObject.parseObject(s);
-        if (jsonObject.containsKey("Success") & (boolean)jsonObject.get("Success")){
-            list = JSON.parseObject(jsonObject.getString("Data"),new TypeReference<List<CloudUserClinic>>(){});
-        }
-        return list;
-    }
 
-    public List<CloudOrganization> getOrganization(Integer currentPage,Integer pageSize,String name,String token){
-        Map<String,String> map = new HashMap<>();
-        if (Objects.nonNull(pageSize)){
-            map.put("PageSize",pageSize.toString());
-        }
-        if (Objects.nonNull(currentPage)){
-            map.put("Page",currentPage.toString());
-        }
-        if (Objects.nonNull(currentPage)){
-            map.put("Name",name);
-        }
-        Gson gson = new Gson();
-        String s1 = gson.toJson(map);
-        String s = HttpUtils.sendPostWithToken(ApiConstant.OrganizationList, s1, token);
-        List<CloudOrganization> list = new ArrayList<>();
-        JSONObject jsonObject = JSONObject.parseObject(s);
-        if (jsonObject.containsKey("Rows")){
-            list = JSON.parseObject(jsonObject.getString("Rows"),new TypeReference<List<CloudOrganization>>(){});
-        }
-        return list;
-    }
 
-    public CloudOrganization saveOrganization(String name,String token){
-        Map<String,String> map = new HashMap<>();
-        map.put("Name",name);
-        Gson gson = new Gson();
-        String s1 = gson.toJson(map);
-        String s = HttpUtils.sendPostWithToken(ApiConstant.OrganizationList, s1, token);
-        JSONObject jsonObject = JSONObject.parseObject(s);
-        CloudOrganization cloudOrganization = new CloudOrganization();
-        if (jsonObject.containsKey("Success") & (boolean)jsonObject.get("Success")){
-            cloudOrganization = JSON.parseObject(jsonObject.getString("Data"),CloudOrganization.class);
-        }
-        return cloudOrganization;
-    }
+
+
 
     //获取token
     public HashMap<Object, Object> getToken(String username,String password){
@@ -138,21 +97,7 @@ public class CloudMethods {
         }
         return cloudUser;
     }
-    public HashMap<String,String> addOrder(Double orderMoney,String orderCode,String token){
-        String json = "{\n" +
-                "  \"orderMoney\": "+orderMoney+", \n" +
-                "  \"orderType\": 5, \n" +
-                "  \"subject\": \"数据下载\", \n" +
-                "  \"body\": \"数据开放平台数据下载\",  \n" +
-                "  \"orderCode\": \""+orderCode+"\", \n" +
-                "  \"payType\": 7, \n" +
-                "  \"webCallbackUrl\": \"http://dsj.cdutcm.edu.cn/opindex\" \n" +
-                "}";
-        String s = HttpUtils.sendPostWithToken(ApiConstant.AddOrder, json, token);
-        Gson gson = new Gson();
-        HashMap<String, String> map = gson.fromJson(s, new TypeToken<HashMap<String,String>>(){}.getType());
-        return map;
-    }
+
     public HashMap SendSms(String phone,String clientToken){
         HashMap hashMap = new HashMap();
         //1.拿到客户端认证
@@ -192,54 +137,15 @@ public class CloudMethods {
         net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(rs);
         return jsonObject.get("access_token").toString();
     }
-    public List<DiseaseVO> getGoodAtDisease(String token){
-        String json = "{\"name\":\"\"}";
-//        String clientToken = getClientToken();
-        String s = HttpUtils.sendPostWithToken(ApiConstant.GetGoodAtDisease, json, token);
-        net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(s);
-        List<DiseaseVO> diseaseVOS = new ArrayList<>();
-        try {
-            String rows = jsonObject.get("Rows").toString();
-            if(StringUtil.notEmpty(rows)){
-                diseaseVOS = JSONUtil.toList(rows, DiseaseVO.class);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return  diseaseVOS;
-    }
-    public String authDocotor(String json,String token){
-        String s1 = HttpUtils.sendPostWithToken(ApiConstant.AuthDoctor, json,token);
-        return s1;
-    }
-    public String uploadData(String json){
-        Map map = new HashMap();
-        map.put("Name",json);
-        return HttpUtils.sendPost(ApiConstant.PostData, map);
-    }
 
-    public String updatePassword(String OldPwd,String NewPwd,String token) {
-        Map<String,Object> map = new HashMap<>();
-        map.put("OldPwd",OldPwd);
-        map.put("NewPwd",NewPwd);
-        map.put("UserId","");
-        Gson gson = new Gson();
-        String json = gson.toJson(map);
-        return HttpUtils.sendPostWithToken(ApiConstant.UpdatePassword, json,token);
-    }
 
-    public String pushWxMsg(String json,String token){
-        String s = HttpUtils.sendPostWithToken(ApiConstant.PushWxMsg, json, token);
-        return s;
-    }
 
-    public String RetrievePassword(String phone, String NewPwd, String accessToken) {
-        Map map = new HashMap();
-        map.put("LoginCode", phone);
-        map.put("LoginPwd", NewPwd);
-        String s = HttpUtils.sendPostWithToken(ApiConstant.RetrievePassword, JSONUtil.toJson(map), accessToken);
-        return s;
-    }
+
+
+
+
+
+
 
     public HashMap<Object, Object> getWxToken(String openid){
         HashMap<Object, Object> hashMap = new HashMap<>();
@@ -282,26 +188,7 @@ public class CloudMethods {
 
 
 
-    public static void main(String[] args) {
-//        CloudMethods cloudMethods = new CloudMethods();
-//        HashMap<Object, Object> hashMap = cloudMethods.getWxToken("oMuWYYVeq4ibU");
-        HashMap<Object, Object> hashMap = new HashMap<>();
-        hashMap.put("OpenId","ouM5m06F9fs3BrNmRKGxI22SMhUY");
-        hashMap.put("First",getHash("亲：今天是2020年1月6日，本日节气为大寒！","#000000"));
-        hashMap.put("Keyword1",getHash("","#000000"));
-        hashMap.put("Keyword2",getHash("小明","#000000"));
-        hashMap.put("Keyword3",getHash("小明","#000000"));
-        hashMap.put("Keyword4",getHash("小明","#000000"));
-        hashMap.put("Keyword5",getHash("小明","#000000"));
-        hashMap.put("Remark",getHash("为了更准确地采集您的健康数据，方便给您提供更科学的健康指导，请于本日内进行体质辨识；","red"));
-        hashMap.put("Url","http://tzbs.cdutcm.edu.cn/user/info");
-        hashMap.put("TemplateId","SWtA1KpYpuU-BEQ2zrlRTFG0mUZ57IlgB78iuMEZIIQ");
-        String json = net.sf.json.JSONObject.fromObject(hashMap).toString();
-        String clientToken = getInstance().getClientToken();
-        System.out.println(clientToken);
-        String s = getInstance().pushWxMsg(json, clientToken);
-        System.out.println(s);
-    }
+
 
     public static HashMap getHash(String value,String color){
         HashMap<Object, Object> hashMap = new HashMap<>();

@@ -27,20 +27,6 @@ import java.util.*;
 @RequestMapping("/cloudAPI")
 public class CloudAPIController {
 
-    @Autowired
-    private RedisTemplate redisTemplate;
 
-    @Autowired
-    private UserClinicService userClinicService;
 
-    @Autowired
-    private ClinicService clinicService;
-
-    @RequestMapping("/getOrganizations")
-    public List<CloudOrganization> getOrganizations(String name){
-        User user = (User) SecurityUtils.getSubject().getPrincipal();
-        String token = (String)redisTemplate.opsForValue().get(user.getAccount() + "token");
-        List<CloudOrganization> organizations = CloudMethods.getInstance().getOrganization(1, 100, name, token);
-        return organizations;
-    }
 }

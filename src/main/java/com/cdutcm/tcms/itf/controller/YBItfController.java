@@ -622,55 +622,7 @@ public class YBItfController {
      * @author: weihao
      * @Date: 2019/4/30
      */
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
-    @Transient
-    public String registByJson(String Name) {
-        //把数据传给穴位敏化
-        Map<String,String>map = new HashMap<>();
-        map.put("Name",Name);
-        String s = HttpUtils.sendPost(ApiConstant.SendDataToXwmh,map);
-        logger.info("【数据传给穴位敏化返回的结果】" + s);
-        logger.info("【接收楼上{}】",Name);
-                try {
-            EMRVo emrVo = new ObjectMapper()
-                    .readValue(Name, EMRVo.class);
-            //保存
-            com.cdutcm.tcms.biz.model.Patient patient = new com.cdutcm.tcms.biz.model.Patient();
-            BeanUtils.copyProperties(emrVo.getPatient().getPatientCard(), patient);
-            final RegistVo regist = emrVo.getPatient().getRegist();
-                    InfoVo info = emrVo.getPatient().getInfo();
-                    com.cdutcm.tcms.biz.model.PatientRegist patientRegist = new com.cdutcm.tcms.biz.model.PatientRegist();
-                    String newPatinetNo =  regist.getPatientNo()+ KeyNumberUtil.SixValidateNumber();
-                    patient.setPatientNo(newPatinetNo);
-                    //年龄为空，设为0岁
-                    patient.setYe(Integer.parseInt(StringUtil.isEmpty(patient.getAge())?"0":patient.getAge()));
-                    patientService.insert(patient);
-            BeanUtils.copyProperties(regist, patientRegist);
-            //生成挂号流水号,在楼上给的基础上，再生成一个6位的随机数
-              String visitNo = patientRegist.getVisitNo()+ KeyNumberUtil.SixValidateNumber();
-            patientRegist.setVisitNo(visitNo);
-            patientRegist.setPatientNo(newPatinetNo);
-            patientRegistService.insert(patientRegist);
-            RegistInfo registInfo = new RegistInfo();
-            BeanUtils.copyProperties(emrVo.getPatient().getInfo(), registInfo);
-            registInfo.setVisitNo(visitNo);
-            ybitfservice.insertRegistInfo(registInfo);
-            logger.info("【数据解析成功】");
-            //写入图片信息
-                    List<EmrImgifo>emrImgifos = new ArrayList<>();
-                    emrImgifos.add(new EmrImgifo(visitNo,info.getSp(),"舌诊"));
-                    emrImgifos.add(new EmrImgifo(visitNo,info.getMp(),"面诊"));
-                    emrImgifos.add(new EmrImgifo(visitNo,info.getTp(),"体诊"));
-                    emrImgifoMapper.plInsert(emrImgifos);
-                    System.out.println("插入自诊图片");
-                } catch (Exception e) {
-            logger.info("【数据解析失败】");
-            e.printStackTrace();
-            return e.getMessage();
-        }
-        System.out.println("有新挂号信息入库");
-        return "上传成功";
-    }
+
 
     @RequestMapping(value = "/innerRegister", method = RequestMethod.POST)
     @Transient

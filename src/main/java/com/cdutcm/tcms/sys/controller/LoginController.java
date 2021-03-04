@@ -1,6 +1,6 @@
 package com.cdutcm.tcms.sys.controller;
 
-import com.alibaba.fastjson.JSONObject;
+
 import com.cdutcm.core.util.*;
 
 import java.io.Serializable;
@@ -9,8 +9,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpSession;
 
-import com.cdutcm.tcms.biz.JoinUpCloudPlat.CloudMethods;
-import com.cdutcm.tcms.biz.JoinUpCloudPlat.DiseaseVO;
 import com.cdutcm.tcms.biz.JoinUpCloudPlat.Methods;
 import com.cdutcm.tcms.biz.service.CloudApiService;
 import com.cdutcm.tcms.sys.entity.*;
@@ -60,31 +58,12 @@ public class LoginController {
     @Autowired
     private ClinicService clinicService;
     @Autowired
-    private RoleService roleService;
-//    @Autowired
-//    private ClientMQTT client;
-//
-//    @Autowired
-//    private MqttConfiguration mqttConfiguration;
-//
-//    private MqttPushClient mqttPushClient;
-    @Autowired
     private RedisManager redisManager;
     @Autowired
     private RedisTemplate redisTemplate;
 
     @Autowired
     private CloudApiService cloudApiService;
-
-//    @RequestMapping("/hello")
-//    @ResponseBody
-//    public String sendHello() {
-//        mqttPushClient = mqttConfiguration.getMqttPushClient();
-//        String kdTopic = "topic1";
-//        mqttPushClient.publish(0, false, kdTopic, "15345715326");
-//        mqttPushClient.subscribe(kdTopic);
-//        return "123";
-//    }
 
     /**
      * 访问登录页
@@ -101,60 +80,9 @@ public class LoginController {
             return ResultVOUtil.error(1,"消息发送失败！");
         }
     }
-    //调用擅长病种接口
-    @RequestMapping("/getGoodAtDisease")
-    public ResultVO getGoodAtDisease(@RequestParam(value = "keyword", defaultValue = "") String keyword){
-        List<DiseaseVO> goodAtDisease = (List<DiseaseVO>)redisTemplate.opsForValue().get("goodAtDisease");
-        if(StringUtil.objIsEmpty(goodAtDisease)||goodAtDisease.size()==0){
-            String clientToken = (String)redisTemplate.opsForValue().get("clientToken");
-            if(StringUtil.isEmpty(clientToken)){
-                clientToken = Methods.getInstance().getClientToken();
-                redisTemplate.opsForValue().set("clientToken",clientToken,2,TimeUnit.HOURS);
-            }
-            goodAtDisease = Methods.getInstance().getGoodAtDisease(clientToken);
-            redisTemplate.opsForValue().set("goodAtDisease",goodAtDisease,8,TimeUnit.HOURS);
-        }
-        if(StringUtil.notEmpty(keyword)){
-            //过滤集合
-            try {
-                List<DiseaseVO>diseaseVOS2 = new ArrayList<>();
-                FSearchTool fSearchTool = new FSearchTool(goodAtDisease, "DiseaseName","PinYin");
-                List<Object> objects =fSearchTool.searchTasks(keyword);
-                for (Object object : objects) {
-                    diseaseVOS2.add((DiseaseVO)object);
-                }
-                return ResultVOUtil.success(diseaseVOS2);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return ResultVOUtil.success(goodAtDisease);
-            }
-        }
-        return ResultVOUtil.success(goodAtDisease);
-    }
 
-    @RequestMapping("/authDoctor")
-    public ResultVO authDoctor(String data){
-        //调用医生认证接口
-        Subject subject = SecurityUtils.getSubject();
-        User user = (User) subject.getPrincipal();
-        String token = (String)redisTemplate.opsForValue().get(user.getAccount() + "token");
-        JSONObject jsonObject = JSONObject.parseObject(data);
-        String organizationId = (String)jsonObject.get("OrganizationId");
-        String organizationName = (String)jsonObject.get("OrganizationName");
-        if (organizationId.equals("0")){
-            CloudMethods.getInstance().saveOrganization(organizationName,token);
-        }
-        String s = Methods.getInstance().authDocotor(data, token);
-        //更新关联诊所
-        cloudApiService.updateUserClinic(user.getAccount(),token);
-        List<Clinic> clinics = clinicService.getClinicsByAccount(user.getAccount());
-        user.setClinics(clinics);
-        PrincipalCollection principalCollection = subject.getPrincipals();
-        String realmName = principalCollection.getRealmNames().iterator().next();
-        PrincipalCollection newPrincipalCollection = new SimplePrincipalCollection(user, realmName);
-        subject.runAs(newPrincipalCollection);
-        return ResultVOUtil.success(s);
-    }
+
+
 
     @RequestMapping(value = "/login")
     public ModelAndView loginGet(String tel) {
@@ -167,28 +95,21 @@ public class LoginController {
         }else{
              user  = userService.getUserByAccount(userInfo.getAccount());
         }
-
         modelAndView.addObject("user",user);
         return modelAndView;
     }
 
     @RequestMapping(value = "/")
     public ModelAndView loginhtml(SysEnity sysEnity) {
-//    String ws = PropertiesUtil.getProperties("/application.yml", "wsUrl");
         ModelAndView modelAndView = new ModelAndView();
         long l = new IdWorker().nextId();
         List<Clinic> clinics = clinicService.selectAll();
         modelAndView.addObject("clinics", clinics);
-//    modelAndView.addObject("wsUrl", ws);
         modelAndView.setViewName("/recipel/login.html");
         if(StringUtil.objCheckIsNull(sysEnity)){
             sysEnity=null;
         }
         modelAndView.addObject("user",sysEnity);
-//        client.setClientInfo(String.valueOf(l), "register/register");
-//        client.start();
-//        client.setClientInfo(String.valueOf(l + 1), "ybm/login");
-//        client.start();
         return modelAndView;
     }
 
@@ -198,11 +119,6 @@ public class LoginController {
     @RequestMapping(value = "/regist")
     public ModelAndView registGet(String openId) {
         ModelAndView mv = new ModelAndView();
-//    List<Clinic> clinics = clinicService.selectAll();
-//    List<Role> roles = roleService.listAllRoles();
-//    mv.addObject("roles", roles);
-//    mv.setViewName("/recipel/login.html");
-//    mv.addObject("clinics", clinics);
         mv.addObject("openId", openId);
         mv.setViewName("/recipel/regist.html");
         return mv;
@@ -331,11 +247,6 @@ public class LoginController {
         User user = (User) subject.getPrincipal();
         List<Clinic> clinics = new ArrayList<>();
         if (user != null) {
-//            Object o = redisTemplate.opsForValue().get(user.getAccount() + "clinicsBaseData");
-//            if(!StringUtil.objIsEmpty(o)){
-//                logger.info("{}【登录从缓存读取，没有查询数据库】",user.getAccount());
-//                clinics =  (List<Clinic>)o;
-//            }else {
             clinics =user.getClinics();
             resultVO.setCode(200);
             resultVO.setMsg("请选择诊所");
@@ -368,7 +279,6 @@ public class LoginController {
         simpleSession.setAttribute("org.apache.shiro.subject.support.DefaultSubjectContext_PRINCIPALS_SESSION_KEY",simplePrincipalCollection);
         redisCache.put(id,simpleSession);
         subject.releaseRunAs();
-//        cloudApiService.updateUserClinic(user.getAccount(),user.getAccessToken());
         return "success";
     }
 
@@ -377,17 +287,4 @@ public class LoginController {
         return userService.updateUser(phone, password, code);
     }
 
-    /**
-     *
-     */
-////  @RequestMapping("/test")
-//    public void test() {
-//        final List<User> users = new ExcelUtil().parseFromExcel("C:\\Users\\wh\\Documents\\Tencent Files\\1060643326\\FileRecv\\重庆班2015级中医学信息(1).xlsx", 1, User.class);
-//
-//        for (User user : users) {
-//            user.setOpenId("");
-//            final SysMsg msg = userRegist(user);
-//            System.out.println(msg);
-//        }
-//    }
 }

@@ -352,31 +352,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResultVO updateUser(String phone, String password, String code) {
-        Map map = new HashMap();
-        map.put("LoginCode", phone);
-        map.put("LoginPwd", password);
-        //校验
-        String codeKey = (String) redisTemplate.opsForValue().get(phone + "codekey");
-        if (StringUtil.isEmpty(codeKey)) {
-            return ResultVOUtil.error(200, "验证码已过期");
-        }
-        map.put("Key", codeKey);
-        map.put("Code", code);
-        map.put("token_type", "Bearer");
-        HashMap<Object, Object> smsToken = Methods.getInstance().getSmsToken(phone, code, codeKey);
-        if ((Boolean) smsToken.get("code")) {
-            TokenObj tokenObj = (TokenObj) smsToken.get("data");
-            map.put("access_token", tokenObj.getAccess_token());
-            String rs = HttpUtils.sendPostWithToken(ApiConstant.RetrievePassword, JSONUtil.toJson(map), map.get("access_token").toString());
-            JSONObject jsonObject = JSONObject.fromObject(rs);
-            if (!(Boolean) jsonObject.get("Success")) {
-                return ResultVOUtil.error(200, jsonObject.optString("Message"));
-            }
-            return ResultVOUtil.success(rs);
-        } else {
-            return ResultVOUtil.error(200, "验证码错误");
-        }
+        return null;
     }
+
 
     @Override
     public User authHulian(String phone) {

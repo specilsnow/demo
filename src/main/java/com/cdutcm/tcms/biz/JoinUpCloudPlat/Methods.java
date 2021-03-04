@@ -146,71 +146,10 @@ public class Methods {
         return jsonObject.get("access_token").toString();
     }
 
-    public List<DiseaseVO> getGoodAtDisease(String token) {
-        String json = "{\"name\":\"\"}";
-//        String clientToken = getClientToken();
-        String s = HttpUtils.sendPostWithToken(ApiConstant.GetGoodAtDisease, json, token);
-        JSONObject jsonObject = JSONObject.fromObject(s);
-        List<DiseaseVO> diseaseVOS = new ArrayList<>();
-        try {
-            String rows = jsonObject.get("Rows").toString();
-            if (StringUtil.notEmpty(rows)) {
-                diseaseVOS = JSONUtil.toList(rows, DiseaseVO.class);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return diseaseVOS;
-    }
 
-    public String authDocotor(String json, String token) {
-        String s1 = HttpUtils.sendPostWithToken(ApiConstant.AuthDoctor, json, token);
-        return s1;
-    }
 
-    public String uploadData(String json) {
-        Map map = new HashMap();
-        map.put("Name", json);
-        //分开去提交一个报错了 提交另外一个
-        JSONObject jsonObject = JSONObject.fromObject(map);
-        String s = HttpUtils.sendPostWithToken(ApiConstant.PostDataWithI, jsonObject.toString(), null);
-        if (StringUtil.objIsEmpty(s)) {
-            JSONObject jsonObject1 = JSONObject.fromObject(s);
-            Boolean success = (Boolean) jsonObject1.get("Success");
-            if (!success) {
-                log.info("【用了带i的那个提交失败了，换不带i的】");
-                s = HttpUtils.sendPost(ApiConstant.PostData, map);
-                JSONObject jsonObject2 = JSONObject.fromObject(s);
-                if(StringUtil.objIsEmpty(jsonObject2)){
-                    log.info("【用了不带i的那个提交失败了，喊林杨改bug】");
-                }else {
-                    Boolean success2 = (Boolean) jsonObject2.get("Success");
-                    if(!success2){
-                        log.info("【用了不带i的那个提交失败了，喊林杨改bug】");
-                    }
-                }
 
-            }
-        }
-        return s;
-    }
 
-    public static void main(String[] args) {
-//        String s = Methods.getInstance().uploadData();
-//        List<DiseaseVO> diseaseVOS  = Methods.getInstance().getGoodAtDisease();
-//        List<DiseaseVO> diseaseVOS = JSONUtil.toList(goodAtDisease, DiseaseVO.class);
-        String json = "{\"zz\":\"口干咽燥\",\"yjs\":\"\",\"bxdata\":\"[6, 8, 3, 7, 7, 4, 9, 9, 2, 5, 5, 4, 0, 0, 0, 9, 8, 6, 4, 9, 0, 6, 2, 4, 4, 3, 5, 1, 8, 5, 0, 2, 2, 8, 2, 2, 6, 2, 1, 1, 1, 9, 8, 9, 2, 0]\",\"jws\":\"\",\"xbs\":\"\",\"bwdata\":\"[1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\",\"js\":\"\",\"gms\":\"\",\"fs\":\"3\",\"adviceName\":\"\",\"doctorName\":\"何洁林\",\"bw\":\"心,肺,肾,\",\"bx\":\"气虚,阳虚,\",\"tgjc\":\"\",\"yz\":\"忌辛辣\",\"disease\":\"口干\",\"drugs\":[{\"dosage\":\"15\",\"name\":\"车前子\"},{\"dosage\":\"12\",\"name\":\"法半夏\"},{\"dosage\":\"15\",\"name\":\"茯苓\"},{\"dosage\":\"15\",\"name\":\"黄柏\"},{\"dosage\":\"12\",\"name\":\"黄连\"},{\"dosage\":\"12\",\"name\":\"黄芩\"},{\"dosage\":\"15\",\"name\":\"牡丹皮\"},{\"dosage\":\"15\",\"name\":\"青蒿\"},{\"dosage\":\"20\",\"name\":\"山药\"},{\"dosage\":\"15\",\"name\":\"山茱萸\"},{\"dosage\":\"30\",\"name\":\"石膏\"},{\"dosage\":\"30\",\"name\":\"熟地黄\"},{\"dosage\":\"15\",\"name\":\"泽泻\"},{\"dosage\":\"12\",\"name\":\"知母\"},{\"dosage\":\"12\",\"name\":\"枳壳\"},{\"dosage\":\"15\",\"name\":\"竹茹\"}],\"userphone\":\"15281020238\",\"sex\":\"男\",\"end_time\":\"2019-12-31\",\"grs\":\"\",\"dept\":\"脾胃科\",\"jff\":\"水煎服，一日三次，一次150ml\",\"ZF\":\"活血祛瘀\",\"doctorPhone\":\"18382473437\",\"symptom\":\"口干咽燥头晕,声低息微\",\"zlyj\":\"多喝水呀\",\"je\":0,\"fzjc\":\"\",\"age\":\"027岁\",\"zx\":\"燥热伤肺证\",\"jzlsh\":\"20191231445028\",\"username\":\"浮浮\"}";
-        HashMap<Object, Object> hashMap = new HashMap<>();
-        hashMap.put("Name", json);
-        JSONObject jsonObject = JSONObject.fromObject(hashMap);
-        System.out.println(jsonObject.toString());
-//        String json1 = "{" +
-//                "\"Name\":" +
-//                "{\"zz\":\"口干咽燥\",\"yjs\":\"\",\"bxdata\":\"[6, 8, 3, 7, 7, 4, 9, 9, 2, 5, 5, 4, 0, 0, 0, 9, 8, 6, 4, 9, 0, 6, 2, 4, 4, 3, 5, 1, 8, 5, 0, 2, 2, 8, 2, 2, 6, 2, 1, 1, 1, 9, 8, 9, 2, 0]\",\"jws\":\"\",\"xbs\":\"\",\"bwdata\":\"[1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\",\"js\":\"\",\"gms\":\"\",\"fs\":\"3\",\"adviceName\":\"\",\"doctorName\":\"何洁林\",\"bw\":\"心,肺,肾,\",\"bx\":\"气虚,阳虚,\",\"tgjc\":\"\",\"yz\":\"忌辛辣\",\"disease\":\"口干\",\"drugs\":[{\"dosage\":\"15\",\"name\":\"车前子\"},{\"dosage\":\"12\",\"name\":\"法半夏\"},{\"dosage\":\"15\",\"name\":\"茯苓\"},{\"dosage\":\"15\",\"name\":\"黄柏\"},{\"dosage\":\"12\",\"name\":\"黄连\"},{\"dosage\":\"12\",\"name\":\"黄芩\"},{\"dosage\":\"15\",\"name\":\"牡丹皮\"},{\"dosage\":\"15\",\"name\":\"青蒿\"},{\"dosage\":\"20\",\"name\":\"山药\"},{\"dosage\":\"15\",\"name\":\"山茱萸\"},{\"dosage\":\"30\",\"name\":\"石膏\"},{\"dosage\":\"30\",\"name\":\"熟地黄\"},{\"dosage\":\"15\",\"name\":\"泽泻\"},{\"dosage\":\"12\",\"name\":\"知母\"},{\"dosage\":\"12\",\"name\":\"枳壳\"},{\"dosage\":\"15\",\"name\":\"竹茹\"}],\"userphone\":\"15281020238\",\"sex\":\"男\",\"end_time\":\"2019-12-31\",\"grs\":\"\",\"dept\":\"脾胃科\",\"jff\":\"水煎服，一日三次，一次150ml\",\"ZF\":\"活血祛瘀\",\"doctorPhone\":\"18382473437\",\"symptom\":\"口干咽燥头晕,声低息微\",\"zlyj\":\"多喝水呀\",\"je\":0,\"fzjc\":\"\",\"age\":\"027岁\",\"zx\":\"燥热伤肺证\",\"jzlsh\":\"20191231445028\",\"username\":\"浮浮\"}" +
-//                "}";
-//        jsonObject.put("Name",json);
-        System.out.println(jsonObject.toString());
-        String s = HttpUtils.sendPostWithToken(ApiConstant.PostDataWithI, jsonObject.toString(), null);
-        System.out.println("返回格式：" + s);
-    }
+
+
 }

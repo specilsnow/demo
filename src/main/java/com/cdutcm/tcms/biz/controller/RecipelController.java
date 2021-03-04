@@ -477,13 +477,7 @@ public class RecipelController {
                 recipelItemMapper.saveallRecipelItem(recipelItems);
             }
             JSONArray recipelItemsJsonArray = JSONArray.fromObject(recipelItems);
-//            if(emr.getIsUpLoad().equals("2")){
-//                UpYptEmr(emr,emr.getRecipels().get(0),recipelItems);
-//            }
             log.info("【{}】保存处方{}", user.getAccount(), recipelItemsJsonArray.toString());
-            //上传云平台
-
-
             List<Baseselfdata> baseselfdatas = new ArrayList<Baseselfdata>();
             if (!StringUtil.isEmptyList(recipelItems)){
                 List<String> exitsmaterinames = basedatamapper.findupdatename(materialnames, user.getAccount(), "yp");
@@ -518,12 +512,6 @@ public class RecipelController {
                 basedatamapper.updatebaseselfdata(materaddnames, user.getAccount());
             }
 
-            /*微信关联处方*/
-//            mqttPushClient = mqttConfiguration.getMqttPushClient();
-//            String kdTopic = "bar/baz";
-//            mqttPushClient.publish(0, false, kdTopic, emr.getVisitNo() + "," + reipelid);
-//            mqttPushClient.subscribe(kdTopic);
-            pushWxMsg(emr,recipelItems);
             log.info("MQTT通知微信有新处方 就诊号【{}】，处方号【{}】", emr.getVisitNo(), reipelid);
         }
         /*修改预约状态*/
@@ -531,76 +519,10 @@ public class RecipelController {
         return "发送成功";
     }
 
-    private void pushWxMsg(Emr emr,List<RecipelItem> recipelItems){
-        List<PatientWx> patientWxes = patientWxService.getUserByStatus(1);
-        String clientToken = CloudMethods.getInstance().getClientToken();
-        Recipel recipel = emr.getRecipel();
-        String itemStr = "";
-        if(recipelItems!=null && recipelItems.size()>0){
-            for (int i=0; i<recipelItems.size(); i++){
-                RecipelItem item = recipelItems.get(i);
-                if(i<recipelItems.size()-1){
-                    itemStr += item.getName() + item.getDosage() + item.getUnit() + ",";
-                }else {
-                    itemStr += item.getName() + item.getDosage() + item.getUnit();
-                }
-            }
-        }
-        for (PatientWx patient : patientWxes){
-            //查询这个月最新的一次答题记录，看答题时间是否在节气内
-            //生成消息发送json
-            String patientName = emr.getPatientName();
-            HashMap<Object, Object> hashMap = new HashMap<>();
-            hashMap.put("OpenId", patient.getWxOpenId());
-            //标题
-            //拼接标题
-            String remark = itemStr;
-            String telephone = "未填";
-            if(StringUtil.notEmpty(emr.getTelephone())){
-                telephone = emr.getTelephone();
-            }
-            String first = "患者"+patientName+"，电话："+ telephone+"，性别："+emr.getSex() +"，年龄："+emr.getAge()+"，诊断："+emr.getChiefComplaint()+"，开单医生："+emr.getDoctorName();
-            hashMap.put("First", getHash(first, "red"));
-            //医院
-            hashMap.put("Keyword1", getHash("国医馆", "#000000"));
-            //姓名
-            hashMap.put("Keyword2", getHash(patientName, "#000000"));
 
-            hashMap.put("Remark", getHash(remark, "#000000"));
-            //链接
-            hashMap.put("Url", "http://yby.cdutcm.edu.cn/");
-            //消息模板id 写死
-            hashMap.put("TemplateId", MsgTemplatConstant.jqNotify);
-            String json = JSONObject.fromObject(hashMap).toString();
-            String s = CloudMethods.getInstance().pushWxMsg(json, clientToken);
-            //判断是否发送成功
-            JSONObject jsonObject = JSONObject.fromObject(s);
-            log.info("【请求云平台{},{}，数据返回内容为：{}】",json,clientToken,s);
-            if(jsonObject == null){
-                log.info("【向{}推送处方失败!】", patientName);
-            }else {
-                Boolean success = (Boolean) jsonObject.get("Success");
-                if (success) {
-                    log.info("【向{}推送处方消息成功!】", patientName);
-                } else {
-                }
-            }
-        }
-    }
 
-    @RequestMapping("/pushWxMsg2Yf")
-    public void pushWxMsg2Yf(String visitNo){
-        Emr emr = emrService.findByVisitNo(visitNo);
-        List<Recipel> recipels = emr.getRecipels();
-        if(recipels!=null && recipels.size()>0){
-            for(Recipel recipel : recipels) {
-                List<RecipelItem> items = recipel.getRecipelItems();
-                if(items!=null && items.size()>0) {
-                    pushWxMsg(emr, items);
-                }
-            }
-        }
-    }
+
+
 
     public static HashMap getHash(String value,String color){
         HashMap<Object, Object> hashMap = new HashMap<>();

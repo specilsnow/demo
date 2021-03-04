@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdutcm.tcms.biz.mapper.EmrMapper">
+    <resultMap id="RecipelMap" type="com.cdutcm.tcms.biz.model.Recipel">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="recipel_no" property="recipelNo" jdbcType="VARCHAR"/>
+        <result column="patient_no" property="patientNo" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="therapy" property="therapy" jdbcType="VARCHAR"/>
+        <result column="emr_id" property="emrId" jdbcType="BIGINT"/>
+        <result column="fs_code" property="fsCode" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="lastupdate" property="lastupdate" jdbcType="TIMESTAMP"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap type="com.cdutcm.tcms.biz.model.PatientRegist" id="patientRegistResult">
+        <id column="pid" property="id" jdbcType="BIGINT"/>
+        <result column="ys" property="ys" jdbcType="VARCHAR"/>
+        <result column="ysbm" property="ysbm" jdbcType="VARCHAR"/>
+        <result column="ghks" property="ghks" jdbcType="VARCHAR"/>
+        <result column="ghksbm" property="ghksbm" jdbcType="VARCHAR"/>
+        <result column="patient_no" property="patientNo" jdbcType="VARCHAR"/>
+        <result column="pvisit_no" property="visitNo" jdbcType="VARCHAR"/>
+        <result column="kssj" property="kssj" jdbcType="TIMESTAMP"/>
+        <result column="io" property="io" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="IllnessResult" type="com.cdutcm.tcms.biz.model.IllnessHistory">
+        <result column="bid" property="id" jdbcType="BIGINT"/>
+        <result column="bichief_complaint" property="chiefComplaint" jdbcType="VARCHAR"/>
+        <result column="bpresent_illness" property="presentIllness" jdbcType="VARCHAR"/>
+        <result column="bpassed_illness" property="passedIllness" jdbcType="VARCHAR"/>
+        <result column="bpersonal_illness" property="personalIllness" jdbcType="VARCHAR"/>
+        <result column="bmenstruation_History" property="menstruationHistory" jdbcType="VARCHAR"/>
+        <result column="bmarriage_history" property="marriageHistory" jdbcType="VARCHAR"/>
+        <result column="ballergic_history" property="allergicHistory" jdbcType="VARCHAR"/>
+        <result column="bfamily_history" property="familyHistory" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="PatientResult" type="com.cdutcm.tcms.biz.model.Patient">
+        <id column="cid" property="id" jdbcType="BIGINT"/>
+        <result column="cpatient_no" property="patientNo" jdbcType="VARCHAR"/>
+        <result column="cname" property="name" jdbcType="VARCHAR"/>
+        <result column="csex" property="sex" jdbcType="VARCHAR"/>
+        <result column="cbirthday" property="birthday" jdbcType="VARCHAR"/>
+        <result column="caddress" property="address" jdbcType="VARCHAR"/>
+        <result column="ctelephone" property="telephone" jdbcType="VARCHAR"/>
+        <result column="ccard_no" property="cardNo" jdbcType="VARCHAR"/>
+        <result column="cnote" property="note" jdbcType="VARCHAR"/>
+        <result column="cye" property="ye" jdbcType="INTEGER"/>
+    </resultMap>
+    <resultMap id="BaseEmrMap" type="com.cdutcm.tcms.biz.model.Emr">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="assist_account" property="assistAccount" jdbcType="VARCHAR"/>
+        <result column="disease" property="disease" jdbcType="VARCHAR"/>
+        <result column="symptommould" property="symptommould" jdbcType="VARCHAR"/>
+        <result column="symptom" property="symptom" jdbcType="VARCHAR"/>
+        <result column="fs_code" property="fsCode" jdbcType="VARCHAR"/>
+        <result column="chief_complaint" property="chiefComplaint" jdbcType="VARCHAR"/>
+        <result column="presentillness" property="presentillness" jdbcType="VARCHAR"/>
+        <result column="pastillness" property="pastillness" jdbcType="VARCHAR"/>
+        <result column="illness_history_id" property="illnessHistoryId" jdbcType="BIGINT"/>
+        <result column="bw" property="bw" jdbcType="VARCHAR"/>
+        <result column="bx" property="bx" jdbcType="VARCHAR"/>
+        <result column="bwdata" property="bwdata" jdbcType="VARCHAR"/>
+        <result column="bxdata" property="bxdata" jdbcType="VARCHAR"/>
+        <result column="therapy" property="therapy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="patient_no" property="patientNo" jdbcType="VARCHAR"/>
+        <result column="visit_no" property="visitNo" jdbcType="VARCHAR"/>
+        <result column="patient_name" property="patientName" jdbcType="VARCHAR"/>
+        <result column="doctor_id" property="doctorId" jdbcType="VARCHAR"/>
+        <result column="doctor_name" property="doctorName" jdbcType="VARCHAR"/>
+        <result column="dept_id" property="deptId" jdbcType="VARCHAR"/>
+        <result column="clinic_id" property="clinicId" jdbcType="VARCHAR"/>
+        <result column="dept_name" property="deptName" jdbcType="VARCHAR"/>
+        <result column="sex" property="sex" jdbcType="VARCHAR"/>
+        <result column="age" property="age" jdbcType="VARCHAR"/>
+        <result column="telephone" property="telephone" jdbcType="VARCHAR"/>
+        <result column="dept_name" property="deptName" jdbcType="VARCHAR"/>
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP"/>
+        <result column="presentillness" property="presentillness"/>
+        <result column="personalIllness" property="personalIllness"/>
+        <result column="pastillness" property="pastillness"/>
+        <result column="allergic_history" property="allergicHistory"/>
+        <result column="menstruation_history" property="menstruationHistory"/>
+        <result column="physical_examination" property="physicalExamination"/>
+        <result column="auxiliary_inspection" property="auxiliaryInspection"/>
+        <result column="medical_advice" property="medicalAdvice"/>
+        <result column="follow_teacher" property="followTeacher"/>
+        <association column="illnessHistory" property="illnessHistory"
+                     javaType="com.cdutcm.tcms.biz.model.IllnessHistory" resultMap="IllnessResult"/>
+        <association column="patient" property="patient" javaType="com.cdutcm.tcms.biz.model.Patient"
+                     resultMap="PatientResult"/>
+        <association column="patientRegist" property="patientRegist" javaType="com.cdutcm.tcms.biz.model.PatientRegist"
+                     resultMap="patientRegistResult"/>
+        <collection property="recipels" column="recipels" ofType="com.cdutcm.tcms.biz.model.Recipel">
+            <result column="recipelid" property="id" jdbcType="VARCHAR"/>
+            <result column="recipel_no" property="recipelNo" jdbcType="VARCHAR"/>
+            <result column="dname" property="name" jdbcType="VARCHAR"/>
+            <result column="dtherapy" property="therapy" jdbcType="VARCHAR"/>
+            <result column="dfsCode" property="fsCode" jdbcType="VARCHAR"/>
+            <result column="dfsCode" property="fsCode" jdbcType="VARCHAR"/>
+            <result column="description" property="description" jdbcType="VARCHAR"/>
+            <result column="jff" property="jff" jdbcType="VARCHAR"/>
+            <result column="js" property="js" jdbcType="VARCHAR"/>
+            <result column="je" property="je" jdbcType="DOUBLE"/>
+            <result column="notice" property="notice"/>
+            <result column="fhdoctor_name" property="fhdoctor_name"/>
+            <collection column="recipelitem" property="recipelItems" ofType="com.cdutcm.tcms.biz.model.RecipelItem">
+                <result column="reid" property="id" jdbcType="VARCHAR"/>
+                <result column="rid" property="recipelId" jdbcType="VARCHAR"/>
+                <result column="ename" property="name" jdbcType="VARCHAR"/>
+                <result column="dosage" property="dosage" jdbcType="VARCHAR"/>
+                <result column="unit" property="unit" jdbcType="VARCHAR"/>
+                <result column="usage_name" property="usage" jdbcType="VARCHAR"/>
+                <result column="jczs" property="jczs" jdbcType="VARCHAR"/>
+            </collection>
+        </collection>
+        <collection property="emrImgInfo" column="emrImgInfo" ofType="com.cdutcm.tcms.biz.model.EmrImgifo">
+            <result column="imgid" property="id" jdbcType="VARCHAR" />
+            <result column="img_url" property="imgUrl" jdbcType="VARCHAR" />
+            <result column="img_name" property="imgName" jdbcType="VARCHAR" />
+        </collection>
+
+    </resultMap>
+    <resultMap type="com.cdutcm.tcms.biz.model.Emr" id="AllResultMap">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="disease" property="disease" jdbcType="VARCHAR"/>
+        <result column="symptommould" property="symptommould" jdbcType="VARCHAR"/>
+        <result column="symptom" property="symptom" jdbcType="VARCHAR"/>
+        <result column="fs_code" property="fsCode" jdbcType="VARCHAR"/>
+        <result column="chief_complaint" property="chiefComplaint" jdbcType="VARCHAR"/>
+        <result column="illness_history_id" property="illnessHistoryId" jdbcType="BIGINT"/>
+        <result column="bw" property="bw" jdbcType="VARCHAR"/>
+        <result column="bx" property="bx" jdbcType="VARCHAR"/>
+        <result column="therapy" property="therapy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="patient_no" property="patientNo" jdbcType="VARCHAR"/>
+        <result column="visit_no" property="visitNo" jdbcType="VARCHAR"/>
+        <result column="patient_name" property="patientName" jdbcType="VARCHAR"/>
+        <result column="doctor_id" property="doctorId" jdbcType="VARCHAR"/>
+        <result column="doctor_name" property="doctorName" jdbcType="VARCHAR"/>
+        <result column="dept_id" property="deptId" jdbcType="VARCHAR"/>
+        <result column="dept_name" property="deptName" jdbcType="VARCHAR"/>
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP"/>
+        <result column="presentillness" property="presentillness"/>
+        <result column="personalIllness" property="personalIllness"/>
+        <result column="pastillness" property="pastillness"/>
+        <result column="allergic_history" property="allergicHistory"/>
+        <result column="menstruation_history" property="menstruationHistory"/>
+        <result column="physical_examination" property="physicalExamination"/>
+        <result column="auxiliary_inspection" property="auxiliaryInspection"/>
+        <result column="medical_advice" property="medicalAdvice"/>
+        <result column="follow_teacher" property="followTeacher"/>
+        <collection property="recipels" column="id" ofType="com.cdutcm.tcms.biz.model.Recipel" select="findrecipels">
+        </collection>
+        <collection property="emrImgInfo" column="id" ofType="com.cdutcm.tcms.biz.model.EmrImgifo" select="findemrImg"></collection>
+    </resultMap>
+    <resultMap type="com.cdutcm.tcms.biz.model.Recipel" id="recipelResultMap">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="recipel_no" property="recipelNo" jdbcType="VARCHAR"/>
+        <result column="patient_no" property="patientNo" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="therapy" property="therapy" jdbcType="VARCHAR"/>
+        <result column="emr_id" property="emrId" jdbcType="BIGINT"/>
+        <result column="fs_code" property="fsCode" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="lastupdate" property="lastupdate" jdbcType="TIMESTAMP"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <collection property="recipelItems" column="emr_id" ofType="com.cdutcm.tcms.biz.model.RecipelItem"
+                    select="findrcipelitem">
+        </collection>
+    </resultMap>
+    <resultMap type="com.cdutcm.tcms.biz.model.RecipelItem" id="recipelitemResultMap">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="recipel_id" property="recipelId" jdbcType="BIGINT"/>
+        <result column="m_order" property="mOrder" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="dosage" property="dosage" jdbcType="VARCHAR"/>
+        <result column="unit" property="unit" jdbcType="VARCHAR"/>
+        <result column="usage_name" property="usage" jdbcType="VARCHAR"/>
+        <result column="jczs" property="jczs" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="emrImginfoMap" type="com.cdutcm.tcms.biz.model.EmrImgifo">
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="visit_no" property="visitNo" jdbcType="VARCHAR" />
+        <result column="img_url" property="imgUrl" jdbcType="VARCHAR" />
+        <result column="img_name" property="imgName" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <update id="updataWrap" parameterType="java.lang.String">
+        UPDATE emr_copy
+        SET disease = REPLACE(REPLACE(disease, CHAR(10), ''), CHAR(13), '')
+        where doctor_id = #{account}
+    </update>
+    <select id="findallemr" resultMap="AllResultMap">
+        select *
+        from emr
+    </select>
+    <select id="findrecipels" parameterType="long" resultMap="recipelResultMap">
+        select *
+        from recipel
+        where emr_id = #{id}
+    </select>
+    <select id="findrcipelitem" parameterType="long" resultMap="recipelitemResultMap">
+        select *
+        from recipel_item
+        where recipel_id = #{emr_id}
+    </select>
+
+    <select id="listPageEMRByCondition" parameterType="com.cdutcm.tcms.biz.model.Emr" resultMap="BaseEmrMap">
+        SELECT
+        *
+        FROM
+        (
+        SELECT
+        *
+        FROM
+        emr
+        <where>
+            <if test="datestring !=null and datestring !=''">
+                create_time LIKE binary '${datestring}'
+                OR symptommould LIKE '${datestring}'
+                OR patient_name LIKE '${datestring}'
+                OR follow_teacher LIKE '${datestring}'
+            </if>
+        </where>
+        ) a1
+        <where>
+            <if test="doctorId !=null and doctorId !=''">
+                and a1.doctor_id =#{doctorId}
+            </if>
+        </where>
+        ORDER BY
+        visit_no DESC
+
+    </select>
+
+    <!-- 根据PatientId查询emr数据 -->
+    <select id="findEmrByPatientId" parameterType="string" resultMap="BaseEmrMap">
+        select *
+        from emr
+        where patient_no = #{_parameter}
+        order by end_time desc
+        limit 5
+    </select>
+
+    <!-- 根据emrId查询emr信息 -->
+    <select id="findEmrByEmrId" parameterType="long" resultMap="BaseEmrMap">
+        select *
+        from emr
+        where id = #{id}
+        order by end_time desc
+        limit 5
+    </select>
+
+    <!-- 插入数据 -->
+    <insert id="saveEmr" parameterType="com.cdutcm.tcms.biz.model.Emr">
+        insert into emr(id, patient_no, visit_no, end_time, disease,
+                        fs_code, illness_history_id, symptommould, symptom, chief_complaint,
+                        bw, bx, therapy,
+                        create_time, patient_name, doctor_id, doctor_name, dept_id,
+                        dept_name, age, sex, telephone, clinic_id, assist_account,
+                        presentillness, pastillness, allergic_history, menstruation_history, physical_examination,
+                        auxiliary_inspection, medical_advice, follow_teacher, personalIllness, bwdata, bxdata)
+        values (#{id}, #{patientNo}, #{visitNo}, #{endTime}, #{disease},
+                #{fsCode}, #{illnessHistoryId}, #{symptommould}, #{symptom}, #{chiefComplaint},
+                #{bw}, #{bx}, #{therapy},
+                #{createTime}, #{patientName}, #{doctorId}, #{doctorName}, #{deptId},
+                #{deptName}, #{age}, #{sex}, #{telephone}, #{clinicId}, #{assistAccount},
+                #{presentillness}, #{pastillness}, #{allergicHistory}, #{menstruationHistory}, #{physicalExamination},
+                #{auxiliaryInspection}, #{medicalAdvice}, #{followTeacher}, #{personalIllness}, #{bwdata}, #{bxdata})
+    </insert>
+
+    <!-- 根据Id 删除数据 -->
+    <delete id="delEmrById" parameterType="long">
+        delete
+        from emr
+        where id = #{id}
+    </delete>
+
+    <!-- 查询数据库是否有当前病人的visitNo -->
+    <select id="findEmrByVisitNo" parameterType="string" resultMap="BaseEmrMap">
+        select *
+        from emr
+        where visit_no = #{_parameter}
+    </select>
+    <select id="findEndTimeEmr" resultMap="BaseEmrMap">
+        select *
+        from emr
+        order by create_time desc
+        limit 1
+    </select>
+    <!-- 根据visitNo 查询出emr -->
+    <select id="findByVisitNo" parameterType="string" resultMap="BaseEmrMap">
+        SELECT a.telephone  AS atelephone,
+               a.sex        AS sex,
+               a.age        AS age,
+               a.id,
+               a.disease,
+               a.symptommould,
+               a.telephone,
+               a.symptom,
+               a.fs_code,
+               a.chief_complaint,
+               a.clinic_id,
+               a.illness_history_id,
+               a.bw,
+               a.bx,
+               a.create_time,
+               a.patient_no,
+               a.visit_no,
+               d.therapy,
+               a.patient_name,
+               a.doctor_id,
+               a.doctor_name,
+               a.dept_id,
+               a.dept_name,
+               d.description,
+               a.end_time,
+               a.presentillness,
+               a.pastillness,
+               a.allergic_history,
+               a.physical_examination,
+               a.auxiliary_inspection,
+               a.medical_advice,
+               a.follow_teacher,
+               a.menstruation_history,
+               a.personalIllness,
+               d.id         AS recipelid,
+               d.recipel_no,
+               d.NAME       AS dname,
+               d.therapy    AS dtherapy,
+               d.fs_Code    AS dfsCode,
+               d.jff,
+               d.js,
+               d.je,
+               d.notice,
+               d.fhdoctor_name,
+               e.id         AS reid,
+               e.recipel_id AS rid,
+               e.NAME       AS ename,
+               e.dosage,
+               e.unit,
+               e.usage_name,
+               e.jczs,
+               g.id         AS imgid,
+               g.img_url,
+               g.img_name
+        FROM emr a
+                 LEFT JOIN recipel d ON d.emr_id = a.id
+                 LEFT JOIN recipel_item e ON e.recipel_id = d.id
+                 LEFT JOIN emr_imgifo g ON g.visit_no=a.visit_no
+        WHERE a.visit_no = #{_parameter}
+    </select>
+    <select id="listPagefindEmrs" resultMap="BaseEmrMap" parameterType="com.cdutcm.tcms.biz.model.Emr">
+        select *
+        from emr a
+        order by a.create_time desc
+    </select>
+
+    <!-- 药房用 -->
+    <select id="listPageEMRByClinic" parameterType="com.cdutcm.tcms.biz.model.Emr" resultMap="BaseEmrMap">
+        select *
+        from emr
+        where clinic_id = #{clinicId}
+        order by visit_no desc
+    </select>
+    <select id="findEmrByAccount" resultMap="BaseEmrMap" parameterType="java.lang.String">
+     SELECT * FROM emr WHERE patient_no IN (
+            SELECT patient_no FROM (
+             SELECT
+					count(*) AS co,
+					patient_no
+				FROM
+					emr where   doctor_id = #{account}
+				GROUP BY
+					patient_no ORDER BY co DESC
+			) t
+     )
+    AND doctor_id = #{account} ORDER BY patient_no
+
+    </select>
+
+    <select id="countFindEmrByAccount2" resultType="java.lang.Integer">
+        SELECT count(*) FROM emr WHERE doctor_id = #{account}
+        <if test="keyword!= null and keyword != ''">
+            and patient_name like CONCAT(#{keyword},'%')
+            or end_time like  CONCAT(#{keyword},'%')
+            or doctor_name like  CONCAT(#{keyword},'%')
+        </if>
+    </select>
+
+    <select id="findEmrByAccount2" resultMap="BaseEmrMap" parameterType="java.lang.String">
+        SELECT * FROM emr WHERE doctor_id = #{account}
+        <if test="keyword!= null and keyword != ''">
+            and patient_name like CONCAT(#{keyword},'%')
+            or end_time like  CONCAT(#{keyword},'%')
+            or doctor_name like  CONCAT(#{keyword},'%')
+        </if>
+        ORDER BY end_time desc
+        limit #{start},#{offset}
+    </select>
+    <select id="findBypatientNo" resultType="java.lang.Integer">
+        select count(*) from emr where doctor_id = #{account} and
+        patient_no=#{patientNo}
+    </select>
+    <select id="listEmrsByAccount"  resultMap="AllResultMap">
+        select *  from emr where  doctor_id=#{account}
+         <if test="startDate !=null and startDate !='' ">
+          and #{startDate}<![CDATA[>=]]>  end_time
+         </if>
+         <if test="endDate !=null and endDate !='' ">
+            and end_time  <![CDATA[<]]>#{endDate}
+         </if>
+         ORDER BY end_time DESC
+    </select>
+    <select id="getMaxId" resultType="java.lang.Long">
+        SELECT max(id) FROM emr
+    </select>
+    <select id="getNewEmrIds" resultType="java.lang.Long">
+        SELECT emr.id  FROM  emr WHERE id>=#{id}
+    </select>
+    <select id="findemrImg" parameterType="string" resultMap="emrImginfoMap">
+        select *
+        from emr_imgifo
+        where visit_no = #{visit_no}
+    </select>
+
+    <select id="getEmrByDoctorId" resultMap="BaseEmrMap">
+        SELECT * from WHERE doctor_id = #{doctorId}
+    </select>
+    <!--<select id="listEmrsByAccount"  resultMap="AllResultMap">-->
+        <!--select *  from emr where  doctor_id=#{account}  ORDER BY create_time-->
+    <!--</select>-->
+</mapper>

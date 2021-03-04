@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8" />
+        <title>中医处方</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta content="width=device-width, initial-scale=1" name="viewport" />
+        <meta content="Preview page of Metronic Admin Theme #2 for statistics, charts, recent events and reports" name="description" />
+        <meta content="" name="author" />
+        <!-- BEGIN GLOBAL MANDATORY STYLES -->
+        <link rel="stylesheet" href="${request.contextPath}/easyui/css/easyui.css">
+        <link rel="stylesheet" href="${request.contextPath}/css/wave.css">
+        <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
+        <link href="${request.contextPath}/metronic/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+        <link href="${request.contextPath}/metronic/css/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+        <link href="${request.contextPath}/metronic/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="${request.contextPath}/metronic/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css" />
+        <!-- END GLOBAL MANDATORY STYLES -->
+        <!-- BEGIN THEME GLOBAL STYLES -->
+        <link href="${request.contextPath}/metronic/css/components.min.css" rel="stylesheet" id="style_components" type="text/css" />
+        <link href="${request.contextPath}/metronic/css/plugins.min.css" rel="stylesheet" type="text/css" />
+        <!-- END THEME GLOBAL STYLES -->
+        <!-- BEGIN THEME LAYOUT STYLES -->
+        <link href="${request.contextPath}/metronic/css/layout.min.css" rel="stylesheet" type="text/css" />
+        <link href="${request.contextPath}/metronic/css/blue.min.css" rel="stylesheet" type="text/css" id="style_color" />
+        <link href="${request.contextPath}/metronic/css/custom.min.css" rel="stylesheet" type="text/css" />
+        <!-- END THEME LAYOUT STYLES -->
+        <link rel="shortcut icon" href="favicon.ico" /> </head>
+        
+    <!-- END HEAD -->
+
+    <body class="page-sidebar-closed-hide-logo page-container-bg-solid">
+    
+    	<div class="page-header navbar navbar-fixed-top" style="height:35px;min-height:35px;">
+            <div class="row-fluid" style="background-position:center;height: 35px;">
+				<div class="span12">
+					<!-- 顶部栏 -->
+			@{ include("header.html")
+		        			     @{ 
+		        			     @} 
+		        		    @}
+				</div>
+			</div>
+            <!-- END HEADER INNER -->
+        </div>
+        
+        <div class="page-container" style="padding-top: 34px;">
+            <div class="col-md-12" style="padding: 0">
+                  <div class="portlet light ">
+                      <div class="row">
+                      	<div class="col-md-2" style="padding-left:0;margin-top:-30px;">
+                      		<div style="position: relative;">
+								<div class="row" style="    height: 971px;">
+									<div class="portlet left">
+										<div class="left-logo">
+									       <img src="${request.contextPath}/img/logo.png" onclick="watchScore()">
+									     </div>
+									     <div class="left-search">
+	   <a href="#" onclick="patientSearch()"><img src="${request.contextPath}/img/search.png"" height="24" width="24" class="left-search-icon" ></a> 
+	   <input type="text" id="search" name="search" class="left-search-input" placeholder="综合查询">
+     </div>
+		                                <div class="left-content">
+									     @ for(patientRegist in ps) {
+									      <div class="left-content-item" onclick="clickPatientInfo('${patientRegist.visitNo}')">
+									         <div class="left-content-item-top">
+									           <div class="left-content-item-top-name">${patientRegist.patient.name}</div>
+									           <div class="left-content-item-top-disease">${patientRegist.disease}</div>
+									         </div>
+									         <div class="left-content-item-bottom">${patientRegist.kssj}</div>
+									       </div>
+									     @}
+									     
+									      </div>
+									     <div class="left-page">
+									        <div class="left-page-item"  onclick="searchNextPage('${p.page.currentPage-1}',${p.page.totalPage})">
+									            <div class="left-page-item-blank">
+									            <i class="iconfont icon-left"></i>
+									           </div>
+									        </div>
+									        <div class="left-page-CurrentPgage">
+									          <div class="left-page-CurrentPgage-blank">第${p.page.currentPage}页</div>
+									        </div>
+									        <div class="left-page-item" onclick="searchNextPage('${p.page.currentPage+1}',${p.page.totalPage})">
+									          <div class="left-page-item-blank" >
+									           <i class="iconfont icon-right"></i>
+									          </div>
+									      </div>
+								<!--      	${p.page.pageStr } -->
+								     </div> 
+                            		</div>
+								</div>
+							</div>
+						</div>
+                      	<div class="col-md-7">
+							<div style="position: relative;">
+								<h2 style="text-align: center;margin: 20px;font-weight:400;'">广安市中医医院     门诊电子病例</h2>
+								<form action="${request.contextPath}/emr/updateEmr" id="updateEmrForm" method="post">
+								<div class="updateInfo-content">
+								   <div class="updateInfo-content-item">
+								      <div class="updateInfo-content-item-input">
+									      <span class="item-label">挂号序号：</span><input type="text" class="item-input" name="id" value="${e.id!""}" hidden="true">
+									      <span> <input type="text" class="item-input" value="${e.visitNo!""}"></span>
+								      </div>
+								       <div class="updateInfo-content-item-input">
+									      <span class="item-label">姓名：</span>
+									      <span> <input type="text" class="item-input" value="${e.patientName}"></span>
+								      </div>
+								      <div class="updateInfo-content-item-input">
+									      <span class="item-label">挂号科室：</span>
+									      <span> <input type="text" class="item-input" value="${e.deptName}"></span>
+								      </div>
+								      <div class="updateInfo-content-item-input">
+									      <span class="item-label">年龄：</span>
+									      <span> <input type="text" class="item-input" value="${e.patient.age}"></span>
+								      </div>
+								   </div>
+								   <div class="updateInfo-content-item">
+								        <div class="updateInfo-content-item-input">
+									      <span class="item-label">性别：</span>
+									      <span> <input type="text" class="item-input" value="${e.patient.sex}"></span>
+								        </div>
+								        <div class="updateInfo-content-item-input">
+									      <span class="item-label">接诊医生：</span>
+									      <span> <input type="text" class="item-input" value="${e.doctorName}"></span>
+								        </div>
+								      <div class="updateInfo-content-item-input">
+									      <span class="item-label">接诊时间：</span>
+									      <span> <input type="text" class="item-input" value="${e.createTime,dateFormat='yyyy-MM-dd HH:mm:ss'}"></span>
+								      </div>
+								   </div>
+								   <div class="updateInfo-content-item">
+								      <div class="updateInfo-content-item-input">
+									      <span class="item-label">病名：</span>
+									      <span> <input type="text" name="disease" class="item-input" value="${e.disease}"></span>
+								      </div>
+								   </div>
+								   <div class="updateInfo-content-item">
+								    <div class="updateInfo-content-item-input">
+									      <span class="item-label">证型：</span>
+									      <span> <input type="text" id="zhengxing" name="symptommould" class="item-input" value="${e.symptommould}"></span>
+									      <span id="zhengxing-notice" class="notice-color">*证型为空</span>
+								      </div>
+								   </div>
+								   <div class="updateInfo-content-item">
+								   <div class="updateInfo-content-item-input">
+									      <span class="item-label">症状：</span>
+									      <span> <input type="text" name="symptom" class="item-input2" value="${e.symptom}"></span>
+								      </div>
+								   </div>
+								   <div class="updateInfo-content-item">
+								   <div class="updateInfo-content-item-input">
+									      <span class="item-label">主诉：</span>
+									      <span> <input type="text" name="chiefComplaint" class="item-input" value="${e.chiefComplaint}"></span>
+								      </div>
+								   </div>
+								   <div class="updateInfo-content-item">
+								    <div class="updateInfo-content-item-input">
+									      <span class="item-label">病位：</span>
+									      <span> <input type="text" name="bw" class="item-input" value="${e.bw}"></span>
+								      </div>
+								   </div>
+								   <div class="updateInfo-content-item">
+								     <div class="updateInfo-content-item-input">
+									      <span class="item-label">病性：</span>
+									      <span> <input type="text" name="bx" class="item-input" value="${e.bx}"></span>
+								      </div>
+								   </div>
+							  </div>
+                                  <div style="clear: both;"></div>
+                                  <h4 style="text-align: left;cursor: pointer;" onclick="toRecipelIndex()">用药信息</h4>
+                                  
+                                  <div>
+                                  		@ var count=-1;
+                                    	@ for(re in e.recipels){
+                                    	@ count++;
+									        <div class="updateInfo-content-item-recipel">
+											      <span class="item-label">治法：</span>
+											      <span> 
+											          <input type="text" id="zhifa" name="recipels[${count}].name" class="item-input" value="${re.therapy}">
+											      </span>
+											       <span id="zhifa-notice" class="notice-color">*治法为空</span>
+											      <span class="item-label">中药处方：</span>
+											      <input type="text" name="recipels[${count}].id" class="item-input" value="${re.id}" hidden="true">
+											      <span> <input type="text" name="recipels[${count}].therapy" class="item-input" value="${re.name}"></span>
+										      </div>
+									     <div class="updateInfo-yao">
+									      @ var subcount=-1;
+									      @ for(recipelItem in re.recipelItems){
+									      @ subcount++;
+									          <div class="updateInfo-yao-blank-item" style="padding-top: 25px;">
+									            <span style="vertical-align:text-top;"><input  class="easyui-combogrid" name="recipels[${count}].recipelItems[${subcount}].name" value="${recipelItem.name}" width="150px;"
+																	data-options="  
+									      								    panelWidth:'29%',
+									       								    idField:'name',
+									        							    textField:'name',
+									      								    fitColumns:true,
+									      								    url: '',	
+									        							    mode:'remote',
+									       								    striped: true,
+									       								    columns:[[
+									                						     {field:'id',title:'编号',width:20},
+									                						     {field:'name',title:'名称',width:20},
+									                  							 {field:'minDosage',title:'最小剂量',width:20},
+									                  							 {field:'maxDosage',title:'最大剂量',width:20},
+									                  							 {field:'unit',title:'单位',width:20},
+									                  							 {field:'xw',title:'性味',width:40}        ]],
+									                  							onShowPanel: function () {
+									 $(this).combogrid('grid').datagrid('options').url = '${request.contextPath}/searchmaterial';
+									 $(this).combogrid('grid').datagrid('reload');
+									}, 
+									                  							 "></input></span>
+									                  							 <input type="text" value="${recipelItem.dosage}" style="width: 40px;height:30px;vertical-align:top;" name="recipels[${count}].recipelItems[${subcount}].dosage">
+									                  							 <span id="yaokg">g</span>
+									          </div>
+									      @}
+									  </div>
+									  <div class="updateInfo-note">
+									   <div class="updateInfo-note-blank">
+									     <span class="item-label">用法：${re.description!}</span>
+									    <span> <input type="text" id="note" class="note"></span>
+									   </div>
+									  </div>
+									  <div class="updateInfo-warn">
+									   <div class="updateInfo-warn-blank">
+									         <h3>【附子】剂量超标，请谨慎使用。</h3>
+									   </div>
+									  </div>
+									  @}
+									  
+									  <div class="form-actions noborder" style="margin-top: 30px;">
+                                            <button type="button" class="btn default" style="width:100px;border-radius:20px!important;float:right;margin-right: 25px;">取消</button>
+                                            <button type="button" class="btn yellow" style="width:100px;border-radius:20px!important;float:right;margin-right: 25px;" onclick="updateEmr()">保存</button>
+                                        </div>
+                                  </div>   
+							 </form>
+									                                  
+							</div>
+						</div>
+						<div class="col-md-3" style="background-color: #eceef1">
+							<div style="position: relative;">
+								<div class="row">
+									
+									<div class="portlet light ">
+		                                <div class="portlet-title" style="border:none;">
+		                                    <div class="caption">
+		                                    	<i class="icon-share font-red-sunglo"></i>
+		                                        <span class="caption-subject font-dark bold uppercase">功能区</span>
+		                                    </div>
+		                                    
+		                                    <div style="float: right;font-size: 24px;">
+		                                    	<span class="glyphicon glyphicon-print" aria-hidden="true"></span>
+		                                    </div>
+		                                </div>
+                            		</div>
+                            		
+                            		<div class="portlet light ">
+		                                <div class="portlet-title">
+		                                    <div class="caption">
+		                                    	<i class="glyphicon glyphicon-star-empty"></i>
+		                                        <span class="caption-subject font-dark bold uppercase">病名推荐</span>
+		                                    </div>
+		                                    
+		                                    <div style="float: right;font-size: 24px;">
+		                                    	<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+		                                    </div>
+		                                </div>
+		                                
+		                                <div class="portlet-body" style="height: 100px;">
+		                                	<label class="col-md-6">咳嗽（82.3%）【个人】</label>
+		                                	<label class="col-md-6">咳嗽（82.3%）【个人】</label>
+		                                	<label class="col-md-6">咳嗽（82.3%）【名家】</label>
+		                                	<label class="col-md-6">咳嗽（82.3%）【经典】</label>
+		                                	<label class="col-md-6">咳嗽（82.3%）【经典】</label>
+		                                	<label class="col-md-6">咳嗽（82.3%）【经典】</label>
+		                                </div>
+                            		</div>
+                            		
+                            		<div class="portlet light ">
+		                                <div class="portlet-title">
+		                                    <div class="caption">
+		                                    	<i class="glyphicon glyphicon-star-empty"></i>
+		                                        <span class="caption-subject font-dark bold uppercase">证型推荐</span>
+		                                    </div>
+		                                    
+		                                    <div style="float: right;font-size: 24px;">
+		                                    	<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+		                                    </div>
+		                                </div>
+		                                
+		                                <div class="portlet-body" style="height: 100px;">
+		                                	<label class="col-md-6">风寒咳嗽（82.3%）【个人】</label>
+		                                	<label class="col-md-6">温热壅滞证（82.3%）【个人】</label>
+		                                	<label class="col-md-6">血热证（82.3%）【名家】</label>
+		                                	<label class="col-md-6">脾胃病症（82.3%）【经典】</label>
+		                                	<label class="col-md-6">脾胃病症（82.3%）【经典】</label>
+		                                	<label class="col-md-6">脾胃病症（82.3%）【经典】</label>
+		                                </div>
+                            		</div>
+                            		
+                            		<div class="portlet light ">
+		                                <div class="portlet-title">
+		                                    <div class="caption">
+		                                    	<i class="glyphicon glyphicon-star-empty"></i>
+		                                        <span class="caption-subject font-dark bold uppercase">治法推荐</span>
+		                                    </div>
+		                                    
+		                                    <div style="float: right;font-size: 24px;">
+		                                    	<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+		                                    </div>
+		                                </div>
+		                                
+		                                <div class="portlet-body" style="height: 100px;">
+		                                	<label class="col-md-6">补气升提（82.3%）</label>
+		                                	<label class="col-md-6">益气健脾、升清利咽（82.3%）</label>
+		                                	<label class="col-md-6">滋阴益肾、清热祛湿（82.3%）</label>
+		                                	<label class="col-md-6">补益心脾、固冲止血（82.3%）</label>
+		                                	<label class="col-md-6">滋阴益肾、清热祛湿（82.3%）</label>
+		                                	<label class="col-md-6">补益心脾、固冲止血（82.3%）</label>
+		                                </div>
+                            		</div>
+                            		
+                            		<div class="portlet light ">
+		                                <div class="portlet-title">
+		                                    <div class="caption">
+		                                    	<i class="glyphicon glyphicon-star-empty"></i>
+		                                        <span class="caption-subject font-dark bold uppercase">处方推荐</span>
+		                                    </div>
+		                                    
+		                                    <div style="float: right;font-size: 24px;">
+		                                    	<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+		                                    </div>
+		                                </div>
+		                                
+		                                <div class="portlet-body" style="height: 100px;">
+		                                	<label class="col-md-6">温经汤（82.3%）</label>
+		                                	<label class="col-md-6">一贯煎（82.3%）</label>
+		                                	<label class="col-md-6">温经汤（82.3%）</label>
+		                                	<label class="col-md-6">一贯煎（82.3%）</label>
+		                                	<label class="col-md-6">温经汤（82.3%）</label>
+		                                	<label class="col-md-6">一贯煎（82.3%）</label>
+		                                </div>
+                            		</div>
+                            		
+                            		
+                            		<div class="portlet light ">
+		                                <div class="portlet-title">
+		                                    <div class="caption">
+		                                    	<i class="glyphicon glyphicon-info-sign"></i>
+		                                        <span class="caption-subject font-dark bold uppercase">提示信息</span>
+		                                    </div>
+		                                </div>
+		                                
+		                                <div class="portlet-body" style="height: 120px;">
+		                                	<div class="alert alert-success">
+                                        		<strong></strong> 新版本V6.2已发布</div>
+		                                	<div class="alert alert-danger">
+                                        		<strong>错误!</strong> 附子剂量超标</div>
+		                                </div>
+                            		</div>
+                                    
+								</div>
+							</div>
+						</div>   
+          			</div>
+                  </div>
+              </div>
+        </div>
+        <!-- END CONTAINER -->
+        <!-- BEGIN FOOTER -->
+        <div class="page-footer">
+            
+            <!-- END FOOTER -->
+            <!-- BEGIN QUICK NAV -->
+            
+            <div class="quick-nav-overlay"></div>
+            <!-- END QUICK NAV -->
+            <!--[if lt IE 9]>
+<script src="../assets/global/plugins/respond.min.js"></script>
+<script src="../assets/global/plugins/excanvas.min.js"></script> 
+<script src="../assets/global/plugins/ie8.fix.min.js"></script> 
+<![endif]-->
+            <script src="${request.contextPath}/metronic/js/jquery.min.js" type="text/javascript"></script>
+            <script src="${request.contextPath}/jquery/jquery.form.js" type="text/javascript"></script>
+            <script src="${request.contextPath}/easyui/jquery.easyui.min.js"></script>
+            <script src="${request.contextPath}/metronic/js/bootstrap.min.js" type="text/javascript"></script>
+            <script src="${request.contextPath}/metronic/js/jquery.easypiechart.min.js" type="text/javascript"></script>
+            <script src="${request.contextPath}/metronic/js/app.min.js" type="text/javascript"></script>
+            <script>
+                $(document).ready(function(){
+                    
+                })
+                // 点击病人查看处方详情
+				function clickPatientInfo(vNo){
+					window.location.href="${request.contextPath}/emr/findEmr?visitNo="+vNo;
+				}
+				function toRecipelIndex(){
+					window.location.href="${request.contextPath}/recipelIndex";
+				}
+				function watchScore(){
+				  window.location.href="${request.contextPath}/scoreStatistics";
+				}
+				function updateEmr(){
+					console.log($("#updateEmrForm"));
+					// $("#updateEmrForm").submit();
+					$("#updateEmrForm").ajaxSubmit(function(data) { 
+						console.log(data)
+						if(data!=null){
+							for(var i=0;i<data.length;i++){
+								alert(data[i].value);
+							}
+						}
+					}); 
+					 return false;
+				}
+            </script>
+    </body>
+<style>
+body{
+font-size:16px;
+background:#273441;
+}
+.form-horizontal .form-group.form-md-line-input {
+    padding-top: 10px;
+    margin: 0 -1px;
+}
+.h1, .h2, .h3, h1, h2, h3 {
+    margin-top: 5px;
+    margin-bottom: 3px;
+}
+.mt-checkbox, .mt-radio {
+    display: inline-block;
+    position: relative;
+    padding-left: 30px;
+    margin-bottom: 1px;
+    cursor: pointer;
+    font-size: 14px;
+    webkit-transition: all .3s;
+    -moz-transition: all .3s;
+    -ms-transition: all .3s;
+    -o-transition: all .3s;
+    transition: all .3s;
+}
+.mt-checkbox-inline, .mt-radio-inline {
+    padding: 1px 0;
+}
+.portlet {
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+.alert {
+    padding: 9px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+.icon-iconfontxingxing{
+color:yellow;
+}
+.skipToPage{
+  margin:0 60px 0 10px;
+  display:flex;
+  font-size:14px;
+  line-height:35px;
+}
+.skipPage{
+  margin:0 10px 0 10px;
+  display:flex;
+  font-size:14px;
+  line-height:35px;
+}
+.icon-star-yellow{
+ color:red;
+}
+body{
+-webkit-user-select:none;
+-moz-user-select:none;
+-ms-user-select:none;
+user-select:none;
+}
+#points{
+margin-top:5px;
+ font-weight:700;
+}
+.right-page ul{
+ list-style:none;
+ display:flex;
+}
+ .icon-left,.icon-right{
+  font-size:32px;
+}
+.right-page-blank{
+  height:100%;
+  width:100%;
+  background:#fff;
+}
+.right-page li{
+  
+  height:30px;
+  margin:3px;
+  width:60px;
+  font-size:16px;
+  line-height:30px;
+  text-align:center;
+  border:1px solid #eee;
+  cursor:pointer;
+}
+.right-page li:hover{
+  background:rgb(99,150,193);
+}
+.right-page li a{
+ text-decoration:none;
+ color:black;
+}
+#skipTo{
+  height:30px;
+  margin:3px;
+  width:50px;
+  font-size:16px;
+  text-align:center;
+   background:#fff;
+   line-height:25px;
+  border:1px solid #eee;
+}
+#skipTo:hover{
+ background:rgb(99,150,193);
+}
+#skip{
+  height:30px;
+  margin: 0 6px;
+  width:30px;
+  font-size:16px;
+  text-align:center;
+  border:1px solid #eee;
+}
+#ok{
+cursor:pointer;
+ margin-left:-40px;
+ border-left:1px solid #eee;
+ line-height:25px;
+ padding-left:5px;
+ height:25px;
+}
+#ok:hover{
+ color:green;
+}
+#search-left{
+ margin-left:5px;
+ width:240px;
+ height:28px;
+ padding-left:10px;
+ border:1px solid rgb(146,182,208);
+ border-radius:5px;
+ outline:none;
+}
+.icon-right,.icon-left{
+color:#fff;
+}
+.icon-you{
+ color:black;
+ font-size:15px;
+}
+.icon-zuo{
+   color:black;
+ font-size:13px;
+}
+.left-page-item-blank{
+    width:100%;
+   height:100%;
+   text-align:center;
+  /*  background:yellow; */
+}
+.right-content-title-search{
+ width:30%;
+ height:100%;
+ margin-top:15px;
+/*  background:green; */
+}
+.left-page-CurrentPgage{
+   width:40%;
+   height:100%;
+   padding:5%;
+   border-left: 1px solid rgba(192,192,192,0.3);
+   border-right: 1px solid rgba(192,192,192,0.3);
+}
+.left-page-CurrentPgage-blank{
+line-height:40px;
+text-align:center;
+font-size:16px;
+vertical-align:bottom;
+   width:100%;
+   height:100%;
+   color:#fff;
+}
+.left-page-item{
+ padding:5%;
+ width:30%;
+ height:100%;
+}
+.left-page-item:hover{
+background:rgb(66,79,88);
+}
+.left-page-blank{
+width:100%;
+height:100%;
+}
+.left-content-item-top-disease{
+white-space:
+nowrap;text-overflow:ellipsis;
+overflow:hidden;
+width:80px;
+}
+.right-mainContent{
+ padding-top:20px;
+ height:84%;
+ backgorund:black;
+ width:100%;
+ /* background:#eee; */
+}
+.right-page{
+  padding:0 1% 1% 1%;
+  height:10%;
+  color:black;
+}
+.right-content{
+ height:90%;
+ padding:0 1%;
+}
+.pagination{
+ float:right;
+ margin:5px 5px 5px 5px
+}
+.right-content-content-table td{
+ width:400px;
+ height:50px;
+}
+.right-content-title-blank{
+	width:100%;
+	height:60%;
+    paddding:5px;
+    margin-top:15px;
+}
+.right-content-title{
+display:flex;
+ height:10%;
+ width:98%;
+ padding:1%;
+}
+.right-content-content{
+ height:90%;
+ width:100%;
+ padding:2%;
+}
+.right-content-blank{
+ height:100%;
+ width:100%;
+ background:#fff;
+}
+.right{
+height:100%;
+width:94%;
+background:#eee;
+}
+#spacing{
+ margin:0 0 5px 0;
+}
+#spacing-left{
+ padding-left:10px;
+ border-left:5px solid rgb(86,177,248);
+ margin-left: 10px;
+}
+#stamp{
+color:red;
+font-weight:600;
+padding:0 3px
+}
+.right-message{
+ height:16%;
+ width:100%;
+ padding: 1%;
+}
+.right-message-blank{
+ height:100%;
+ width:100%;
+ background:#fff;
+ display:flex;
+}
+.right-message-item{
+ width:25%;
+}
+.special{
+   border-right:1px solid rgba(192,192,192,0.8);
+}
+.right-message-item-blank{
+  margin-top:16px;
+  height:50%;
+  width:100%;
+  display:flex;
+}
+.right-message-item-icon{
+  width:30%;
+  padding-top:15px;
+  text-align:center;
+}
+.right-message-item-text{
+  padding:20px 0 0 15px;
+  width:70%;
+}
+body,h3,p,h1{
+ margin:0;
+}
+.score{
+ height:100%;
+ width:100%;
+ background:#eee;
+}
+ /* background:rgb(41,51,61); */
+.nav{
+ height:5%;
+ /* width:100%; */
+ background: #263441;
+}
+.content{
+ height:95%;
+ width:100%;
+ display:flex;
+}
+.left{
+height:100%;
+ background: #263441;
+}
+.left-logo{
+ text-align:center;
+ height:10%;
+ padding-top:15px;
+}
+.left-search{
+ height:8%;
+ background:rgb(66,79,88);
+ text-align:center;
+}
+.left-search-icon{
+ position:absolute;
+ margin:23px 0 0 5px;
+}
+.left-search-input{
+ margin-top:20px;
+ height:32px;
+ width:200px;
+ border-radius:5px!important;
+ border:none;
+ background:rgb(122,131,138);
+ font-size:16px;
+ padding-left:30px;
+ color:#fff;
+}
+.left-content{
+ height:72%;
+ cursor:pointer;
+}
+.left-page{
+cursor:pointer;
+width:100%;
+height:7%;
+border-bottom: 1px solid rgba(192,192,192,0.3);
+display:flex;
+}
+.left-content-item{
+ padding:0 35px;
+ height:10%;
+ color:#fff;
+ border-bottom: 1px solid rgba(192,192,192,0.3);
+}
+.left-content-item:hover{
+background:rgb(66,79,88);
+}
+.left-content-item-top{
+  padding-top:5px;
+  height:50%;
+  display:flex;
+  justify-content:space-between;
+}
+.left-content-item-bottom{
+ height:50%;
+}
+.watchScore-title{
+  height:10%;
+  padding:0 1% 0 1%;
+}
+.watchScore-title-blank{
+ height:100%;
+ width:100%;
+ background:#fff;
+}
+.inputScore{
+position:absolute;
+margin:80px 0 0 11%;
+color:#fff;
+z-index:40;
+}
+#score-number{
+ font-size:80px;
+}
+.watchScore-score-circle-blank{
+  height:100%;
+  width:100%;
+  text-align:center;
+}
+.container {
+    width: 200px;
+    height: 200px;
+    padding: 5px;
+    border: 5px solid rgba(255, 150, 64,.8);
+    border-radius: 50%;
+    overflow: hidden;
+}
+.wave {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    background-color: rgba(255, 150, 64, .8);
+    border-radius: 50%;
+ }
+    .wave:before,
+    .wave:after{
+        content: "";
+        position: absolute;
+        width: 360px;
+        height: 360px;
+        top: 0;
+        left: 50%;
+        background-color: rgba(255, 255, 255, .4);
+        border-radius: 45%;
+        transform: translate(-50%, -70%) rotate(0);
+        animation: rotate 6s linear infinite;
+        z-index: 10;
+    }
+    
+    .wave:after {
+        border-radius: 47%;
+        background-color: rgba(255, 255, 255, .9);
+        transform: translate(-50%, -70%) rotate(0);
+        animation: rotate 10s linear -5s infinite;
+        z-index: 20;
+    }
+.detail-content-item-text{
+  padding:20px 0 0 15px;
+  width:70%;
+}
+.detail-content-item-icon{
+  width:30%;
+  padding-top:15px;
+  text-align:center;
+}
+.detail-content-item-blank{
+ margin-top:16px;
+  height:50%;
+  width:100%;
+  display:flex;
+}
+.detail-content-item{
+width:25%;
+}
+.detail-content-blank{
+ height:100%;
+ width:100%;
+ background:#fff;
+ display:flex;
+}
+.detail-title{
+  height:30%;
+  padding-top:15px;
+}
+.detail-content{
+  height:70%;
+}
+.watchScore-detail-blank{
+  height:100%;
+  background:#fff;
+}
+.text-button-input{
+ height:60px;
+ width:240px;
+ background:rgb(86,177,248);
+ border-radius:30px;
+ outline:none;
+ border:none;
+}
+.text-title{
+ height:30%;
+ padding:100px 0 0 40px;
+}
+.text-content{
+ height:10%;
+ padding:40px 0 0 40px;
+}
+.text-button{
+ height:60%;
+ color:#fff;
+ padding:60px 0 0 130px;
+}
+.watchScore{
+  height:100%;
+  width:100%;
+}
+.watchScore-score{
+ height:50%;
+ padding:0 1% 1% 1%;
+}
+.watchScore-score-blank{
+ height:100%;
+ background:#fff;
+ display:flex;
+}
+.watchScore-score-circle{
+  width:40%;
+  height:100%;
+  padding:4%;
+}
+.watchScore-score-text{
+ font-size:20px;
+  width:60%;
+   height:100%;
+}
+.watchScore-detail{
+ height:40%;
+ padding:1%;
+}
+ .zj-dignose-header{
+	    padding-left:20px;
+	    height:5%;
+	    color:#fff;
+	  }
+	  .zj-dignose-header-Chinese{
+	    font-size:20px;
+	    font-weight:400;
+	    float:right;
+	    margin-right:2%
+	  }
+	  
+.portlet.light {
+    padding: 0px 15px 0px;
+    background-color: #fff;
+}
+.updateInfo-content-item{
+ padding:0 20px;
+ height:36px;
+ border-bottom:1px solid rgba(220,220,220,0.8);
+ display:flex;
+}
+.updateInfo-content-recipel{
+ padding:0 20px;
+ height:11%;
+ border-bottom:1px solid rgba(220,220,220,0.8);
+ display:flex;
+}
+.updateInfo-content-item-input{
+  margin-top:5px;
+  /* width:25%; */
+}
+.updateInfo-content-item-recipel{
+  margin-top:5px;
+  margin-left:20px;
+  width:100%;
+}
+
+.notice-color{
+ background:rgb(207,105,98);
+ color:#fff;
+ padding:1px;
+}
+.item-input{
+ border:none;
+ outline:none;
+}
+.item-input2{
+ border:none;
+ outline:none;
+ width:600px;
+}
+.item-label{
+ font-weight:900;
+ margin-right:10px;
+}
+.updateInfo-yao-blank-item{
+text-alin:center;
+font-size:20px;
+font-weight:500;
+height:20px;
+line-height:20px;
+padding:1.5% 1.5%;
+ width:25%;
+ backgound:yellow;
+ font-weight:500
+}
+.updateInfo-note{
+  height:5%;
+  padding:0 2%;
+ }
+ .updateInfo-yao-blank{
+  width:100%;
+  background:rgb(213,105,105);
+}
+.updateInfo-yao{
+  padding:3% 3%;
+  display:flex;
+  flex-wrap: wrap;
+}
+#note{
+  border:none;
+  width:50%;
+  outline:none;
+}
+.updateInfo-warn-blank{
+ width:98%;
+ height:100%;
+ background:rgb(213,105,105);
+ padding:1%;
+ color:#fff;
+ margin-left:2%;
+}
+/* bootstrap和easyui下拉冲突 */
+.panel {
+    margin-bottom: 0px;
+    background-color: #fff;
+    border: 1px solid transparent;
+}
+.panel-body {
+    padding: 0px;
+}
+.combo-arrow {
+  background: url('${request.contextPath}/img/combo_arrow.png') no-repeat center center;
+}
+.portlet-body label{
+	padding:0 2px;
+	font-size:14px;
+}
+
+</style>
+</html>

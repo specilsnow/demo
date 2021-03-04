@@ -1,0 +1,193 @@
+
+<head>
+	<title> 处方笺 </title>
+	<meta charset="UTF-8"/>
+	<!--<script language="javascript" src="${request.contextPath}/js/LodopFuncs.js"></script>-->
+	
+	<style>
+	.jf{
+	position: absolute;
+	top: 550px;
+	width:500px;
+	height:50px;
+	}
+	.jbxx{
+		width: 120px; 
+		display: inline-block;
+		font-size: 10px;
+	}
+	.xb{
+		width: 80px; 
+		display: inline-block;
+
+	}
+	.rq{
+		margin-left: 80px;
+	}
+	.lczd{
+		width: 240px; 
+	}
+		.brxx{
+		width:200px; 
+		border:0; 
+		border-bottom:1px solid #000; 
+		text-align:center;
+
+	}
+	.rq{
+		width:70px; 
+		border:0; 
+		border-bottom:1px solid #000; 
+		text-align:center;
+	}
+	table{
+		border-collapse: collapse;padding: 0;
+		width: 100%;
+	}
+	td{
+		width:60%;
+	}
+	.jcsj{
+		width:100%;
+		border-collapse:collapse;
+		text-align: left;
+	}
+	li{
+		list-style-type:none; 
+		margin-top: 20px;
+		font-size: 10px;
+	}
+	.yyxx{
+		font-weight:normal;
+	}
+</style>
+</head>
+
+<body>
+	<div style="margin: 0px auto; width: 600px;" id="div3">
+	<ul>
+		<div id="div1">
+			<p style="text-align:right;font-size:25px;font-weight:bold;width: 300px;"><a>处方笺</a></p>
+		</div>
+		<div id="d3">
+		<li style="margin-top: 10px;list-style-type:none;">
+			<span>
+
+				<nobr><label class="jbxx" style="display: inline-block;font-weight:bold;">门诊、编号：<input type="text" class="form-control" id="form_control_1" value ="${fsemr.visitNo!""}" style="width: 120px;border-bottom: 1px solid #000000;  border-top:0px;  border-left:0px;  border-right:0px;"></label></nobr>
+				<nobr><label style="margin-left: 10px;font-weight:bold;margin-left: 50px;">姓名：<input type="text" class="form-control" id="form_control_1" value="${fsemr.patientName!""}" style="width: 100px;border-bottom: 1px solid #000000;  border-top:0px;  border-left:0px;  border-right:0px;"></label></nobr>
+			</span>
+		</li>
+		<li style="margin-top: 10px;list-style-type:none;">
+			<span>
+				<label class="jbxx,xb" style="width: 140px;display: inline-block;font-weight:bold;">性别：<input type="text" class="form-control" id="form_control_1" value="${fsemr.sex!""}" style="width: 80px;border-bottom: 1px solid #000000;  border-top:0px;  border-left:0px;  border-right:0px;"></label>
+				<nobr><label style="margin-left: 10px;font-weight:bold;" >年龄：<input type="text" class="form-control" id="form_control_1" value="${fsemr.age!""}" style="width: 35px;border-bottom: 1px solid #000000;  border-top:0px;  border-left:0px;  border-right:0px;"></label></nobr>
+				<nobr><label style="margin-left: 10px;font-weight:bold;">日期：<input type="text" class="form-control" id="form_control_1" value="${fsemr.createTime!"",'yyyy-MM-dd'}" style="width: 120px;border-bottom: 1px solid #000000;  border-top:0px;  border-left:0px;  border-right:0px;"></label></nobr>
+			</span>
+		</li>
+		<li style="margin-top: 20px;margin-left:16px;list-style-type:none;">
+			<span>
+				<div class="form-group form-md-line-input has-success" style="width: 100%;float: left;">
+	                <span class="control-label" for="form_control_1" style="width: 90px;float: left;font-weight:bold;">临床诊断</span>
+	                    <div class="col-md-9" style="width: 70.5%;float: left;">
+	                      @if(!isEmpty(fsemr.disease)){
+          
+                <input type="text" name="visitNo" class="form-control" id="form_control_1" value=' ${ strutil.replace(fsemr.disease,"&&&","")}' style="width: 350px;border-bottom: 1px solid #000000;  border-top:0px;  border-left:0px;  border-right:0px;">
+                @}else{
+                 <input type="text" name="visitNo" class="form-control"  id="form_control_1" value="${fsemr.disease!""}"  style="width: 350px;border-bottom: 1px solid #000000;  border-top:0px;  border-left:0px;  border-right:0px;">
+                @}
+                
+		                    <input type="hidden" name="disease" id="diseasesum">
+	                        <div class="form-control-focus"> </div>
+	                    </div>
+	            </div>
+			</span>
+		</li>
+		</div>
+		<div id="d7">
+		<div style=" margin-bottom:-30px;">
+		<li style="margin-top: 20px; margin-bottom:-30px;list-style-type:none;">
+			<span style="font-size: 15px;"><b>用药信息：</b></span>
+		</li>
+		</div>
+		
+			@ var i=0;
+		
+	<li style="margin-top: 10px;display: inline-block;list-style-type:none; height:300px; ">
+		@for (recipelitem in fsemr.recipels[0].recipelItems){
+			
+			@if(strutil.length(recipelitem.name)<=32){
+			
+			@if(!isEmpty(recipelitem.usage)){		
+			<span style="width:105px;display: inline-block;margin-top:40px;">
+				<label class="rname" style="margin-top:-30px;display: inline-block;text-align:left;vertical-align:bottom;word-break: break-all; font-weight: bold; font-size: 15px;width: 70px;">${recipelitem.name!""}</label>
+				<span style="display: inline-block;">
+					<sup><label style="font-size: 14px; display:block;">${recipelitem.usage}</label></sup>
+					<sub><label style="font-size: 14px;">${recipelitem.dosage!""}${recipelitem.unit!""}</label></sub>
+				</span>
+			</span>
+			 @}else{
+          <span style="width:105px;display: inline-block;margin-top:40px;">
+				<label  class="rname" style="margin-top:-30px;display: inline-block;text-align:left; font-weight: bold; font-size: 14px;">${recipelitem.name!""}${recipelitem.dosage!""}${recipelitem.unit!""}</label>
+			</span>
+            	 @}
+			
+			
+			@i=i+1;    
+		@ if(i==4){
+		@i=0;
+		
+		@}
+		
+		 @}else{
+		 
+		 @if(!isEmpty(recipelitem.usage)){		
+			<span style="width:105px;display: inline-block;margin-top:20px;">
+				<label class="rname" style="margin-top:-30px;display: inline-block;text-align:left;vertical-align:bottom;word-break: break-all; font-weight: bold; font-size: 15px;width: 70px;">${recipelitem.name!""}</label>
+				<span style="display: inline-block;">
+					<sup><label style="font-size: 14px; display:block;">${recipelitem.usage}</label></sup>
+					<sub><label style="font-size: 14px;">${recipelitem.dosage!""}${recipelitem.unit!""}</label></sub>
+				</span>
+			</span>
+			 @}else{
+          <span style="width:105px;display: inline-block;margin-top:20px;">
+				<label  class="rname" style="margin-top:-30px;display: inline-block;text-align:left; font-weight: bold; font-size: 14px;">${recipelitem.name!""}${recipelitem.dosage!""}${recipelitem.unit!""}</label>
+			</span>
+            	 @}
+			
+			
+			@i=i+1;    
+		@ if(i==4){
+		@i=0;
+		
+		@}
+		
+		 @}
+		@}
+		
+		
+		</li>
+		
+		</div>
+		
+		<div class="jf"style="position: absolute;top: 600px;;width:500px;height:50px;" id="div5">
+			<li style="margin-top: 20px;">
+				<label>煎、服法：<input type="text" class="form-control" id="form_control_1" value="${fsemr.recipels[0].jff}" style="width: 330px;border-bottom: 1px solid #000000;  border-top:0px;  border-left:0px;  border-right:0px;"></label>
+			</li>
+			<li style="margin-top: 5px;list-style-type:none;">
+				<label>剂数：<input type="text" class="form-control" id="form_control_1" value="${fsemr.recipels[0].js}" style="width: 50px;border-bottom: 1px solid #000000;  border-top:0px;  border-left:0px;  border-right:0px;">付</label>
+				<label style="margin-left: 50px;">注意：<input type="text" class="form-control" id="form_control_1" value="${fsemr.recipels[0].notice!""}" style="width: 200px;border-bottom: 1px solid #000000;  border-top:0px;  border-left:0px;  border-right:0px;"></label>
+			</li>
+			<li style="margin-top: 5px;list-style-type:none;">
+				<span>金额：<input type="text" class="form-control" id="form_control_1" value="${fsemr.recipels[0].je}" style="width: 70px;border-bottom: 1px solid #000000;  border-top:0px;  border-left:0px;  border-right:0px;">元</span>
+				<span style="margin-left: 10px;">医师：<input type="text" class="form-control" id="form_control_1" value="${fsemr.doctorName}" style="width: 55px;border-bottom: 1px solid #000000;  border-top:0px;  border-left:0px;  border-right:0px;"></span>
+				<span style="margin-left: 10px;">药师(复核)：<input type="text" class="form-control" id="form_control_1" value="${fsemr.recipels[0].fhdoctor_name!""}" style="width: 55px;border-bottom: 1px solid #000000;  border-top:0px;  border-left:0px;  border-right:0px;"></span>
+			</li>
+		</div>
+	</ul>
+	</div>
+	</div>
+	
+</body>
+
+<script>
+</script>

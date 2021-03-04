@@ -1,0 +1,39 @@
+<div class="table-scrollable" style="height: 200px;min-height:200px;">
+	<table class="table table-hover">
+		<tbody>
+			@ var count = 1;
+			@ for(user in users){
+			<tr onclick="showinfo('${user.account}')">
+				<td style="padding:8px 5px;width: 10px;"> ${count++} </td>
+				<td style="width:120px;"> ${user.name} </td>
+				<td style="width:110px;">${user.specialty} </td>
+           	</tr>
+            @}
+		</tbody>
+	</table>
+</div>
+<div style="margin-top:5px;text-align: right;height:30px;">
+	${userInfo.page.pageStr }
+</div>
+<script>
+
+  function searchNextPage(currentPage) {
+    var url = "${request.contextPath}/user/doctorList";
+    postdata = {
+      'page.currentPage': currentPage,
+      'name': '${userInfo.name}',
+      'specialty': '${userInfo.specialty}'
+    };
+    $.post(url, postdata, function (data) {
+      $("#doctor-list").html(data);
+    });
+  }
+
+function showinfo(account){
+		$("#emrhistoryPage").animate({width: "0",}, 500);
+	    $("#doctorlistPage").load("${request.contextPath}/user/userInfo?account="+account);
+	    var animateWidth = document.documentElement.clientWidth * 0.75;
+	    $("#doctorlistPage").animate({width:animateWidth},"slow");
+} 
+</script>
+

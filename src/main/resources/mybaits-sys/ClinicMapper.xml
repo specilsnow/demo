@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdutcm.tcms.sys.mapper.ClinicMapper" >
+
+<resultMap type="com.cdutcm.tcms.sys.entity.Clinic" id="baseResultMap">
+ 	<id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="clinic_id" property="clinicId" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="tel" property="tel" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="machine_id" property="machineId" jdbcType="VARCHAR" />
+    <result column="qr" property="qr" jdbcType="VARCHAR" />
+    <result column="leader" property="leader" jdbcType="VARCHAR" />
+</resultMap>
+<sql id="Base_Column_List" >
+    id,name,clinic_id,province,city,address
+  </sql>
+    <insert id="insertUserAssociatedClinic">
+        insert sys_user_clinic (account,clinic_id,role_id) values (#{account},#{clinicId},#{roleId})
+    </insert>
+    <insert id="insertclinic">
+        insert  clinic(name,clinic_id,province,city,address,tel,create_time)
+         values (#{name},#{clinicId},#{province},#{city},#{address},#{tel},#{create_time})
+    </insert>
+    <select id="selectAll" resultMap="baseResultMap">
+  SELECT 
+  <include refid="Base_Column_List"/>
+  FROM clinic
+  </select>
+  
+
+    <select id="selectById" resultMap="baseResultMap" parameterType="java.lang.Integer">
+        SELECT * FROM clinic WHERE id=#{id}
+    </select>
+    <select id="findByClinicId" resultMap="baseResultMap" parameterType="java.lang.String">
+        SELECT * FROM clinic WHERE clinic_id=#{clinicId}
+    </select>
+
+    <select id="getClinicsByAccount" resultMap="baseResultMap">
+        SELECT b.* FROM sys_user_clinic a LEFT JOIN clinic b ON a.clinic_id  = b. clinic_id WHERE  a.account = #{account}
+    </select>
+
+    <insert id="insertList" parameterType="java.util.List" useGeneratedKeys="true">
+        INSERT INTO clinic
+        (name,clinic_id,address,create_time)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.name},#{item.clinicId},#{item.address},#{item.create_time})
+        </foreach>
+    </insert>
+
+</mapper>

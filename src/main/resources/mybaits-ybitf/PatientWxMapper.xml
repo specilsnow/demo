@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdutcm.tcms.itf.mapper.PatientWxMapper">
+<resultMap type="com.cdutcm.tcms.itf.model.PatientWx" id="PatientWxResultmap">
+	<id column="id" property="id" jdbcType="BIGINT" />
+	<result column="visit_no" property="visitNo" jdbcType="VARCHAR" />
+	<result column="patient_name" property="patientName" jdbcType="VARCHAR" />
+	<result column="telephone" property="telephone" jdbcType="VARCHAR" />
+	<result column="wx_openid" property="wxOpenId" jdbcType="VARCHAR" />
+	<result column="patient_no" property="patientNo" jdbcType="VARCHAR" />
+	<result column="odc" property="odc" jdbcType="VARCHAR" />
+	<result column="orc" property="orc" jdbcType="VARCHAR" />
+	<result column="gmt_create" property="gmtCreate"  />
+</resultMap>
+
+ <insert id="save" parameterType="com.cdutcm.tcms.itf.model.PatientWx" >
+    insert into patient_wx (id,visit_no,patient_name,telephone,wx_openid,gmt_create) values (#{id},#{visitNo},#{patientName},#{telephone},#{wxOpenId},now())
+  </insert>
+  
+  <update id="updateVisitNoByOpenId">
+  	update patient_wx set visit_no = #{visitNo} where wx_openid = #{wxOpenId}
+  </update>
+
+ <select id="getUserByWxOpenId" resultMap="PatientWxResultmap">
+ 	select * from patient_wx where wx_openid = '${wxOpenId}'
+ </select>
+ 
+ <select id="getUserByVisitNo" resultMap="PatientWxResultmap">
+ 	select * from patient_wx where visit_no = '${visitNo}'
+ </select>
+	<select id="getUserByStatus" resultMap="PatientWxResultmap">
+		select * from patient_wx where status = '${status}'
+	</select>
+ <!-- 更新用户部分信息，到时候和上面的visitNo更新一起合并 -->
+ <update id="updatePatientInfo" parameterType="com.cdutcm.tcms.itf.model.PatientWx">
+  	update patient_wx set patient_no = #{patientNo},orc = #{orc},odc = #{odc} where wx_openid = #{wxOpenId}
+  </update>
+</mapper>

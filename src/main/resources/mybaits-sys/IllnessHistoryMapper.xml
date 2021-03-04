@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdutcm.tcms.biz.mapper.IllnessHistoryMapper" >
+  <resultMap id="BaseResultMap" type="com.cdutcm.tcms.biz.model.IllnessHistory" >
+    <result column="id" property="id" jdbcType="BIGINT" />
+    <result column="chief_complaint" property="chiefComplaint" jdbcType="VARCHAR" />
+    <result column="present_illness" property="presentIllness" jdbcType="VARCHAR" />
+    <result column="passed_illness" property="passedIllness" jdbcType="VARCHAR" />
+    <result column="personal_illness" property="personalIllness" jdbcType="VARCHAR" />
+    <result column="marriage_history" property="marriageHistory" jdbcType="VARCHAR" />
+    <result column="allergic_history" property="allergicHistory" jdbcType="VARCHAR" />
+    <result column="family_history" property="familyHistory" jdbcType="VARCHAR" />
+  </resultMap>
+  <insert id="insert" parameterType="com.cdutcm.tcms.biz.model.IllnessHistory" >
+    insert into illness_history (id,
+      chief_complaint, present_illness, 
+      passed_illness, personal_illness, marriage_history, 
+      allergic_history, family_history)
+    values (#{id,jdbcType=BIGINT}, 
+      #{chiefComplaint,jdbcType=VARCHAR}, #{presentIllness,jdbcType=VARCHAR}, 
+      #{passedIllness,jdbcType=VARCHAR}, #{personalIllness,jdbcType=VARCHAR}, #{marriageHistory,jdbcType=VARCHAR}, 
+      #{allergicHistory,jdbcType=VARCHAR}, #{familyHistory,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cdutcm.tcms.biz.model.IllnessHistory" >
+    insert into illness_history
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="chiefComplaint != null" >
+        chief_complaint,
+      </if>
+      <if test="presentIllness != null" >
+        present_illness,
+      </if>
+      <if test="passedIllness != null" >
+        passed_illness,
+      </if>
+      <if test="personalIllness != null" >
+        personal_illness,
+      </if>
+      <if test="marriageHistory != null" >
+        marriage_history,
+      </if>
+      <if test="allergicHistory != null" >
+        allergic_history,
+      </if>
+      <if test="familyHistory != null" >
+        family_history,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="chiefComplaint != null" >
+        #{chiefComplaint,jdbcType=VARCHAR},
+      </if>
+      <if test="presentIllness != null" >
+        #{presentIllness,jdbcType=VARCHAR},
+      </if>
+      <if test="passedIllness != null" >
+        #{passedIllness,jdbcType=VARCHAR},
+      </if>
+      <if test="personalIllness != null" >
+        #{personalIllness,jdbcType=VARCHAR},
+      </if>
+      <if test="marriageHistory != null" >
+        #{marriageHistory,jdbcType=VARCHAR},
+      </if>
+      <if test="allergicHistory != null" >
+        #{allergicHistory,jdbcType=VARCHAR},
+      </if>
+      <if test="familyHistory != null" >
+        #{familyHistory,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 根据id删除 -->
+  <delete id="delIllnessById" parameterType="long">
+  	delete from illness_history where id = #{id}
+  </delete>
+  <select id="findIllnessHistory" parameterType="Long" resultMap="BaseResultMap">
+  	select * from illness_history where id=#{_parameter}
+  </select>
+</mapper>

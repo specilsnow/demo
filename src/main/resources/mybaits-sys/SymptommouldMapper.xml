@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdutcm.tcms.biz.mapper.KbSymptommouldMapper" >
+  <resultMap id="BaseResultMap" type="com.cdutcm.tcms.biz.model.KbSymptommould" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="pinyin" property="pinyin" jdbcType="VARCHAR" />
+    <result column="fs_code" property="fsCode" jdbcType="VARCHAR" />
+    <result column="lastupdate" property="lastupdate" jdbcType="TIMESTAMP" />
+    <result column="version" property="version" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, pinyin, fs_code, lastupdate,version
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from symptommould
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from symptommould
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.cdutcm.tcms.biz.model.KbSymptommould" >
+    insert into symptommould (id, name, pinyin, 
+      fs_code, lastupdate,version)
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{pinyin,jdbcType=VARCHAR}, 
+      #{fsCode,jdbcType=VARCHAR}, #{lastupdate,jdbcType=TIMESTAMP},#{version})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cdutcm.tcms.biz.model.KbSymptommould" >
+    insert into symptommould
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="pinyin != null" >
+        pinyin,
+      </if>
+      <if test="fsCode != null" >
+        fs_code,
+      </if>
+      <if test="lastupdate != null" >
+        lastupdate,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="pinyin != null" >
+        #{pinyin,jdbcType=VARCHAR},
+      </if>
+      <if test="fsCode != null" >
+        #{fsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="lastupdate != null" >
+        #{lastupdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cdutcm.tcms.biz.model.KbSymptommould" >
+    update symptommould
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="pinyin != null" >
+        pinyin = #{pinyin,jdbcType=VARCHAR},
+      </if>
+      <if test="fsCode != null" >
+        fs_code = #{fsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="lastupdate != null" >
+        lastupdate = #{lastupdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="version != null" >
+        version = #{version,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cdutcm.tcms.biz.model.KbSymptommould" >
+    update symptommould
+    set name = #{name,jdbcType=VARCHAR},
+      pinyin = #{pinyin,jdbcType=VARCHAR},
+      fs_code = #{fsCode,jdbcType=VARCHAR},
+      lastupdate = #{lastupdate,jdbcType=TIMESTAMP},
+      version = #{version,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <!-- 根据名称或者拼音查询症型 -->
+  <select id="listPageSymptomMouldByNameOrPinYin" parameterType="com.cdutcm.tcms.biz.model.KbSymptommould" resultMap="BaseResultMap">
+  	 select * from symptommould where 1=1
+  	 <if test=" name !=null and name !=''">
+		and ( pinyin like '%${name}%' or name like '%${name}%')
+	 </if>
+	 order by length(name) asc
+  </select>
+  
+  <!-- 查询所有证型 -->
+  <select id="findAllSymptomMould" resultMap="BaseResultMap">
+  	 select * from symptommould order by length(name)
+  </select>
+  
+    <!-- 删除SymptomMould表里名称重复的数据 -->
+  <delete id="delSymptomMouldRepetitionName">
+  	delete from symptommould
+		where id not in(
+			select * from (select max(id) from symptommould group by name
+		) as s)
+  </delete>
+  
+   <!-- 根据name 查询symptommould -->
+  <select id="findSymptommouldByName" parameterType="string" resultMap="BaseResultMap">
+  	select * from  symptommould where name = #{_parameter}
+  </select>
+</mapper>

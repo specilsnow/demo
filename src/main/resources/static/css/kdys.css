@@ -1,0 +1,90 @@
+ .yf{
+    height:55px;
+ }
+.yf_title{
+	font-size:17px;
+	float:left;
+	padding:7px;
+	width:90px;
+} 
+.yf_content{
+    cursor:default;
+	float:left;
+	border:1.5px solid #DACFC1;
+	width:80px;
+	height:35px;
+	text-align:center;
+	color:#DACFC1;
+	font-weight:550;
+	padding:6px;
+	margin:5px 5px 0px 5px
+}
+.yf_content_select{
+    cursor:default;
+	float:left;
+    border:1.5px solid #E2C18F;
+    color:#E2C18F;
+	width:80px;
+	height:35px;
+	text-align:center;
+    color:#E2C18F;
+	font-weight:550;
+	padding:6px;
+	margin:5px 5px 0px 5px
+}
+.yf_content:hover{
+	border:1.5px solid #E2C18F;
+    color:#E2C18F;
+}
+.handle{
+	float:right;
+	margin:10px 10px 5px 5px;
+}
+.handle1{
+	margin:5px 10px 5px 5px;
+}
+.xw{
+  float:left;
+  background-color:#F4F0E7;
+  width:100px;
+  height:50px;
+  border: 1.5px solid #DACFC1;
+  text-align:center;
+  padding:13px;
+  margin:5px 15px 10px 5px;
+}
+.xw_select{
+  float:left;
+  background-color:#F4F0E7;
+  width:100px;
+  color:#E2C18F;
+  border: 1.5px solid #E2C18F;
+  height:50px;
+  text-align:center;
+  padding:13px;
+  margin:5px 15px 10px 5px;
+}
+.row{
+  /* margin:30px 5px 5px 5px */
+}
+.page_and_btn ul {
+    margin: 0px;
+    list-style: none;
+    float: right;
+    width: auto;
+    height: 100%;
+    overflow: hidden;
+    padding: 0px;
+}
+.page_and_btn ul li {
+    float: left;
+    border: 1px solid #CCCCCC;
+    height: 20px;
+    line-height: 20px;
+    margin: 3px 2px;
+}
+.page_and_btn ul li a, .pageinfo {
+    display: block;
+    padding: 0px 6px;
+    background: #FAFBFD;
+}

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdutcm.tcms.itf.mapper.RegistInfoMapper">
+
+    <insert id="insert" parameterType="com.cdutcm.tcms.itf.model.RegistInfo">
+        insert into regist_info (id, chief_complaint, passed_illness, present_illness, allergic_history, family_history, menstruation_history, marriage_history, personal_illness, symptom, visit_no)
+         values (#{id},#{chiefComplaint},#{passedIllness},#{presentIllness},#{allergicHistory},#{familyHistory},#{menstruationHistory},#{marriageHistory},#{personalIllness},#{symptom},#{visitNo})
+    </insert>
+    <select id="getByVisitNo" resultType="com.cdutcm.tcms.itf.model.RegistInfo">
+        select id, chief_complaint, passed_illness, present_illness, allergic_history, family_history, menstruation_history, marriage_history, personal_illness, symptom, visit_no
+         from regist_info where visit_no = #{visitNo}
+    </select>
+</mapper>

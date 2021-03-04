@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdutcm.tcms.biz.mapper.MedicineEighteenNinteenMapper" >
+  <resultMap id="BaseResultMap" type="com.cdutcm.tcms.biz.model.MedicineEighteenNinteen" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="medicine1" property="medicine1" jdbcType="VARCHAR" />
+    <result column="medicine2" property="medicine2" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="lastupdate" property="lastupdate" jdbcType="TIMESTAMP" />
+  </resultMap>
+ 
+ 	<!-- 分页获取数据库所有十八反十九畏 -->
+ 	<select id="listPageMedicineEighteenNinteen" parameterType="com.cdutcm.tcms.biz.model.MedicineEighteenNinteen">
+ 		select * from medicine_eighteen_ninteen 
+ 		order by id 
+ 	</select>
+ 	<!-- 获取所有十八反十九畏 -->
+ 	<select id="findAllMedicineEighteenNinteen" resultMap="BaseResultMap">
+ 		select * from medicine_eighteen_ninteen 
+ 	</select>
+</mapper>

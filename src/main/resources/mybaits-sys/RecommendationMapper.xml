@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdutcm.tcms.biz.mapper.RecommendationMapper">
+    <resultMap id="BaseRecipelMap" type="com.cdutcm.tcms.biz.model.BaseRecipel">
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="therapy" property="therapy" jdbcType="VARCHAR" />
+        <result column="therapy_type" property="therapyType" jdbcType="VARCHAR" />
+        <result column="emr_id" property="emrId" jdbcType="BIGINT" />
+        <result column="pinyin" property="pinyin" jdbcType="VARCHAR" />
+        <result column="disease" property="disease" jdbcType="VARCHAR" />
+        <result column="symptommould" property="symptommould" jdbcType="VARCHAR" />
+        <result column="source" property="source" jdbcType="VARCHAR" />
+        <result column="deptname" property="deptname" jdbcType="VARCHAR" />
+        <result column="fs_code" property="fsCode" jdbcType="VARCHAR" />
+        <result column="symptom" property="symptom" jdbcType="VARCHAR" />
+        <result column="version" property="version" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="lastupdate" property="lastupdate" jdbcType="TIMESTAMP" />
+        <result column="doctorid" property="doctorid" jdbcType="VARCHAR" />
+    </resultMap>
+    <select id="findDisease" resultType="java.lang.String">
+        SELECT name FROM disease WHERE name LIKE CONCAT('%',#{keyword},'%') OR pinyin LIKE CONCAT('%',#{keyword},'%')
+    </select>
+
+    <select id="findSymptommould" resultType="java.lang.String">
+        SELECT name FROM symptommould WHERE name LIKE CONCAT('%',#{keyword},'%') OR pinyin LIKE CONCAT('%',#{keyword},'%')
+    </select>
+
+    <select id="findTherapy" resultType="java.lang.String">
+        SELECT DISTINCT therapy FROM baserecipel WHERE therapy LIKE CONCAT('%',#{keyword},'%') AND therapy != ''
+    </select>
+
+    <select id="findRecipel" resultType="com.cdutcm.tcms.biz.model.BaseRecipel">
+        SELECT * FROM baserecipel WHERE `name` LIKE CONCAT('%',#{keyword},'%') AND (doctorid = '' OR doctorid = #{account})
+    </select>
+</mapper>

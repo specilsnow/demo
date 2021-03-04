@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdutcm.tcms.biz.mapper.BaseRecipelMapper">
+	<resultMap id="BaseResultMap" type="com.cdutcm.tcms.biz.model.BaseRecipel">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="therapy" property="therapy" jdbcType="VARCHAR" />
+		<result column="therapy_type" property="therapyType" jdbcType="VARCHAR" />
+		<result column="emr_id" property="emrId" jdbcType="BIGINT" />
+		<result column="pinyin" property="pinyin" jdbcType="VARCHAR" />
+		<result column="disease" property="disease" jdbcType="VARCHAR" />
+		<result column="symptommould" property="symptommould" jdbcType="VARCHAR" />
+		<result column="source" property="source" jdbcType="VARCHAR" />
+		<result column="deptname" property="deptname" jdbcType="VARCHAR" />
+		<result column="fs_code" property="fsCode" jdbcType="VARCHAR" />
+		<result column="symptom" property="symptom" jdbcType="VARCHAR" />
+		<result column="version" property="version" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="lastupdate" property="lastupdate" jdbcType="TIMESTAMP" />
+		<result column="notice" property="notice"  />
+	</resultMap>
+	<resultMap type="com.cdutcm.tcms.biz.model.BaseRecipelgroups" id="GroupResultMap">
+	<result column="KSname" property="gropuname" jdbcType="VARCHAR" />
+	<collection property="baseRecipels" ofType="com.cdutcm.tcms.biz.model.BaseRecipel" select="findbyksname" column="KSname">
+	</collection>
+	</resultMap>
+	<resultMap id="RecipelAndRecipelItemResultMap" type="com.cdutcm.tcms.biz.model.Recipel">
+		<id column="aid" property="id" jdbcType="BIGINT" />
+		<result column="recipel_no" property="recipelNo" jdbcType="VARCHAR" />
+		<result column="patient_no" property="patientNo" jdbcType="VARCHAR" />
+		<result column="aname" property="name" jdbcType="VARCHAR" />
+		<result column="therapy" property="therapy" jdbcType="VARCHAR" />
+		<result column="emr_id" property="emrId" jdbcType="BIGINT" />
+		<result column="fs_code" property="fsCode" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="lastupdate" property="lastupdate" jdbcType="TIMESTAMP" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="description" property="description" jdbcType="VARCHAR" />
+		<collection property="recipelItems" column="recipel_id"
+			ofType="com.cdutcm.tcms.biz.model.RecipelItem">
+			<id column="bid" property="id" jdbcType="BIGINT" />
+			<result column="recipel_id" property="recipelId" jdbcType="BIGINT" />
+			<result column="m_order" property="mOrder" jdbcType="INTEGER" />
+			<result column="bname" property="name" jdbcType="VARCHAR" />
+			<result column="dosage" property="dosage" jdbcType="VARCHAR" />
+			<result column="unit" property="unit" jdbcType="VARCHAR" />
+			<result column="usage_name" property="usage" jdbcType="VARCHAR" />
+			<result column="jczs" property="jczs" jdbcType="VARCHAR" />
+		</collection>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		id, name, therapy, emr_id, pinyin,disease, symptommould,source,
+		deptname, fs_code, symptom,version,create_time,lastupdate
+	</sql>
+				<!-- 查询所有的 therapy_type-->
+	<select id="listPageTherapyType"  resultMap="BaseResultMap" >
+	SELECT therapy_type FROM baserecipel where therapy_type !="" GROUP BY therapy_type
+	</select>
+	<!-- 根据id查出处方 -->
+	<select id="findBaseRecipel"  resultMap="BaseResultMap" >
+	SELECT * FROM baserecipel where id = #{id}
+	</select>
+	<!-- 根据therapy_type查出处方 -->
+	<select id="listPageTherapyByType"  resultMap="BaseResultMap" parameterType="com.cdutcm.tcms.biz.model.BaseRecipel">
+	SELECT * FROM baserecipel WHERE therapy_type=#{therapyType,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 根据id 查询 -->
+	<select id="listPagefindBaseRecipelById" parameterType="com.cdutcm.tcms.biz.model.BaseRecipel"
+		resultMap="RecipelAndRecipelItemResultMap">
+		select a.id as aid,a.name as
+		aname,a.therapy,a.emr_id,a.pinyin,a.disease,a.symptommould,
+		a.source, a.deptname, a.fs_code,a.symptom,a.version,a.create_time,a.lastupdate,
+		b.id as bid,b.name as bname, b.recipel_id, b.dosage, b.m_order,
+		b.unit, b.usage_name, b.jczs
+		from baserecipel a, baserecipel_item b where a.id=b.recipel_id
+		and a.id =#{id}
+	</select>
+	<!-- 获取所有BaseRecipel -->
+	<select id="listPageBaseRecipels" resultMap="BaseResultMap">
+		select * from baserecipel  where 1=1
+		<if test="doctorid !=null">
+		and doctorid=#{doctorid}
+		</if> order by  lastupdate desc
+	</select>
+
+	<select id="findBaseRecipelByBaseRecipelId" parameterType="java.lang.Long"
+		resultMap="RecipelAndRecipelItemResultMap">
+		select a.id as aid,a.name as
+		aname,a.therapy,a.emr_id,a.pinyin,a.disease,a.symptommould,
+		a.source, a.deptname, a.fs_code,a.symptom,a.version,a.create_time,a.lastupdate,
+		b.id as bid,b.name as bname, b.recipel_id, b.dosage, b.m_order,
+		b.unit, b.usage_name, b.jczs
+		from baserecipel a, baserecipel_item b where a.id=b.recipel_id and 
+			a.id =#{id}
+	</select>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from baserecipel
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<!-- 获取所有BaseRecipel -->
+	<select id="listBaseRecipels" resultMap="BaseResultMap">
+		select * from baserecipel  where doctorid is null or doctorid=''
+	</select>
+
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from baserecipel
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert" parameterType="com.cdutcm.tcms.biz.model.BaseRecipel">
+		insert into baserecipel (id, name, therapy, emr_id, pinyin,disease,
+		symptommould,source,source_id,
+		deptname, fs_code, symptom,version,create_time,lastupdate,notice)
+		values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR},
+		#{pinyin,jdbcType=VARCHAR},
+		#{therapy,jdbcType=VARCHAR}, #{emrId,jdbcType=BIGINT}, #{disease,jdbcType=VARCHAR},
+		#{symptommould,jdbcType=VARCHAR},#{source,jdbcType=VARCHAR},
+		#{deptname,jdbcType=VARCHAR},#{symptom,jdbcType=VARCHAR},#{version,jdbcType=VARCHAR},
+		#{fsCode,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP},#{lastupdate,jdbcType=TIMESTAMP},#{notice})
+	</insert>
+	<insert id="insertSelective" parameterType="com.cdutcm.tcms.biz.model.Recipel">
+		insert into baserecipel
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			
+			<if test="therapy != null">
+				therapy,
+			</if>
+			<if test="emrId != null">
+				emr_id,
+			</if>
+			
+			<if test="lastupdate != null">
+				lastupdate,
+			</if>
+			<if test="doctorid != null">
+			doctorid
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			
+			<if test="therapy != null">
+				#{therapy,jdbcType=VARCHAR},
+			</if>
+			<if test="emrId != null">
+				#{emrId,jdbcType=BIGINT},
+			</if>
+			<if test="lastupdate != null">
+				#{lastupdate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="doctorid != null">
+				#{doctorid,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.cdutcm.tcms.biz.model.BaseRecipel">
+		update baserecipel
+		<set>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="pinyin != null">
+				pinyin = #{pinyin,jdbcType=VARCHAR},
+			</if>
+			<if test="therapy != null">
+				therapy = #{therapy,jdbcType=VARCHAR},
+			</if>
+			<if test="emrId != null">
+				emr_id = #{emrId,jdbcType=BIGINT},
+			</if>
+			<if test="fsCode != null">
+				fs_code = #{fsCode,jdbcType=VARCHAR},
+			</if>
+			<if test="lastupdate != null">
+				lastupdate = #{lastupdate,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.cdutcm.tcms.biz.model.BaseRecipel">
+		update baserecipel
+		set name = #{name,jdbcType=VARCHAR},
+		pinyin = #{pinyin,jdbcType=VARCHAR},
+		therapy = #{therapy,jdbcType=VARCHAR},
+		emr_id = #{emrId,jdbcType=BIGINT},
+		fs_code = #{fsCode,jdbcType=VARCHAR},
+		lastupdate = #{lastupdate,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+
+
+
+	<!-- 获取所有处方名称为自拟方，或者草药方，或者 中药处方 或者 未知方 的baseRecipel的 Id -->
+	<select id="listPageBaseRecipelByName" parameterType="com.cdutcm.tcms.biz.model.BaseRecipel"
+		resultType="long">
+		select id from baserecipel where name in ('自拟方','草药方','中药处方','未知方')
+	</select>
+
+	<!-- 根据id获取tc_base_recipel 的处方名称 -->
+	<select id="findTCBaseRecipelRecipelNameById" parameterType="long"
+		resultType="string">
+		select name from tc_base_recipel where id = #{id}
+	</select>
+
+	<!-- 把修改过名称的baserecipel表里的rename改为T -->
+	<update id="updateRename" parameterType="long">
+		update baserecipel set status = 'T' where id = #{id}
+	</update>
+	<!-- 查询科室模板 -->
+	<select id="findbyksname"  resultMap="BaseResultMap" parameterType="String">
+	select *  from baserecipel where deptname=#{KSname}
+	</select>
+	<select id="listPageBaseRecipelByKSName" resultMap="GroupResultMap">
+    select deptname as KSname  from baserecipel where deptname !="" and  deptname is not NULL group by deptname 
+	</select>
+</mapper>

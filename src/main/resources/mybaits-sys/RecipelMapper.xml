@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdutcm.tcms.biz.mapper.RecipelMapper">
+	<resultMap id="BaseResultMap" type="com.cdutcm.tcms.biz.model.Recipel">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="recipel_no" property="recipelNo" jdbcType="VARCHAR" />
+		<result column="patient_no" property="patientNo" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="therapy" property="therapy" jdbcType="VARCHAR" />
+		<result column="emr_id" property="emrId" jdbcType="BIGINT" />
+		<result column="fs_code" property="fsCode" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="lastupdate" property="lastupdate" jdbcType="TIMESTAMP" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="description" property="description" jdbcType="VARCHAR" />
+		<result column="jff" property="jff" jdbcType="VARCHAR" />
+		<result column="js" property="js" jdbcType="VARCHAR" />
+		<result column="je" property="je" jdbcType="DOUBLE" />
+		<result column="odc" property="odc" jdbcType="VARCHAR" />
+		<result column="orc" property="orc" jdbcType="VARCHAR" />
+		<result column="qy_status" property="qyStatus" jdbcType="VARCHAR" />
+		<result column="discount_price" property="discountAmount" jdbcType="DOUBLE" />
+		<result column="discount_ratio" property="discountRatio" jdbcType="DOUBLE" />
+	</resultMap>
+	
+	
+	<resultMap id="RecipelAndRecipelItemResultMap" type="com.cdutcm.tcms.biz.model.BaseRecipel">
+		<id column="aid" property="id" jdbcType="BIGINT" />
+		<result column="aname" property="name" jdbcType="VARCHAR" />
+		<result column="therapy" property="therapy" jdbcType="VARCHAR" />
+		<result column="emr_id" property="emrId" jdbcType="BIGINT" />
+		<result column="pinyin" property="pinyin" jdbcType="VARCHAR" />
+		<result column="disease" property="disease" jdbcType="VARCHAR" />
+		<result column="symptommould" property="symptommould" jdbcType="VARCHAR" />
+		<result column="source" property="source" jdbcType="VARCHAR" />
+		<result column="deptname" property="deptname" jdbcType="VARCHAR" />
+		<result column="fs_code" property="fsCode" jdbcType="VARCHAR" />
+		<result column="symptom" property="symptom" jdbcType="VARCHAR" />
+		<result column="version" property="version" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="lastupdate" property="lastupdate" jdbcType="TIMESTAMP" />
+		<result column="jff" property="jff" jdbcType="VARCHAR" />
+		<result column="js" property="js" jdbcType="VARCHAR" />
+		<result column="je" property="je" jdbcType="DOUBLE" />
+		<collection property="baseRecipelItem" column="recipel_id"
+			ofType="com.cdutcm.tcms.biz.model.BaseRecipelItem">
+			<id column="bid" property="id" jdbcType="BIGINT" />
+			<result column="recipel_id" property="recipelId" jdbcType="BIGINT" />
+			<result column="bname" property="name" jdbcType="VARCHAR" />
+			<result column="dosage" property="dosage" jdbcType="VARCHAR" />
+			<result column="m_order" property="mOrder" jdbcType="INTEGER" />
+			<result column="unit" property="unit" jdbcType="VARCHAR" />
+			<result column="usage_name" property="usageName" jdbcType="TIMESTAMP" />
+			<result column="jczs" property="jczs" jdbcType="VARCHAR" />
+		</collection>
+	</resultMap>
+
+	<!-- 根据病人id查询所有处方 -->
+	<select id="findRecipelByName" parameterType="string"
+		resultMap="BaseResultMap">
+		select * from recipel where name =#{name} order
+		by create_time desc
+	</select>
+	
+	<select id="findRecipelByBaseRecipelId" parameterType="long"
+		resultMap="RecipelAndRecipelItemResultMap">
+		select a.id as aid,a.name as
+		aname,a.recipel_no,a.emr_id,a.patient_no,
+		a.therapy,a.fs_code,a.status,a.description,a.create_time,a.lastupdate,
+		b.id as bid,b.name as bname, b.recipel_id, b.dosage, b.m_order,
+		b.unit, b.usage_name, b.jczs
+	 from recipel a, recipel_item b where
+		a.id=b.recipel_id
+		and a.id =#{id}
+	</select>
+
+	<select id="listPageFindPastRecipel" parameterType="com.cdutcm.tcms.biz.model.Recipel"
+		resultMap="BaseResultMap">
+		select <!-- ROW_NUMBER() over(order by createTime desc) as rownumber, -->
+		* from recipel
+		where 1=1
+		<if test="recipelNo !=null and recipelNo!=''">
+			and recipel_no=#{recipelNo}
+		</if>
+		<if test="name !=null and name !=''">
+			and name like '%${name}%'
+		</if>
+		<if test="therapy !=null and therapy !=''">
+			and (therapy like '%${therapy}%' or therapy_pinyin like '%${therapy}%')
+		</if>
+		<if test="patientNo !=null and patientNo !=''">
+			and patient_no=#{patientNo}
+		</if>
+		<if test="createTime != null and createTime !=''">
+			and create_time >=#{createTime}
+		</if>
+	</select>
+	
+	<!-- 药房Recipel分页 -->
+	<select id="listPagePharmacyRecipel" resultMap="BaseResultMap">
+		select r.* from recipel r,emr e where e.id = r.emr_id
+		<if test="startDate != null and startDate != ''">
+			and DATE_FORMAT(r.lastupdate, '%Y-%m-%d')&gt;=  DATE_FORMAT(#{startDate}, '%Y-%m-%d')
+			<!-- and r.lastupdate &gt;= str_to_date(concat('', #{startDate}),'%Y-%m-%d %H:%i:%s') -->
+		</if>
+		<if test="endDate != null and endDate != ''">
+			and DATE_FORMAT(r.lastupdate, '%Y-%m-%d')&lt;=  DATE_FORMAT(#{endDate}, '%Y-%m-%d')
+			<!--  and r.lastupdate &lt;= str_to_date(concat('', #{endDate}),'%Y-%m-%d %H:%i:%s')-->
+		</if>
+		<if test="qyStatus!=null and qyStatus!=''">
+			<if test="'T'.toString() eq qyStatus.toString()">
+				and r.qy_status = #{qyStatus}
+			</if>
+			<if test="'F'.toString() eq qyStatus.toString()">
+				and (r.qy_status = #{qyStatus} or r.qy_status is null)
+			</if>
+		</if>
+		<if test="qyStatus!=null and status!=''">
+			<if test="'T'.toString() eq status.toString()">
+				and r.status = #{status}
+			</if>
+			<if test="'F'.toString() eq status.toString()">
+				and (r.status = #{status} or r.status is null)
+			</if>
+		</if>
+		<if test="name != null and name != ''">
+			and (e.patient_name like '%${name}%' or e.doctor_name like '%${name}%')
+		</if>
+		<if test="js != null and js != ''">
+			and e.clinic_id = #{js} 
+		</if>
+	</select>
+
+	<!-- 根据emrId查询对应的处方 -->
+	<select id="findRecipelByEmrId" parameterType="long" resultMap="BaseResultMap">
+		select * from recipel where emr_id =#{emrId}
+	</select>
+
+	<!-- 根据病人id查询所有处方 -->
+	<select id="findRecipelByPatientId" parameterType="string"
+		resultMap="BaseResultMap">
+		select * from recipel where patient_no =#{_parameter} order
+		by create_time desc limit 5
+	</select>
+
+	<!-- 添加发送的处方 -->
+	<insert id="saveRecipel" parameterType="com.cdutcm.tcms.biz.model.Recipel">
+		insert into recipel (id, recipel_no, patient_no,
+		name, therapy, emr_id,
+		fs_code,create_time,lastupdate,status,
+		description,jff,js,je,orc,odc,notice,fhdoctor_name
+		)
+		values (#{id,jdbcType=BIGINT}, #{recipelNo,jdbcType=VARCHAR},
+		#{patientNo,jdbcType=VARCHAR},
+		#{name,jdbcType=VARCHAR}, #{therapy,jdbcType=VARCHAR}, #{emrId,jdbcType=BIGINT},
+		#{fsCode,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+		#{lastupdate,jdbcType=TIMESTAMP},#{status,jdbcType=VARCHAR},#{description,jdbcType=VARCHAR},
+		#{jff,jdbcType=VARCHAR},#{js,jdbcType=VARCHAR},#{je,jdbcType=DOUBLE},#{orc,jdbcType=VARCHAR},#{odc,jdbcType=VARCHAR},#{notice},#{fhdoctor_name}
+		)
+	</insert>
+
+	<!-- 根据id删除recipel -->
+	<delete id="delRecipelById" parameterType="long">
+		delete from recipel
+		where id = #{id}
+	</delete>
+	<select id="findRecipelByRecipelId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		SELECT  *
+		FROM recipel
+		WHERE
+		id=#{id}
+	</select>
+	
+	<update id="updateRecipelById" parameterType="com.cdutcm.tcms.biz.model.Recipel">
+		update recipel
+		<set>
+			<if test="discountRatio!=null">
+				discount_ratio = #{discountRatio},
+			</if>
+			<if test="status!=null and status!=''">
+				status = #{status},
+			</if>
+			<if test="qyStatus!=null and qyStatus!=''">
+				qy_status = #{qyStatus},
+			</if>
+			<if test="discountAmount!=null">
+				discount_price = #{discountAmount}
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<!-- 查出已拣药未取药的recipel -->
+	<select id="findTstatusFqyStatusRecipel" resultMap="BaseResultMap" parameterType="string">
+		select r.* 
+		from recipel r,emr e 
+		where e.id=r.emr_id and r.status='T' 
+		and (r.qy_status='F' OR r.qy_status is NULL) 
+		and e.clinic_id = #{clinicId};
+	</select>
+    <select id="findRecipelByAccount" resultMap="BaseResultMap">
+		SELECT id,emr_id, DATE_FORMAT(lastupdate,'%Y-%m-%d %H:%i:%s') lastupdate,jff,js from recipel where emr_id in (SELECT id from emr where doctor_id = #{account})
+	</select>
+</mapper>

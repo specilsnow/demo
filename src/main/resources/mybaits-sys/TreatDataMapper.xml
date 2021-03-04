@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdutcm.tcms.biz.mapper.TreatDataMapper">
+    <resultMap id="treatDataMap" type="com.cdutcm.tcms.biz.model.TreatData">
+        <result column="id" jdbcType="BIGINT" property="id"/>
+        <result column="visit_no" jdbcType="VARCHAR" property="visitNo"/>
+        <result column="temperature_list_before" jdbcType="VARCHAR" property="temperatureListBefore"/>
+        <result column="temperature_list_before_num" jdbcType="BIGINT" property="temperatureListBeforeNum"/>
+        <result column="temperature_list_after" jdbcType="VARCHAR" property="temperatureListAfter"/>
+        <result column="temperature_list_after_num" jdbcType="VARCHAR" property="temperatureListAfterNum"/>
+        <result column="resistance_list_before" jdbcType="VARCHAR" property="resistanceListBefore"/>
+        <result column="resistance_list_before_num" jdbcType="VARCHAR" property="resistanceListBeforeNum"/>
+        <result column="resistance_list_after" jdbcType="VARCHAR" property="resistanceListAfter"/>
+        <result column="resistance_list_after_num" jdbcType="VARCHAR" property="resistanceListAfterNum"/>
+        <result column="create_time" jdbcType="VARCHAR" property="createTime"/>
+        <result column="update_time" jdbcType="VARCHAR" property="updateTime"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.cdutcm.tcms.biz.model.TreatData">
+        insert into treat_data(id,visit_no,temperature_list_before,temperature_list_before_num,temperature_list_after,temperature_list_after_num,resistance_list_before,resistance_list_before_num,resistance_list_after,resistance_list_after_num,create_time,update_time) values(#{id},#{visitNo},#{temperatureListBefore},#{temperatureListBeforeNum},#{temperatureListAfter},#{temperatureListAfterNum},#{resistanceListBefore},#{resistanceListBeforeNum},#{resistanceListAfter},#{resistanceListAfterNum},#{createTime},#{updateTime})
+    </insert>
+    <update id="update" parameterType="com.cdutcm.tcms.biz.model.TreatData">
+         update treat_data set
+            visit_no=#{visitNo,jdbcType=VARCHAR},
+            temperature_list_before=#{temperatureListBefore,jdbcType=VARCHAR},
+            temperature_list_before_num=#{temperatureListBeforeNum,jdbcType=INTEGER},
+            temperature_list_after=#{temperatureListAfter,jdbcType=VARCHAR},
+            temperature_list_after_num=#{temperatureListAfterNum,jdbcType=INTEGER},
+            resistance_list_before=#{resistanceListBefore,jdbcType=VARCHAR},
+            resistance_list_before_num=#{resistanceListBeforeNum,jdbcType=INTEGER},
+            resistance_list_after=#{resistanceListAfter,jdbcType=VARCHAR},
+            resistance_list_after_num=#{resistanceListAfterNum,jdbcType=INTEGER},
+            create_time=#{createTime,jdbcType=VARCHAR},
+            update_time=#{updateTime,jdbcType=VARCHAR}
+          where id=#{id,jdbcType=BIGINT}
+    </update>
+    <select id="findByVisitNo" resultMap="treatDataMap">
+        SELECT * from treat_data WHERE visit_no = #{visitNo}
+    </select>
+
+    <select id="findByAccount" resultMap="treatDataMap">
+       SELECT a.* FROM xwmh4.treat_data a inner join patient b on a.visit_no = b.visit_no
+       where b.doctor_id = #{account}
+    </select>
+    <delete id="deleteByVisitNo">
+        DELETE  FROM treat_data WHERE visit_no = #{visitNo}
+    </delete>
+    <update id="updateBeforeData" parameterType="com.cdutcm.tcms.biz.model.TreatData">
+         update treat_data set
+            temperature_list_before=#{temperatureListBefore,jdbcType=VARCHAR},
+            temperature_list_before_num=#{temperatureListBeforeNum,jdbcType=INTEGER},
+            resistance_list_before=#{resistanceListBefore,jdbcType=VARCHAR},
+            resistance_list_before_num=#{resistanceListBeforeNum,jdbcType=INTEGER},
+            update_time= #{updateTime,jdbcType=VARCHAR}
+          where visit_no=#{visitNo,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateAfterData" parameterType="com.cdutcm.tcms.biz.model.TreatData">
+        update treat_data set
+        temperature_list_after=#{temperatureListAfter,jdbcType=VARCHAR},
+        temperature_list_after_num=#{temperatureListAfterNum,jdbcType=INTEGER},
+        resistance_list_after=#{resistanceListAfter,jdbcType=VARCHAR},
+        resistance_list_after_num=#{resistanceListAfterNum,jdbcType=INTEGER},
+        update_time=#{updateTime,jdbcType=VARCHAR}
+        where  visit_no=#{visitNo,jdbcType=VARCHAR}
+    </update>
+</mapper>

@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdutcm.tcms.sys.mapper.UserMapper">
+	<sql id="userColumns">id,account,username,password,status,pwd,create_time,open_id</sql>
+
+	<resultMap type="com.cdutcm.tcms.sys.entity.User" id="userAndRoleResultMap">
+		<id column="id" property="userId"/>
+		<result column="account" property="account"/>
+		<result column="username" property="username"/>
+		<result column="password" property="password"/>
+		<result column="status" property="status"/>
+		<result column="lastupdate" property="lastupdate"/>
+		<result column="create_time" property="createtime"/>
+		<association property="role" column="role_id" javaType="com.cdutcm.tcms.sys.entity.Role">
+			<id column="role_id" property="roleId"/>
+			<result column="role_name" property="roleName"/>
+			<result column="rights" property="rights"/>
+			<result column="description" property="description"/>
+		</association>
+	</resultMap>
+	<resultMap type="com.cdutcm.tcms.sys.entity.User" id="userResultMap">
+		<id column="id" property="userId"/>
+		<result column="account" property="account"/>
+		<result column="username" property="username"/>
+		<result column="password" property="password"/>
+		<result column="status" property="status"/>
+		<result column="role_id" property="roleId"/>
+	</resultMap>
+	
+	<resultMap type="com.cdutcm.tcms.sys.entity.UserInfo" id="userInfoResultMap">
+		<id column="id" property="id"/>
+		<result column="account" property="account"/>
+		<result column="name" property="name"/>
+		<result column="description" property="description"/>
+		<result column="status" property="status"/>
+		<result column="title" property="title"/>
+		<result column="icon" property="icon"/>
+		
+	</resultMap>
+
+
+	
+	
+	<select id="listAllUser" resultMap="userAndRoleResultMap">
+		select u.id,u.username,u.account,u.password,r.id,r.role_name ,u.lastupdate
+		from sys_user u 
+		left join sys_user_clinic r on u.role_id=r.id
+		where u.status=0 
+	</select>
+	
+	<select id="listPageUser" parameterType="com.cdutcm.tcms.sys.entity.User" resultMap="userAndRoleResultMap">
+		select u.id,u.username,u.account,u.password,u.role_id,r.role_name ,u.lastupdate,u.create_time
+		from sys_user u 
+		left join sys_user_clinic r on u.role_id=r.id
+		where u.status=0 
+		<if test="account!=null and account!=''">
+			and u.account like '%${account}%'
+		</if>
+		<if test="roleId!=null and roleId!=0">
+			and u.role_id=#{roleId} 
+		</if>
+		<if test="lastupdate!=null">
+		and u.lastupdate&gt;=#{lastupdate} 
+		</if>
+		<if test="lastupdate!=null">
+		and u.lastupdate&lt;=#{lastupdate} 
+		</if>
+	</select>
+	
+	<select id="getUserInfo" parameterType="com.cdutcm.tcms.sys.entity.User" resultMap="userResultMap">
+		select * from sys_user where 1=1
+		<if test="account!=null and password!=null">
+		and account = #{account} and password=#{password}
+		</if>
+		<if test="userId!=null and userId>0">
+		and id = #{userId}
+		</if>
+	</select>
+	<select id="getUserById" parameterType="long" resultMap="userResultMap">
+		select * from sys_user u where u.id = #{userId}
+	</select>
+	<select id="getUserByAccount" resultMap="userResultMap">
+		select * from sys_user u where u.account = #{account}
+	</select>
+	<select id="getUserAndRoleById" parameterType="long" resultMap="userAndRoleResultMap">
+		select u.id,u.username,u.account,u.password,u.role_id,
+		r.role_name,r.rights ,r.description
+		from sys_user u 
+		left join sys_user_clinic r on u.role_id=r.id
+		where u.status=0 and u.id=#{userId}
+	</select>
+	<select id="getCountByName" parameterType="com.cdutcm.tcms.sys.entity.User" resultType="int">
+		select count(id) from sys_user where account=#{account} 
+	</select>
+	<select id="getCount" parameterType="com.cdutcm.tcms.sys.entity.User" resultType="int">
+		select count(id) from sys_user where status=0 
+		<if test="account!=null and account!=''">
+		 and account like '%${account}%'   
+		</if>
+		<if test="roleId!=null and roleId!=0">
+		and role_id=#{roleId} 
+		</if>
+		<if test="lastupdateStart!=null">
+		and lastupdate&gt;=#{lastupdateStart} 
+		</if>
+		<if test="lastupdateEnd!=null">
+		and lastupdate&lt;=#{lastupdateEnd} 
+		</if>
+	</select>
+	<insert id="insertUser" parameterType="com.cdutcm.tcms.sys.entity.User" useGeneratedKeys="true" keyProperty="userId">
+		insert into sys_user (<include refid="userColumns"/>) values (#{userId},#{account},#{username},#{password},0,#{pwd},#{creattime},#{openId})
+	</insert>
+
+	<insert id="insertUserInfo">
+		insert into user_info (id,account,name,open_id,telephone,sex,email) values (#{userId},#{account},#{username},#{openId},#{tel},#{sex},#{email})
+	</insert>
+
+
+	<update id="updateUser" parameterType="com.cdutcm.tcms.sys.entity.User">
+		update sys_user set 
+		account=#{account},
+		username=#{username},password=#{password},
+		status=#{status},
+		role_id=#{roleId},
+		pwd = #{pwd},
+		lastupdate=#{lastupdate} 
+		where id=#{userId}
+	</update>
+
+	<update id="updateUserPwd" parameterType="com.cdutcm.tcms.sys.entity.User">
+		update sys_user set
+		pwd=#{password}
+		where account=#{account}
+	</update>
+
+	<update id="updateLastLogin" parameterType="com.cdutcm.tcms.sys.entity.User">
+		update sys_user set lastupdate=#{lastupdate} where id=#{userId}
+	</update>
+	<update id="updateUserBaseInfo" parameterType="com.cdutcm.tcms.sys.entity.User">
+		update sys_user set 
+		account=#{account},
+		username=#{username},
+		role_id=#{roleId} 
+		<if test="password!=null and password!=''">,password=#{password} </if>
+		 where id=#{userId}
+	</update>
+	<update id="updateUserRights" parameterType="com.cdutcm.tcms.sys.entity.User">
+		update sys_user set rights=#{rights} where id=#{userId}
+	</update>
+	<delete id="deleteUser" parameterType="long">
+		delete from sys_user where id=#{userId}
+	</delete>
+	
+	<select id="getClinic" parameterType="com.cdutcm.tcms.sys.entity.User" resultType="java.lang.String">
+		select clinic_id from sys_user_clinic where user_id = #{userId}
+	</select>
+	
+	<select id="listPageUserInfo" parameterType="com.cdutcm.tcms.sys.entity.UserInfo" resultMap="userInfoResultMap">
+		select * from user_info order by status desc
+	</select>
+	
+	<select id="getUserInfoByAccount" resultType="com.cdutcm.tcms.sys.entity.UserInfo" parameterType="java.lang.String">
+		select * from user_info where account = #{account}
+	</select>
+
+	<select id="getUserByOpenid" resultType="com.cdutcm.tcms.sys.entity.User" parameterType="java.lang.String">
+		select a.id id,a.account account,a.username username ,a.pwd pwd
+		from sys_user a,user_info b
+		where a.account = b.account and b.open_id =  #{openId}
+	</select>
+
+  <select id="listPageUserInfoByNameOrSpecialty" parameterType="com.cdutcm.tcms.sys.entity.UserInfo" resultMap="userInfoResultMap">
+		select * from user_info
+    where 1=1
+    <if test="name !=null and name !=''">
+      and name like '%${name}%'
+    </if>
+    <if test="specialty !=null and specialty !=''">
+      and specialty like '%${specialty}%'
+    </if>
+		 order by status desc
+	</select>
+
+  <!-- 查询在线医生信息 -->
+  <select id="listPageOnlineUser" resultType="com.cdutcm.tcms.sys.entity.UserInfo" parameterType="com.cdutcm.tcms.sys.entity.UserInfo" >
+    SELECT ui.account,ui.`name`,ui.specialty
+    FROM sys_user u
+    JOIN user_info ui ON u.account = ui.account
+    WHERE 1 = 1
+    <if test="accounts != null">
+      and u.account in
+      (${accounts})
+    </if>
+    <if test="name !=null and name !=''">
+      and name like '%${name}%'
+    </if>
+    <if test="specialty !=null and specialty !=''">
+      and specialty like '%${specialty}%'
+    </if>
+  </select>
+	<select id="getUserInfoByTel" resultType="com.cdutcm.tcms.sys.entity.UserInfo">
+     select * from user_info where telephone = #{telphone}
+	</select>
+	<select id="countAllUser" resultType="java.lang.Integer">
+		 SELECT COUNT(*) from sys_user
+	</select>
+	<select id="selectLimitUser" resultMap="userResultMap">
+		SELECT * from sys_user limit #{start},#{num}
+	</select>
+	<select id="getRoles" resultType="java.lang.String" parameterType="java.lang.Long">
+		SELECT role_id from sys_user_role WHERE user_id = #{userId}
+	</select>
+</mapper>

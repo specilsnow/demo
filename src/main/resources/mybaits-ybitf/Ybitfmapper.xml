@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdutcm.tcms.itf.mapper.YBitfmapper">
+<resultMap type="com.cdutcm.tcms.itf.model.cf" id="CFResultmap">
+<id column="id" property="id" jdbcType="BIGINT" />
+<result column="recipel_no" property="recipel_no" jdbcType="VARCHAR" />
+<result column="disease" property="disease" jdbcType="VARCHAR" />
+<result column="name" property="name" jdbcType="VARCHAR" />
+<result column="therapy" property="therapy" jdbcType="VARCHAR" />
+<result column="lx" property="lx"  />
+<result column="jff" property="jff"  />
+<result column="js" property="js"  />
+<result column="je" property="je"  />
+<result column="doctor_name" property="doctor_name"  />
+<result column="doctor_id" property="doctor_id"  />
+<result column="fhdoctor_name" property="fhdoctor_name"  />
+<result column="fhdoctor_id" property="fhdoctor_id"  />
+<result column="lastupdate" property="lastupdate"  />
+<result column="clinic_id" property="clinic_id"  />
+<result column="odc" property="odc"  />
+<result column="orc" property="orc"  />
+<collection property="items" column="id" ofType="com.cdutcm.tcms.itf.model.items" select="finditems" >
+</collection>   
+</resultMap>
+
+<resultMap type="com.cdutcm.tcms.itf.model.PatientWx" id="PatientResultmap">
+	<id column="id" property="id" jdbcType="BIGINT" />
+	<result column="visit_no" property="visitNo" jdbcType="VARCHAR" />
+	<result column="patient_name" property="patientName" jdbcType="VARCHAR" />
+	<result column="telephone" property="telephone" jdbcType="VARCHAR" />
+	<result column="wx_openid" property="wxOpenId" jdbcType="VARCHAR" />
+	<result column="gmt_create" property="gmtCreate"  />
+</resultMap>
+<resultMap type="com.cdutcm.tcms.itf.model.cf" id="CFResultmapWithOutItem">
+	<id column="id" property="id" jdbcType="BIGINT" />
+	<result column="recipel_no" property="recipel_no" jdbcType="VARCHAR" />
+	<result column="disease" property="disease" jdbcType="VARCHAR" />
+	<result column="name" property="name" jdbcType="VARCHAR" />
+	<result column="therapy" property="therapy" jdbcType="VARCHAR" />
+	<result column="lx" property="lx"  />
+	<result column="jff" property="jff"  />
+	<result column="js" property="js"  />
+	<result column="je" property="je"  />
+	<result column="doctor_name" property="doctor_name"  />
+	<result column="doctor_id" property="doctor_id"  />
+	<result column="fhdoctor_name" property="fhdoctor_name"  />
+	<result column="fhdoctor_id" property="fhdoctor_id"  />
+	<result column="lastupdate" property="lastupdate"  />
+	<result column="clinic_id" property="clinic_id"  />
+	<result column="visit_no" property="visitNo" jdbcType="VARCHAR" />
+	<result column="telephone" property="telephone" jdbcType="VARCHAR" />
+	<result column="wx_openid" property="wxOpenId" jdbcType="VARCHAR" />
+	<result column="odc" property="odc"  />
+	<result column="orc" property="orc"  />
+	<result column="gmt_create" property="gmtCreate"  />
+</resultMap>
+  <insert id="savepatientregist" parameterType="com.cdutcm.tcms.itf.model.PatientRegist" >
+    insert into patient_regist
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="ys != null" >
+        ys,
+      </if>
+      <if test="ysbm != null" >
+        ysbm,
+      </if>
+      <if test="ghks != null" >
+        ghks,
+      </if>
+      <if test="ghksbm != null" >
+        ghksbm,
+      </if>
+      <if test="patient_no != null" >
+        patient_no,
+      </if>
+      <if test="visit_no != null" >
+        visit_no,
+      </if>
+      <if test="kssj != null" >
+        kssj,
+      </if>
+      
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="ys != null" >
+        #{ys,jdbcType=VARCHAR},
+      </if>
+      <if test="ysbm != null" >
+        #{ysbm,jdbcType=VARCHAR},
+      </if>
+      <if test="ghks != null" >
+        #{ghks,jdbcType=VARCHAR},
+      </if>
+      <if test="ghksbm != null" >
+        #{ghksbm,jdbcType=VARCHAR},
+      </if>
+      <if test="patient_no != null" >
+        #{patient_no,jdbcType=VARCHAR},
+      </if>
+      <if test="visit_no != null" >
+        #{visit_no,jdbcType=VARCHAR},
+      </if>
+      <if test="kssj != null" >
+        #{kssj},
+      </if>
+      
+    </trim>
+  </insert>
+
+ <insert id="itfsavapatient" parameterType="com.cdutcm.tcms.itf.model.Patient">
+ insert into patient(id,name,sex,birthday,address,telephone,wx_id,patient_no)
+ values(#{id},#{name},#{sex},#{birthday},#{address},#{telephone},#{wx_id},#{patient_no})
+ </insert>
+<select id="iftfindRecipelItemByRecipelNo" resultType="com.cdutcm.tcms.itf.model.items">
+SELECT ri.* from recipel_item ri,recipel r where ri.recipel_id = r.id and r.recipel_no=#{recipel_no}
+</select>
+<select id="iftfindrecipel" parameterType="com.cdutcm.tcms.biz.model.Emr" resultMap="CFResultmapWithOutItem">
+select r.*,e.disease as disease ,e.telephone as telphone,e.clinic_id as clinicId,e.age as age,e.sex as sex,e.patient_name as patientName,wx.gmt_create as gmt_create,wx.wx_openid as wx_openid, wx.visit_no as visit_no from emr e,recipel r,patient_wx wx where e.id=r.emr_id
+<!-- and wx.telephone=e.telephone  -->
+<if test="patientName !=null and patientName!=''">
+and e.patient_name=#{patientName}
+</if>
+<if test="telephone !=null and telephone !=''">
+and e.telephone=#{telephone}
+</if>
+<if test="visitNo !=null and visitNo !='' ">
+and e.visit_no=#{visitNo}
+</if>
+<if test="starttime!=null and starttime!=''">
+			and e.create_time>=#{starttime}
+</if>
+		<if test="endTime !=null and endTime !=''">
+			and e.create_time &lt;#{endTime}
+		</if>
+		<if test="clinicId !=null and clinicId !='' ">
+		and e.clinicId=#{clinicId}
+		</if>
+		<if test="visitNo ==''">
+		and r.status !='c'
+		</if>
+	
+		order by e.visit_no desc
+</select>
+<update id="recipeCharge">
+UPDATE emr e left join recipel r on e.id = r.emr_id SET r.`status` = 'c' WHERE e.clinicId=#{clinicId} 
+and r.id=#{recipel_no}
+</update>
+<select id="findpatient"   resultMap="PatientResultmap">
+select * from  patient_wx where telephone = #{telphone}
+</select>
+    <select id="findypdmByRecipelitem" resultType="com.cdutcm.tcms.itf.model.YpdmEnity">
+        select bsd.name as orignName,sym.name as realName from  base_self_data bsd
+        left join  standard_doctor_material_associative sdma on bsd.id=sdma.material_id
+        left join  standard_yaofang_material_associative syma on sdma.doctor_standard_material_id=syma.standard_doctor_material_id
+        left join  standard_yaofang_material sym on syma.standard_yaofang_material_id=sym.id
+        where syma.clinic_id=#{clinicid} and bsd.user_id=#{account} and bsd.name in (
+        <foreach collection="recipelItems" item="item" index= "index" separator =",">
+            #{item.name}
+        </foreach>
+        ) group by  sym.name
+    </select>
+</mapper>

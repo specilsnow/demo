@@ -1,0 +1,73 @@
+
+  @ var itemname=[];
+  @ for(var i=0;i<@items.size();i++){
+  <input type="hidden" class="disablerecipelitem" value="${item.id!""}" name="recipels[${i}].id">
+
+  @if(!isEmpty(item.recipelItems)){
+  @ for(baseRecipelItem in item.recipelItems){
+  @ if(!array.contain(itemname,baseRecipelItem.name)&&baseRecipelItem.name!=""&&baseRecipelItem.name!=null){
+  <div class="col-md-3 col-xs-6" style="padding: 5px 2px;">
+                                  		<div style="float: left;width: 70%;">
+                                  		<div class="div-box" style="width: 100%;height: 50px;border:1px solid #27A4B0"   ontouchstart="pop(this,event)" >
+                                  	   @ if(strutil.length(baseRecipelItem.name)<=3){
+                                  	   <lable style="font-size:30px;">${baseRecipelItem.name}</lable>
+                                  	   @}else if(strutil.length(baseRecipelItem.name)==4){
+                                  	    <lable style="font-size:24px;">${baseRecipelItem.name}</lable>
+                                  	   @}else if(strutil.length(baseRecipelItem.name)==5){
+                                  	   <lable style="font-size:20px;">${baseRecipelItem.name}</lable>
+                                  	   @}else{
+                                  	   <lable style="font-size:16px;">${baseRecipelItem.name}</lable>
+                                  	   @}
+                                  		<input type="hidden" value="${baseRecipelItem.name}" class="material_hidden" name="recipels[${k}].recipelItems[${j}].name">
+                                  		</div>	
+                                  			<span class="glyphicon glyphicon-remove" ontouchstart="removematerial(this)" aria-hidden="true" style="font-size: 16px;color: red;     position: absolute;  top: 44px;left: 58%;"></span>
+                                  		</div>
+                                  		<div style="float: left;padding-left: 5px;width: 30%;">
+                                  			<div class="div-box" style="width: 40px;height: 23px;font-size:16px;border:1px solid #27A4B0"  ontouchstart="pop(this,event,'yf')">
+                                             <lable style="font-size:16px;white-space:nowrap;">${baseRecipelItem.usage}</lable>
+                                  			 <input type="hidden" value="${baseRecipelItem.usage}"  name="recipels[${k}].recipelItems[${j}].usage">
+                                  			</div>
+                                  			<div style="clear: both;"></div>
+                                  			<div class="div-box" style="width: 40px;height: 23px;margin-top: 4px;font-size:16px;border:1px solid #27A4B0"   ontouchstart="pop(this,event,'jl')" >
+                                  		    <lable style="font-size:16px;">${baseRecipelItem.dosage}${baseRecipelItem.unit}</lable>
+                                  			<input type="hidden" value="${baseRecipelItem.dosage}${baseRecipelItem.unit}" name="recipels[${k}].recipelItems[${j}].dosage">
+                                           
+                                  		</div>
+                                    </div>
+                        @l=l+1;             
+                        @j=j+1;   
+                        @array.add(itemname,baseRecipelItem.name);       
+                        </div> @}else if(array.contain(itemname,baseRecipelItem.name)&&baseRecipelItem.name!=""&&baseRecipelItem.name!=null){   
+                         <input type="hidden" class="disablerecipelitem" value="${baseRecipelItem.name}" name="recipels[${k}].recipelItems[${j}].name">
+                         <input type="hidden" class="disablerecipelitem"  value="${baseRecipelItem.dosage}" name="recipels[${k}].recipelItems[${j}].dosage">
+                         <input type="hidden" class="disablerecipelitem" value="${baseRecipelItem.unit}" name="recipels[${k}].recipelItems[${j}].unit">
+                         <input type="hidden" class="disablerecipelitem" value="${baseRecipelItem.usage}" name="recipels[${k}].recipelItems[${j}].usage">
+                         @j=j+1; 
+                         @}
+                          @} 
+                          @} 
+                        @k=k+1; 
+  @}
+  @ for(var i=l;i<28;i++){
+      <div class="col-md-3 col-md-6" style="padding: 5px 2px;">
+                                  		<div style="float: left;width: 70%;">
+                                  		<div class="div-box" style="width: 100%;height: 50px;border:1px solid #27A4B0" oninput="searchmaterrial(this)"  ontouchstart="pop(this,event)" ><lable style="font-size:30px;"></lable>
+                                  		<input type="hidden" value="" class="material_hidden" name="recipels[0].recipelItems[${i}].name">
+                                  		</div>
+                                  			<!-- <input type="password"  style="width: 100%;height: 60px;" oninput="searchmaterrial(this)"  ontouchstart="pop(this,event)" placeholder=""> -->
+                                  			<span class="glyphicon glyphicon-remove" ontouchstart="removematerial(this)" aria-hidden="true" style="font-size: 16px;color: red;    position: absolute;  top: 44px;left: 58%"></span>
+                                  		</div>
+                                  			<div style="float: left;padding-left: 5px;width: 30%;">
+                                  			<div class="div-box" style="width: 40px;height: 23px;font-size:16px;border:1px solid #27A4B0"  ontouchstart="pop(this,event,'yf')">
+                                             <lable style="font-size:10px;"></lable>
+                                  			 <input type="hidden" value="" name="recipels[0].recipelItems[${i}].usage">
+                                  			</div>
+                                  			<div style="clear: both;"></div>
+                                  			<div class="div-box" style="width: 40px;height: 23px;margin-top: 4px;font-size:16px;border:1px solid #27A4B0"   ontouchstart="pop(this,event,'jl')" >
+                                  		    <lable style="font-size:10px;"></lable>
+                                  			<input type="hidden" value="" name="recipels[0].recipelItems[${i}].dosage">
+          
+                                  		</div>
+                                    </div>
+                                    </div>
+  @}

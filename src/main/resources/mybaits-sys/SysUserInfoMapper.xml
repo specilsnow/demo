@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdutcm.tcms.sys.mapper.SysUserInfoMapper">
+    <resultMap id="userInfoMap" type="com.cdutcm.tcms.sys.entity.UserInfo">
+        <result column="id" jdbcType="BIGINT" property="id" />
+        <result column="account" jdbcType="VARCHAR" property="account" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="description" jdbcType="VARCHAR" property="description" />
+        <result column="status" jdbcType="INTEGER" property="status" />
+        <result column="title" jdbcType="VARCHAR" property="title" />
+        <result column="icon" jdbcType="VARCHAR" property="icon" />
+        <result column="telephone" jdbcType="VARCHAR" property="telephone" />
+    </resultMap>
+    <insert id="insert" parameterType="com.cdutcm.tcms.sys.entity.UserInfo">
+        insert into user_info(id,account,name,description,status,title,icon,telephone) values(#{id},#{account},#{name},#{description},#{status},#{title},#{icon},#{telephone})
+    </insert>
+    <update id="update" parameterType="com.cdutcm.tcms.sys.entity.UserInfo">
+        update user_info set
+        account=#{account,jdbcType=VARCHAR},
+        name=#{name,jdbcType=VARCHAR},
+        description=#{description,jdbcType=VARCHAR},
+        status=#{status,jdbcType=INTEGER},
+        title=#{title,jdbcType=VARCHAR},
+        icon=#{icon,jdbcType=VARCHAR},
+        specialty=#{specialty,jdbcType=VARCHAR},
+        telephone=#{telephone,jdbcType=VARCHAR}
+        where id=#{id,jdbcType=BIGINT}
+    </update>
+</mapper>

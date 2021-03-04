@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdutcm.tcms.biz.mapper.AnalyzeEntityMapper">
+    <resultMap id="analyzeEntityMap" type="com.cdutcm.tcms.biz.model.AnalyzeEntity">
+        <result column="clinic" jdbcType="VARCHAR" property="clinic"/>
+        <result column="department" jdbcType="VARCHAR" property="department"/>
+        <result column="doctor" jdbcType="VARCHAR" property="doctor"/>
+        <result column="recipel_num" jdbcType="VARCHAR" property="recipelNum"/>
+        <result column="recipel_detail_num" jdbcType="VARCHAR" property="recipelDetailNum"/>
+        <result column="group_by" jdbcType="VARCHAR" property="groupBy"/>
+    </resultMap>
+    <resultMap id="staticsEmrMap" type="com.cdutcm.tcms.biz.model.StaticsEmr">
+        <result column="doc_name" jdbcType="VARCHAR" property="docName" />
+        <result column="patient_name" jdbcType="VARCHAR" property="patientName" />
+        <result column="recipel_name" jdbcType="VARCHAR" property="recipelName" />
+        <result column="recipel_id" jdbcType="VARCHAR" property="recipelId" />
+        <result column="create_time" jdbcType="VARCHAR" property="createTime" />
+    </resultMap>
+    <resultMap id="BaseEmrMap" type="com.cdutcm.tcms.biz.model.Emr">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="assist_account" property="assistAccount" jdbcType="VARCHAR"/>
+        <result column="disease" property="disease" jdbcType="VARCHAR"/>
+        <result column="symptommould" property="symptommould" jdbcType="VARCHAR"/>
+        <result column="symptom" property="symptom" jdbcType="VARCHAR"/>
+        <result column="fs_code" property="fsCode" jdbcType="VARCHAR"/>
+        <result column="chief_complaint" property="chiefComplaint" jdbcType="VARCHAR"/>
+        <result column="presentillness" property="presentillness" jdbcType="VARCHAR"/>
+        <result column="pastillness" property="pastillness" jdbcType="VARCHAR"/>
+        <result column="illness_history_id" property="illnessHistoryId" jdbcType="BIGINT"/>
+        <result column="bw" property="bw" jdbcType="VARCHAR"/>
+        <result column="bx" property="bx" jdbcType="VARCHAR"/>
+        <result column="bwdata" property="bwdata" jdbcType="VARCHAR"/>
+        <result column="bxdata" property="bxdata" jdbcType="VARCHAR"/>
+        <result column="therapy" property="therapy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="patient_no" property="patientNo" jdbcType="VARCHAR"/>
+        <result column="visit_no" property="visitNo" jdbcType="VARCHAR"/>
+        <result column="patient_name" property="patientName" jdbcType="VARCHAR"/>
+        <result column="doctor_id" property="doctorId" jdbcType="VARCHAR"/>
+        <result column="doctor_name" property="doctorName" jdbcType="VARCHAR"/>
+        <result column="dept_id" property="deptId" jdbcType="VARCHAR"/>
+        <result column="clinic_id" property="clinicId" jdbcType="VARCHAR"/>
+        <result column="dept_name" property="deptName" jdbcType="VARCHAR"/>
+        <result column="sex" property="sex" jdbcType="VARCHAR"/>
+        <result column="age" property="age" jdbcType="VARCHAR"/>
+        <result column="telephone" property="telephone" jdbcType="VARCHAR"/>
+        <result column="dept_name" property="deptName" jdbcType="VARCHAR"/>
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP"/>
+        <result column="presentillness" property="presentillness"/>
+        <result column="personalIllness" property="personalIllness"/>
+        <result column="pastillness" property="pastillness"/>
+        <result column="allergic_history" property="allergicHistory"/>
+        <result column="menstruation_history" property="menstruationHistory"/>
+        <result column="physical_examination" property="physicalExamination"/>
+        <result column="auxiliary_inspection" property="auxiliaryInspection"/>
+        <result column="medical_advice" property="medicalAdvice"/>
+        <result column="follow_teacher" property="followTeacher"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.cdutcm.tcms.biz.model.AnalyzeEntity">
+        insert into analyze_entity(clinic,department,doctor,recipel_num,recipel_detail_num,group_by) values(#{clinic},#{department},#{doctor},#{recipelNum},#{recipelDetailNum},#{groupBy})
+    </insert>
+    <update id="update" parameterType="com.cdutcm.tcms.biz.model.AnalyzeEntity">
+        update analyze_entity set
+        department=#{department,jdbcType=VARCHAR},
+        doctor=#{doctor,jdbcType=VARCHAR},
+        recipel_num=#{recipelNum,jdbcType=VARCHAR},
+        recipel_detail_num=#{recipelDetailNum,jdbcType=VARCHAR},
+        group_by=#{groupBy,jdbcType=VARCHAR}
+        where clinic=#{clinic,jdbcType=VARCHAR}
+    </update>
+    <select id="getStatic" resultMap="analyzeEntityMap">
+       SELECT
+        a.doctor_name as doctor,
+        a.doctor_id as doctorId,
+        a.dept_name as department,
+        d.name as clinic,
+        a.patient_name,
+        c.name,
+        c.dosage,
+        c.unit,
+        count(distinct(emr_id)) as recipelNum,
+        count(*) as recipelDetailNum
+        FROM
+        chd6.emr
+        a left join recipel b on a.id=b.emr_id
+        left join recipel_item c on b.id = c.recipel_id
+        left join clinic d on a.clinic_id = d.clinic_id
+        where 1=1
+        and a.dept_name!=''
+        and a.doctor_name!=''
+        and a.dept_name != ''
+        and b.name != ''
+        and d.name !=''
+        <if test="clinic!= null and clinic != ''">
+            and d.name= #{clinic}
+        </if>
+        <if test="department != null and department != ''">
+            and a.dept_name = #{department}
+        </if>
+        <if test="doctor!= null and doctor != ''">
+            and a.doctor_name=#{doctor}
+        </if>
+        <if test="createTime!= null and createTime != ''">
+            and a.end_time like CONCAT(#{createTime},'%')
+        </if>
+        <if test="timeInterVal!= null and timeInterVal != '' and  createTime == null or createTime==''">
+            <if test="timeInterVal == '今天'">
+                and  to_days(a.end_time) = to_days(now())
+            </if>
+            <if test="timeInterVal == '昨天'">
+                and  TO_DAYS( NOW( ) ) - TO_DAYS(a.end_time) &lt;=  1
+            </if>
+            <if test="timeInterVal == '近7天'">
+                and  DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= date(a.end_time)
+            </if>
+            <if test="timeInterVal == '近30天'">
+               and DATE_SUB(CURDATE(), INTERVAL 30 DAY) &lt;= date(a.end_time)
+            </if>
+            <if test="timeInterVal == '上一个月'">
+                and DATE_FORMAT(a.end_time, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+            </if>
+            <if test="timeInterVal == '本季度'">
+                and PERIOD_DIFF( date_format( now( ) , '%Y%m' ) , date_format( a.end_time, '%Y%m' ) ) =1
+            </if>
+        </if>
+        group by ${groupBy}
+        ORDER by recipelNum ${orderBys}
+        limit #{top}
+    </select>
+    <select id="getEmrStatic" resultMap="analyzeEntityMap">
+        SELECT
+        a.doctor_name as doctor,
+        a.doctor_id as doctorId,
+        a.dept_name as department,
+        d.name as clinic,
+        a.patient_name,
+        count(distinct(emr_id)) as recipelNum,
+        c.name,
+        c.dosage,
+        c.unit
+        FROM
+        chd6.emr
+        a left join recipel b on a.id=b.emr_id
+        left join recipel_item c on b.id = c.recipel_id
+        left join clinic d on a.clinic_id = d.clinic_id
+        where 1=1
+        and a.dept_name!=''
+        and a.doctor_name!=''
+        and a.dept_name != ''
+        and b.name != ''
+        and d.name !=''
+        <if test="clinic!= null and clinic != ''">
+            and d.name= #{clinic}
+        </if>
+        <if test="keyword!= null and keyword != ''">
+            and a.doctor_name like CONCAT(#{keyword},'%')
+        </if>
+        <if test="department != null and department != ''">
+            and a.dept_name = #{department}
+        </if>
+        <if test="doctor!= null and doctor != ''">
+            and a.doctor_name=#{doctor}
+        </if>
+        <if test="createTime!= null and createTime != ''">
+            and a.end_time like CONCAT(#{createTime},'%')
+        </if>
+        <if test="timeInterVal!= null and timeInterVal != '' and  createTime == null or createTime==''">
+            <if test="timeInterVal == '今天'">
+                and  to_days(a.end_time) = to_days(now())
+            </if>
+            <if test="timeInterVal == '昨天'">
+                and  TO_DAYS( NOW( ) ) - TO_DAYS(a.end_time) &lt;=  1
+            </if>
+            <if test="timeInterVal == '近7天'">
+                and  DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= date(a.end_time)
+            </if>
+            <if test="timeInterVal == '近30天'">
+                and DATE_SUB(CURDATE(), INTERVAL 30 DAY) &lt;= date(a.end_time)
+            </if>
+            <if test="timeInterVal == '上一个月'">
+                and DATE_FORMAT(a.end_time, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+            </if>
+            <if test="timeInterVal == '本季度'">
+                and PERIOD_DIFF( date_format( now( ) , '%Y%m' ) , date_format( a.end_time, '%Y%m' ) ) =1
+            </if>
+        </if>
+        GROUP by doctorId
+        order by a.end_time desc
+        limit #{start},#{limit}
+    </select>
+    <select id="countEmrStatic" resultType="java.lang.Integer">
+        SELECT
+        count(DISTINCT a.doctor_id)
+        FROM
+        chd6.emr
+        a left join recipel b on a.id=b.emr_id
+        left join recipel_item c on b.id = c.recipel_id
+        left join clinic d on a.clinic_id = d.clinic_id
+        where 1=1
+        and a.dept_name!=''
+        and a.doctor_name!=''
+        and a.dept_name != ''
+        and b.name != ''
+        and d.name !=''
+        <if test="clinic!= null and clinic != ''">
+            and d.name= #{clinic}
+        </if>
+        <if test="keyword!= null and keyword != ''">
+            and a.doctor_name like CONCAT(#{keyword},'%')
+        </if>
+        <if test="department != null and department != ''">
+            and a.dept_name = #{department}
+        </if>
+        <if test="doctor!= null and doctor != ''">
+            and a.doctor_name=#{doctor}
+        </if>
+        <if test="createTime!= null and createTime != ''">
+            and a.end_time like CONCAT(#{createTime},'%')
+        </if>
+        <if test="timeInterVal!= null and timeInterVal != '' and  createTime == null or createTime==''">
+            <if test="timeInterVal == '今天'">
+                and  to_days(a.end_time) = to_days(now())
+            </if>
+            <if test="timeInterVal == '昨天'">
+                and  TO_DAYS( NOW( ) ) - TO_DAYS(a.end_time) &lt;=  1
+            </if>
+            <if test="timeInterVal == '近7天'">
+                and  DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= date(a.end_time)
+            </if>
+            <if test="timeInterVal == '近30天'">
+                and DATE_SUB(CURDATE(), INTERVAL 30 DAY) &lt;= date(a.end_time)
+            </if>
+            <if test="timeInterVal == '上一个月'">
+                and DATE_FORMAT(a.end_time, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+            </if>
+            <if test="timeInterVal == '本季度'">
+                and PERIOD_DIFF( date_format( now( ) , '%Y%m' ) , date_format( a.end_time, '%Y%m' ) ) =1
+            </if>
+        </if>
+    </select>
+    <select id="getEmrs" resultMap="BaseEmrMap">
+       SELECT * from (SELECT
+        a.*
+        FROM
+        chd6.emr
+        a left join recipel b on a.id=b.emr_id
+        left join clinic d on a.clinic_id = d.clinic_id
+        where 1=1
+        and a.dept_name!=''
+        and a.doctor_name!=''
+        and a.dept_name != ''
+        and b.name != ''
+        and d.name !=''
+        <if test="clinic!= null and clinic != ''">
+            and d.name= #{clinic}
+        </if>
+        <if test="doctorId!= null and doctorId != ''">
+            and a.doctor_id=#{doctorId}
+        </if>
+
+        <if test="department != null and department != ''">
+            and a.dept_name = #{department}
+        </if>
+
+        <if test="createTime!= null and createTime != ''">
+            and a.end_time like CONCAT(#{createTime},'%')
+        </if>
+        <if test="timeInterVal!= null and timeInterVal != '' and  createTime == null or createTime==''">
+            <if test="timeInterVal == '今天'">
+                and to_days(a.end_time) = to_days(now())
+            </if>
+            <if test="timeInterVal == '昨天'">
+                and TO_DAYS( NOW( ) ) - TO_DAYS(a.end_time) &lt;= 1
+            </if>
+            <if test="timeInterVal == '近7天'">
+                and DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= date(a.end_time)
+            </if>
+            <if test="timeInterVal == '近30天'">
+                and DATE_SUB(CURDATE(), INTERVAL 30 DAY) &lt;= date(a.end_time)
+            </if>
+            <if test="timeInterVal == '上一个月'">
+                and DATE_FORMAT(a.end_time, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+            </if>
+            <if test="timeInterVal == '本季度'">
+                and PERIOD_DIFF( date_format( now( ) , '%Y%m' ) , date_format( a.end_time, '%Y%m' ) ) =1
+            </if>
+        </if>
+        order by a.end_time desc
+        )temp
+        WHERE 1=1
+        <if test="keyword!= null and keyword != ''">
+            and doctor_name like CONCAT(#{keyword},'%')
+            or patient_name like CONCAT(#{keyword},'%')
+            or end_time like CONCAT(#{keyword},'%')
+        </if>
+        limit #{start},#{limit}
+    </select>
+    <select id="countGetEmrs" resultType="java.lang.Integer">
+       SELECT COUNT(*) FROM (SELECT
+        a.*
+        FROM
+        chd6.emr
+        a left join recipel b on a.id=b.emr_id
+        left join clinic d on a.clinic_id = d.clinic_id
+        where 1=1
+        and a.dept_name!=''
+        and a.doctor_name!=''
+        and a.dept_name != ''
+        and b.name != ''
+        and d.name !=''
+        <if test="clinic!= null and clinic != ''">
+            and d.name= #{clinic}
+        </if>
+        <if test="department != null and department != ''">
+            and a.dept_name = #{department}
+        </if>
+        <if test="doctorId!= null and doctorId != ''">
+            and a.doctor_id=#{doctorId}
+        </if>
+        <if test="createTime!= null and createTime != ''">
+            and a.end_time like CONCAT(#{createTime},'%')
+        </if>
+        <if test="timeInterVal!= null and timeInterVal != '' and  createTime == null or createTime==''">
+            <if test="timeInterVal == '今天'">
+                and to_days(a.end_time) = to_days(now())
+            </if>
+            <if test="timeInterVal == '昨天'">
+                and TO_DAYS( NOW( ) ) - TO_DAYS(a.end_time) &lt;= 1
+            </if>
+            <if test="timeInterVal == '近7天'">
+                and DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= date(a.end_time)
+            </if>
+            <if test="timeInterVal == '近30天'">
+                and DATE_SUB(CURDATE(), INTERVAL 30 DAY) &lt;= date(a.end_time)
+            </if>
+            <if test="timeInterVal == '上一个月'">
+                and DATE_FORMAT(a.end_time, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+            </if>
+            <if test="timeInterVal == '本季度'">
+                and PERIOD_DIFF( date_format( now( ) , '%Y%m' ) , date_format( a.end_time, '%Y%m' ) ) =1
+            </if>
+        </if>
+        )temp WHERE 1=1
+        <if test="keyword!= null and keyword != ''">
+            and doctor_name like CONCAT(#{keyword},'%')
+            or  patient_name like CONCAT(#{keyword},'%')
+            or end_time like CONCAT(#{keyword},'%')
+        </if>
+    </select>
+</mapper>

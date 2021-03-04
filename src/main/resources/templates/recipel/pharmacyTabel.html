@@ -1,0 +1,89 @@
+        <meta charset="utf-8"/>
+		<div class="scroller-table">
+		<table style="width:100%">
+	                        	<thead>
+	                        		<tr>
+		                        		<th>病人姓名</th>
+										<th>联系电话</th>
+										<th>就诊时间</th>
+		                        		<th>医生姓名</th>
+		                        		<th>剂数</th>
+		                        		<th>金额</th>
+		                        		<th>
+		                        			<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">药品状态 <b class="caret"></b></a>
+												<ul class="dropdown-menu yp">
+													<li><a id="action-1" href="#" onclick="changStatus('T')">已拣药</a></li>
+													<li><a href="#" onclick="changStatus('F')">未拣药</a></li>
+													<li><a href="#" onclick="changStatus('')">全部</a></li>
+												</ul>
+											</li>
+										</th>
+										<th>
+		                        			<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">取药状态 <b class="caret"></b></a>
+												<ul class="dropdown-menu qy">
+													<li><a id="action-1" href="#" onclick="changQyStatus('T')">已取药</a></li>
+													<li><a href="#" onclick="changQyStatus('F')">未取药</a></li>
+													<li><a href="#" onclick="changQyStatus('')">全部</a></li>
+												</ul>
+											</li>
+										</th>
+		                        		<th>操作</th>
+	                        		</tr>
+	                        	</thead>
+	                        	<tbody>
+	                        	@for(emr in emrs) {
+		                        	<tr>
+		                        		<td id= "${emr.recipel.id}" onclick="showRecipel(this)">${emr.patientName}</td>
+										<td>${emr.telephone}</td>
+										<td>${emr.recipel.lastupdate,' yyyy/MM/dd'}</td>
+		                        		<td>${emr.doctorName}</td>
+		                        		<td>${emr.recipel.js}</td>
+		                        		@if(isEmpty(emr.recipel.discountAmount)) {
+		                        			<td id= "${emr.recipel.id}" onclick="shouCutPrice(this,${emr.recipel.je!0},'${emr.recipel.qyStatus!"F"}')">￥${emr.recipel.je!"0"}元</td>
+		                        		@}else {
+		                        			<td id= "${emr.recipel.id}" onclick="showCutPrice(this,${emr.recipel.discountAmount},${emr.recipel.discountRatio})"><span class="sale">￥${emr.recipel.discountAmount!"0"}元</span></td>
+		                        		@}
+		                        		@if(emr.recipel.status=="T") {
+		                        			<td>已拣药</td>
+		                        		@}else{
+		                        			<td style="color: red;">未拣药</td>
+		                        		@}
+		                        		@if(emr.recipel.qyStatus=="T") {
+										<td><span onclick="changeQy('${emr.patientName}','${emr.recipel.status!"F"}','${emr.recipel.qyStatus!"F"}','${emr.recipel.id}')">已取药</span></td>
+										<td style="color: #CCCCCC">发送提示</td>
+										@}else{
+		                        			<td style="color: red;"><span onclick="changeQy('${emr.patientName}','${emr.recipel.status!"F"}','${emr.recipel.qyStatus!"F"}','${emr.recipel.id}')">未取药</span></td>
+											<td style="color: #86D9D0" onclick="getPosition(this)">发送提示</td>
+										@}
+		                        		<!--<td onclick="getPosition(this)">发送提示</td>-->
+		                        	</tr>
+		                        	@}
+	                        	</tbody>
+	                        </table>
+		</div>
+	                        <input type="hidden" id="status">
+	                        <input type="hidden" id="qyStatus">
+	                        <div class="page-div">
+	                         	${recipel.page.pageStr }
+	                        </div>
+
+<script>
+ function searchNextPage(currentPage) {
+    var url = contextPath + "/listRecipels";
+    var startDate = $("#stime").val();
+ 	var endDate = $("#etime").val();
+ 	var qyStatus = $("#qyStatus").val();
+ 	var status = $("#status").val();
+ 	var patientName = $("#patientName").val();
+    postdata={'page.currentPage':currentPage,
+    			'status' : status,
+    			'qyStatus' : qyStatus,
+    			'name' : patientName,
+    			'startDate' : startDate,
+    			'endDate' : endDate
+    		};
+	$.post(url,postdata,function(data){
+		$("#baseRecipelHolder .scroller").html(data);
+	});
+ }
+</script>

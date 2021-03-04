@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+
+    <!-- 彩色日志格式 -->
+    <property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%logger){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}" />
+    <!--包名输出缩进对齐-->
+    <property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}" />
+    <!--将日志信息输入到数据库-->
+    <appender name="DBLog" class="ch.qos.logback.classic.db.DBAppender">
+    	<filter class="com.cdutcm.core.config.LogbackMessageDBLogFilter"></filter>
+        <connectionSource class="ch.qos.logback.core.db.DataSourceConnectionSource">	
+             <dataSource class="org.apache.commons.dbcp.BasicDataSource">
+                <driverClassName>com.mysql.jdbc.Driver</driverClassName>
+                <url>jdbc:mysql://210.41.221.78:3307/chd6_log?characterEncoding=UTF-8</url>
+                <username>sgkj</username>
+                <password>cdutcm@123</password>
+            </dataSource>
+        </connectionSource>
+    </appender>
+    <appender name="consoleLog" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>
+                %d %msg%n
+            </pattern>
+        </layout>
+    </appender>
+    <appender name="fileInfoLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>
+                %d %msg%n
+            </pattern>
+        </encoder>
+        <!--滚动策略-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>
+                /recipel/info.%d.log
+            </fileNamePattern>
+        </rollingPolicy>
+    </appender>
+    <appender name="fileErrorLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <encoder>
+            <pattern>
+                %d %msg%n
+            </pattern>
+        </encoder>
+        <!--滚动策略-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>
+                /recipel/error.%d.log
+            </fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+
+    <!--info级别的日志输入-->
+    <root level="info">
+        <!--控制台输入-->
+        <appender-ref ref="consoleLog"/>
+        <!--普通日志-->
+        <appender-ref ref="fileInfoLog"/>
+        <!--错误日志-->
+        <appender-ref ref="fileErrorLog"/>
+        <!--日志写入数据库配置-->
+        <appender-ref ref="DBLog"/>
+    </root>
+    <!--打印執行的sql語句-->
+    <logger name="com.cdutcm.tcms" level="DEBUG" />
+</configuration>

@@ -1,0 +1,35 @@
+ <meta charset="UTF-8">
+     <div class="left-content">
+	     @ for(patientRegist in ps) {
+	      <div class="left-content-item" onclick="clickPatientInfo('${patientRegist.visitNo}')">
+	         <div class="left-content-item-top">
+	           <div class="left-content-item-top-name">${patientRegist.patient.name}</div>
+	           <div class="left-content-item-top-disease">${patientRegist.disease}</div>
+	         </div>
+	         <div class="left-content-item-bottom">${patientRegist.kssj}</div>
+	       </div>
+	     @}
+	     @elsefor{
+	       <div class="left-content-item">
+	          <div class="left-content-item-top">
+	           <div class="left-content-item-top-name">  暂无数据！</div>
+	         </div>
+	                   
+	       </div>
+	     @}
+	     
+	      </div>
+	     <div class="left-page">
+	        <div class="left-page-item"  onclick="searchNextPage('${p.page.currentPage-1}',${p.page.totalPage})">
+	           <div class="left-page-item-blank">
+	            <i class="iconfont icon-left"></i>
+	           </div>
+	        </div>
+	        <div class="left-page-CurrentPgage">
+	          <div class="left-page-CurrentPgage-blank">第${p.page.currentPage}页</div>
+	        </div>
+	        <div class="left-page-item" onclick="searchNextPage('${p.page.currentPage+1}',${p.page.totalPage})">
+	          <div class="left-page-item-blank" >
+	            <i class="iconfont icon-right"></i>
+	          </div>
+	      </div>

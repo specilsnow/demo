@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdutcm.tcms.biz.mapper.RecipelItemMapper" >
+  <resultMap id="BaseResultMap" type="com.cdutcm.tcms.biz.model.RecipelItem" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="recipel_id" property="recipelId" jdbcType="BIGINT" />
+    <result column="m_order" property="mOrder" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="dosage" property="dosage" jdbcType="VARCHAR" />
+    <result column="unit" property="unit" jdbcType="VARCHAR" />
+    <result column="usage_name" property="usage" jdbcType="VARCHAR" />
+    <result column="jczs" property="jczs" jdbcType="VARCHAR" />
+    
+  </resultMap>
+  <select id="findItemByRecipelNo" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	select * from recipel_item where recipel_id=#{_parameter}
+  </select>
+  
+  <!-- 根据recipelId删除 -->
+  <delete id="delRecipelItemByRecipelId" parameterType="long">
+  	delete from recipel_item where recipel_id = #{recipelId}
+  </delete>
+  <select id="findItemByRecipelId" parameterType="Long" resultMap="BaseResultMap">
+  	select * from recipel_item where recipel_id=#{_parameter}
+  </select>
+    <select id="findItemByAccount" resultMap="BaseResultMap">
+      select id,recipel_id,name,dosage,unit,usage_name from recipel_item where recipel_id in(
+SELECT id from recipel where emr_id in (SELECT id from emr where doctor_id = #{account}))
+    </select>
+
+    <!-- 添加发送处方的药品信息 -->
+   <insert id="saveRecipelItem" parameterType="com.cdutcm.tcms.biz.model.RecipelItem" >
+    insert into recipel_item
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="recipelId != null" >
+        recipel_id,
+      </if>
+      <if test="mOrder != null" >
+        m_order,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="dosage != null" >
+        dosage,
+      </if>
+      <if test="unit != null" >
+        unit,
+      </if>
+      <if test="usage != null" >
+        usage_name,
+      </if>
+      <if test="jczs != null" >
+        jczs,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="recipelId != null" >
+        #{recipelId,jdbcType=BIGINT},
+      </if>
+      <if test="mOrder != null" >
+        #{mOrder,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="dosage != null" >
+        #{dosage,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null" >
+        #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="usage != null" >
+        #{usage,jdbcType=VARCHAR},
+      </if>
+      <if test="jczs != null" >
+        #{jczs,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <insert id="saveallRecipelItem" parameterType="java.util.List">
+   insert into recipel_item(id,recipel_id,m_order,name,dosage,unit,usage_name,jczs) VALUES
+   <foreach collection="list" item="item" separator=",">
+        (#{item.id}, #{item.recipelId},#{item.mOrder},#{item.name},#{item.dosage},#{item.unit},#{item.usage},#{item.jczs})
+   </foreach>
+  </insert>
+</mapper>

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdutcm.tcms.biz.mapper.KbSymptomMapper" >
+  <resultMap id="BaseResultMap" type="com.cdutcm.tcms.biz.model.KbSymptom" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="pinyin" property="pinyin" jdbcType="VARCHAR" />
+    <result column="ctype" property="ctype" jdbcType="VARCHAR" />
+    <result column="dtype" property="dtype" jdbcType="VARCHAR" />
+    <result column="part" property="part" jdbcType="VARCHAR" />
+    <result column="alias" property="alias" jdbcType="VARCHAR" />
+    <result column="fs_code" property="fsCode" jdbcType="VARCHAR" />
+    <result column="lastupdate" property="lastupdate" jdbcType="TIMESTAMP" />
+    <result column="version" property="version" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, pinyin, ctype, dtype, part, alias, fs_code, lastupdate, version
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from symptom
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from symptom
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.cdutcm.tcms.biz.model.KbSymptom" >
+    insert into symptom (id, name, pinyin, 
+      ctype, dtype, part, 
+      alias, fs_code, lastupdate,version
+      )
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{pinyin,jdbcType=VARCHAR}, 
+      #{ctype,jdbcType=VARCHAR}, #{dtype,jdbcType=VARCHAR}, #{part,jdbcType=VARCHAR}, 
+      #{alias,jdbcType=VARCHAR}, #{fsCode,jdbcType=VARCHAR}, #{lastupdate,jdbcType=TIMESTAMP},#{version}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cdutcm.tcms.biz.model.KbSymptom" >
+    insert into symptom
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="pinyin != null" >
+        pinyin,
+      </if>
+      <if test="ctype != null" >
+        ctype,
+      </if>
+      <if test="dtype != null" >
+        dtype,
+      </if>
+      <if test="part != null" >
+        part,
+      </if>
+      <if test="alias != null" >
+        alias,
+      </if>
+      <if test="fsCode != null" >
+        fs_code,
+      </if>
+      <if test="lastupdate != null" >
+        lastupdate,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="pinyin != null" >
+        #{pinyin,jdbcType=VARCHAR},
+      </if>
+      <if test="ctype != null" >
+        #{ctype,jdbcType=VARCHAR},
+      </if>
+      <if test="dtype != null" >
+        #{dtype,jdbcType=VARCHAR},
+      </if>
+      <if test="part != null" >
+        #{part,jdbcType=VARCHAR},
+      </if>
+      <if test="alias != null" >
+        #{alias,jdbcType=VARCHAR},
+      </if>
+      <if test="fsCode != null" >
+        #{fsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="lastupdate != null" >
+        #{lastupdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cdutcm.tcms.biz.model.KbSymptom" >
+    update symptom
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="pinyin != null" >
+        pinyin = #{pinyin,jdbcType=VARCHAR},
+      </if>
+      <if test="ctype != null" >
+        ctype = #{ctype,jdbcType=VARCHAR},
+      </if>
+      <if test="dtype != null" >
+        dtype = #{dtype,jdbcType=VARCHAR},
+      </if>
+      <if test="part != null" >
+        part = #{part,jdbcType=VARCHAR},
+      </if>
+      <if test="alias != null" >
+        alias = #{alias,jdbcType=VARCHAR},
+      </if>
+      <if test="fsCode != null" >
+        fs_code = #{fsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="lastupdate != null" >
+        lastupdate = #{lastupdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="version != null" >
+        version = #{version,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cdutcm.tcms.biz.model.KbSymptom" >
+    update symptom
+    set name = #{name,jdbcType=VARCHAR},
+      pinyin = #{pinyin,jdbcType=VARCHAR},
+      ctype = #{ctype,jdbcType=VARCHAR},
+      dtype = #{dtype,jdbcType=VARCHAR},
+      part = #{part,jdbcType=VARCHAR},
+      alias = #{alias,jdbcType=VARCHAR},
+      fs_code = #{fsCode,jdbcType=VARCHAR},
+      lastupdate = #{lastupdate,jdbcType=TIMESTAMP},
+      version = #{version,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <!-- 根据名称或者拼音查询症状 -->
+  <select id="listPageSymptomByNameOrPinYin" parameterType="com.cdutcm.tcms.biz.model.KbSymptom" resultMap="BaseResultMap">
+  	 select * from symptom where 1=1
+  	 <if test="name !=null and name !=''">
+		and ( pinyin like '%${name}%' or name like '%${name}%')
+	 </if>
+	 order by length(name) asc
+  </select>
+  
+  <!-- 查询所有症状 -->
+  <select id="findAllSymptom" resultMap="BaseResultMap">
+  	 select * from symptom order by length(name)
+  </select>
+  
+  <!-- 查询症状里面带括号的数据 -->
+  <select id="findSymptomByBracket" resultMap="BaseResultMap">
+  	select * from symptom where name like '%(%' or name like '%（%'or name like '%【%'or name like '%[%'
+  </select>
+  
+  <!-- 查询症状里面带有英文逗号的数据-->
+  <select id="findSymptomByComma" resultMap="BaseResultMap">
+  	select * from symptom where name like '%,%'
+  </select>
+  
+  
+    <!-- 删除Symptom表里名称重复的数据 -->
+  <delete id="delSymptomRepetitionName">
+  	delete from symptom
+		where id not in(
+			select * from (select max(id) from symptom group by name
+		) as s)
+  </delete>
+  
+  <!-- 根据name 查询symptom -->
+  <select id="findSymptomByName" parameterType="string" resultMap="BaseResultMap">
+  	select * from  symptom where name = #{_parameter}
+  </select>
+  
+  <!-- 查询出归经码为空的数据 -->
+  <select id="findSymptomByFsCodeIsNull" resultMap="BaseResultMap">
+  	select * from symptom where fs_code is null or fs_code = ''
+  </select>
+  
+  <!-- 查询出所有常用症状 -->
+  <select id="listAllCommons" resultMap="BaseResultMap">
+  	select * from symptom where version = 'COMM-1.0'
+  </select>
+</mapper>

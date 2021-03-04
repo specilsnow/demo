@@ -1,0 +1,18 @@
+.text-button-input{
+    background:  #cf3535 !important;
+}
+.wave {
+    background-color: #ef8e30 !important;
+}
+.container {
+    border: 5px solid #ef8e30 !important;
+}
+#spacing-left{
+    border-left:3px solid #cf3535 !important;
+}
+.right-page li:hover{
+    background:#cf3535 !important;
+}
+.icon-iconfontxingxing{
+    color:#ef8e30 !important;
+}

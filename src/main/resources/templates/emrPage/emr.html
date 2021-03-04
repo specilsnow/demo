@@ -1,0 +1,164 @@
+   <meta charset="UTF-8">
+  <div class="right-content" id="right-content">
+           <div class="right-content-blank">
+             <div class="right-content-title">
+               <div class="right-content-title-blank">
+                <h3 id="spacing-left">历史记录</h3>
+               </div>
+              <div class="right-content-title-search">
+              <span>查询</span>
+              <span><input type="text" id="search-left" placeholder="病名/日期/姓名/星级"/ ></span>
+              <span id="ok">
+              <img src="${request.contextPath}/img/search.png"" height="24" width="24">
+              </span>
+               </div>
+             </div>
+             <div class="right-content-content">
+                <table class="table" style="border-collapse:separate; border-spacing:0px 5px;">
+				<thead>
+					<tr>
+					    <th style="width:40px;padding:0;">
+							
+						</th>
+						<th>
+							姓名
+						</th>
+						<th>
+							病名
+						</th>
+						<th>
+							治法
+						</th>
+						<th>
+							就诊日期
+						</th>
+						<th>
+							状态
+						</th>
+						<th>
+							星级
+						</th>
+						<th style="text-align:center">
+						操作
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+				@ for(emr in emrs) {
+				<tr id="starGoal">
+					   <td style="width:40px;padding:0;">
+						 <img src="${request.contextPath}/img/avatar.jpg" height="50" width="50" style="border-radius:50%;border:2px #92B6D0 solid">
+						</td>
+						<td>
+						 ${emr.patientName}
+						</td>
+						<td>
+						  ${emr.disease}
+						</td>
+						<td>
+						  ${emr.therapy}
+						</td>
+						<td>
+					      ${emr.createTime,dateFormat='yyyy-MM-dd HH:mm:ss'}
+						</td>
+						<td>
+						处理完成
+						</td>
+						<td id="stars">
+						 <p>2</p>
+						</td>
+						<td style="text-align:center">
+						 <button type="button" class="btn btn-default" onclick="clickPatientInfo('${emr.visitNo}')">查看</button>
+						 <button type="button" class="btn btn-danger" onclick="delInfo()">删除</button>
+						</td>
+					</tr>
+					@}
+				</tbody>
+			</table>
+             </div>
+           </div>
+       </div>
+       <div class="right-page">
+       <div class="right-page-blank" >
+        <ul class="pull-right">
+        <li>
+           <a herf="#" onclick="searchNextEmrPage('${e.page.currentPage-1}','${e.page.totalPage}')">上一页</a>
+         </li>
+           <div class="skipPage">
+               <div>第${e.page.currentPage}页</div>
+           </div>
+            <li>
+           <a herf="#" onclick="searchNextEmrPage('${e.page.currentPage+1}','${e.page.totalPage}')">下一页</a>
+           </li>
+           <div class="skipToPage">
+           <span>总${e.page.totalPage}页，</span>
+             <span>跳至</span>
+             <span><input type="text" id="skip"></span>
+             <span>页</span>
+             <span><input type="submit" id="skipTo" value="跳转"></span>
+           </div>
+         </ul>
+       </div>
+    </div>
+    <script>
+    $(function(){
+//表格奇数行添加样式
+  $("tr:odd").addClass("success");
+  //星星评分
+  $("#starGoal #stars p").each(function(){
+     var starNum = $(this).text();
+     var stars="";
+     var starA="<i class='iconfont icon-iconfontxingxing'></i>";
+     var starB="<i class='iconfont icon-star'></i>"
+     for(var i=0;i<5;i++){
+       if(i<starNum){
+         stars =stars+starA;
+       }
+       else{
+          stars =stars+starB;
+       }
+     }
+    $(this).replaceWith(stars);
+  })
+})
+    
+    </script>
+    <style>
+    .btn{
+    border-radius:0;
+    }
+    .btn-default{
+    	background:#fff;
+    	
+    	color:#92B6D0;
+    	border-color:#92B6D0;
+    }
+     .table > tbody > tr > td{
+     text-align:center;
+     	border:none!important;
+     	vertical-align:unset!important;
+     background-color:#E9EDEE!important;
+     }
+     .table > tbody > tr td:first-child{
+     background: linear-gradient(to right,#fff 50%,#E9EDEE 50%);
+     }
+     .table > tbody > tr td:last-child{
+     background:transparent!important;
+     }
+    	.table > tbody > tr.success td{
+    	background-color:#92B6D0!important;
+    	color:#fff;
+    	}
+    	.table > tbody > tr.success td:first-child{
+    	background: linear-gradient(to right,#fff 50%,#92B6D0 50%);
+    	}
+    	.table > tbody > tr.success td:last-child{
+    	background:transparent!important;
+    	}
+    	
+.table > thead > tr > th{
+	border:none;
+	color:#92B6D0;
+	text-align:center;
+}
+    </style>

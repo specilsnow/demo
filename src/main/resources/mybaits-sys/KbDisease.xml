@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdutcm.tcms.biz.mapper.KbDiseaseMapper" >
+  <resultMap id="BaseResultMap" type="com.cdutcm.tcms.biz.model.KbDisease" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="pinyin" property="pinyin" jdbcType="VARCHAR" />
+    <result column="fs_code" property="fsCode" jdbcType="VARCHAR" />
+    <result column="icd_code" property="icdCode" jdbcType="VARCHAR" />
+    <result column="his_id" property="hisId" jdbcType="VARCHAR" />
+    <result column="lastupdate" property="lastupdate" jdbcType="TIMESTAMP" />
+    <result column="version" property="version" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, pinyin, fs_code, icd_code, his_id, lastupdate, version
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from disease
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from disease
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.cdutcm.tcms.biz.model.KbDisease" >
+    insert into disease (id, name, pinyin, 
+      fs_code,his_id, icd_code, lastupdate,version
+      )
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{pinyin,jdbcType=VARCHAR}, 
+      #{fsCode,jdbcType=VARCHAR},#{hisId,jdbcType=VARCHAR}, #{icdCode,jdbcType=VARCHAR}, #{lastupdate,jdbcType=TIMESTAMP}
+      , #{version,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cdutcm.tcms.biz.model.KbDisease" >
+    insert into disease
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="pinyin != null" >
+        pinyin,
+      </if>
+      <if test="fsCode != null" >
+        fs_code,
+      </if>
+      <if test="icdCode != null" >
+        icd_code,
+      </if>
+         <if test="hisId != null" >
+        his_id,
+      </if>
+      <if test="lastupdate != null" >
+        lastupdate,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="pinyin != null" >
+        #{pinyin,jdbcType=VARCHAR},
+      </if>
+      <if test="fsCode != null" >
+        #{fsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="icdCode != null" >
+        #{icdCode,jdbcType=VARCHAR},
+      </if>
+      <if test="hisId != null" >
+        #{hisId,jdbcType=VARCHAR},
+      </if>
+      <if test="lastupdate != null" >
+        #{lastupdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cdutcm.tcms.biz.model.KbDisease" >
+    update disease
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="pinyin != null" >
+        pinyin = #{pinyin,jdbcType=VARCHAR},
+      </if>
+      <if test="fsCode != null" >
+        fs_code = #{fsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="icdCode != null" >
+        icd_code = #{icdCode,jdbcType=VARCHAR},
+      </if>
+      <if test="hisId != null" >
+        his_id = #{hisId,jdbcType=VARCHAR},
+      </if>
+      <if test="lastupdate != null" >
+        lastupdate = #{lastupdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="version != null" >
+        version = #{version,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cdutcm.tcms.biz.model.KbDisease" >
+    update disease
+    set name = #{name,jdbcType=VARCHAR},
+      pinyin = #{pinyin,jdbcType=VARCHAR},
+      fs_code = #{fsCode,jdbcType=VARCHAR},
+      icd_code = #{icdCode,jdbcType=VARCHAR},
+      his_id = #{hisId,jdbcType=VARCHAR},
+      lastupdate = #{lastupdate,jdbcType=TIMESTAMP},
+      version = #{version,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+    <!-- 根据名称或者拼音查询病名 -->
+  <select id="listPageDiseaseByPinYinOrName" parameterType="com.cdutcm.tcms.biz.model.KbDisease" resultMap="BaseResultMap">
+  	 select * from disease where 1=1
+    <if test=" name !=null and name !=''">
+		and ( pinyin like '%${name}%' or name like '%${name}%')
+	 </if>
+	 order by length(name) asc
+  </select>
+  
+   	<!-- 查询所有病名 -->
+  <select id="findAllDisease" resultMap="BaseResultMap">
+  	 select * from disease where name is not null and name != '' order by convert(name using gbk) asc
+  </select>
+  
+  <!-- 把病名添加到temp_2表 -->
+  <insert id="insertTempOfDisease" parameterType="com.cdutcm.tcms.biz.model.KbDisease">
+  	insert into tc_c.temp_2(id,zdmc,status)values(#{id},#{name},'T')
+  </insert>
+  
+  <!-- 清空temp_2表 -->
+  <delete id="deleteAllTemp">
+  	delete from tc_c.temp_2
+  </delete>
+  
+      <!-- 删除disease表里名称重复的数据 -->
+  <delete id="delDiseaseRepetitionName">
+  	delete from disease
+		where id not in(
+			select * from (select max(id) from disease group by name
+		) as s)
+  </delete>
+  
+     <!-- 根据name 查询disease -->
+  <select id="findDiseaseByName" parameterType="string" resultMap="BaseResultMap">
+  	select * from  tc_c.disease where name = #{_parameter}
+  </select>
+  
+  <!-- 查询name带有英文逗号的数据 -->
+  <select id="findAllDiseaseByComma" resultMap="BaseResultMap">
+  	 select * from disease where name like '%,%' or name like '%，%'or name like '%、%' order by length(name)
+  </select>
+  
+   <!-- 根据存储过程把去重后的病名数据添加到temp_2表 -->
+  <insert id="addDiseaseForSP" parameterType="java.lang.String">
+	 <![CDATA[
+    {call proc_batchDiseaseInsert(
+    	#{prxml,mode=IN,jdbcType=VARCHAR}
+    )}
+    ]]>
+  </insert>
+  
+  <!-- 根据his返回给我们对码的id查询temp_2表查询出his病名和我们本地匹配的病名 -->
+  <select id="findTempDiseaseByid" parameterType="string" resultType="string">
+  	select zdmc from tc_c.temp_2 where id =#{_parameter}
+  </select>
+  
+  <!-- 查询temp_2表所有id -->
+  <select id="findAllTempDisease" resultMap="BaseResultMap">
+  	select id, zdmc as name from tc_c.temp_2 order by id
+  </select>
+  
+     <!-- 存储过程添加his病名，并和我们本地的病名所对应 -->
+  <insert id="addHisDiseaseForSP" parameterType="java.lang.String">
+	 <![CDATA[
+    {call proc_batchHisDiseaseInsert(
+    	#{prxml,mode=IN,jdbcType=VARCHAR}
+    )}
+    ]]>
+  </insert>
+  
+  <!-- 根据disease_mix表查询出药品的的hisid,icd_code -->
+   <select id="findDiseaseMixHisIdByName" resultType="com.cdutcm.tcms.biz.model.KbDisease">
+   	  select his_id as hisId ,local_name as name,ctype,icd_code as icdCode from disease_mix
+   </select>
+   
+   <!-- 根据病名查找 -->
+   <select id="findbyDiseaseName" resultType="string" parameterType="string">
+      select name from disease where 
+       	<foreach collection="list" index="index" item="item" separator="or" >
+         name like concat('%',#{item},'%')
+       </foreach>
+        limit 1
+   </select>
+   
+    <!-- 获取分词查询匹配的结果 -->
+   <select id="findAnalyzerRecommendDisease" resultType="string" parameterType="string">
+  	select distinct name from disease where 
+  	<foreach collection="list" index="index" item="item" separator="or" >
+         name like concat('%',#{item},'%')
+    </foreach>
+      ORDER BY LENGTH(name) limit 50
+   </select>
+   
+   <!-- 设置disease表里面所有icd_code,his_id为空 -->
+   <update id="updateDiseaseHisIdIsNull">
+   	  update disease set his_id = null ,icd_code = null,ctype = null
+   </update>
+   
+   <!-- 根据name修改his_id,icd_code -->
+   <update id="updateDiseaseHisIdByName" parameterType="com.cdutcm.tcms.biz.model.KbDisease">
+   	  update disease set his_id = #{hisId},icd_code = #{icdCode},ctype = #{ctype} where name = #{name}
+   </update>
+   
+   <!-- 根据病名删除 -->
+   <delete id="delDiseaseByName" parameterType="string">
+   	  delete from disease where name =#{_parameter}
+   </delete>
+   
+   <!-- /** 根据病名查询temp2表中的id */ -->
+   <select id="findZdbmByZdmc" parameterType="string" resultType="int">
+   	  select id from temp_2 where zdmc=#{_parameter}
+   </select>
+
+</mapper>

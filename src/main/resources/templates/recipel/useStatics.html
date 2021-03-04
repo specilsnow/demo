@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+    <title>掌上开方</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <meta content="Preview page of Metronic Admin Theme #2 for statistics, charts, recent events and reports"
+          name="description"/>
+    <meta content="" name="author"/>
+    <!--H5禁止缩放-->
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport"/>
+    <!-- BEGIN GLOBAL MANDATORY STYLES -->
+    <link href="${request.contextPath}/css/fonts-googleapis.css" rel="stylesheet" type="text/css"/>
+    <link href="${request.contextPath}/metronic/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    <link href="${request.contextPath}/metronic/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <!-- END GLOBAL MANDATORY STYLES -->
+    <!-- BEGIN THEME GLOBAL STYLES -->
+    <link href="${request.contextPath}/metronic/css/components.min.css" rel="stylesheet" id="style_components"
+          type="text/css"/>
+    <link href="${request.contextPath}/metronic/css/plugins.min.css" rel="stylesheet" type="text/css"/>
+    <!-- END THEME GLOBAL STYLES -->
+    <!-- BEGIN THEME LAYOUT STYLES -->
+    <link href="${request.contextPath}/metronic/css/layout.min.css" rel="stylesheet" type="text/css"/>
+    <link href="${request.contextPath}/metronic/css/blue.min.css" rel="stylesheet" type="text/css" id="style_color"/>
+    <link href="${request.contextPath}/metronic/css/custom.min.css" rel="stylesheet" type="text/css"/>
+    <!-- END THEME LAYOUT STYLES -->
+    <link rel="stylesheet" type="text/css"
+          href="${request.contextPath}/bootstrap/css/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css"/>
+    <!-- 样式冲突CSS -->
+    <link rel="stylesheet" type="text/css" href="${request.contextPath}/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="${request.contextPath}/css/useStatics.css">
+</head>
+
+<!-- END HEAD -->
+
+<body class="page-sidebar-closed-hide-logo page-container-bg-solid">
+<div class="header">
+    <div class="left"><a href="${request.contextPath}/recipelIndex">返回首页</a></div>
+    <div class="center">数据统计</div>
+    <div class="right" onclick="showModel()">
+        <i class="fa fa-bars" aria-hidden="true"></i>
+    </div>
+</div>
+<div class="container">
+    <div class="selectContainer">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <span>选择诊所</span>
+                    <span class="right hospitalTitle">当前选择：<span id="hospitalValue"></span></span>
+                </h3>
+            </div>
+            <div class="panel-body" id="hospital">
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <span>选择科室</span>
+                    <span class="right departmentTitle">当前选择：<span id="departmentValue"></span></span>
+                </h3>
+            </div>
+            <div class="panel-body" id="department">
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <span>选择医生</span>
+                    <span class="right doctorTitle">当前选择：<span id="doctorValue"></span></span>
+                </h3>
+            </div>
+            <div class="panel-body" id="doctor">
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <span>选择区间</span>
+                    <span class="right sectionTitle">当前选择：<span id="sectionValue"></span></span>
+                </h3>
+            </div>
+            <div class="panel-body" id="section">
+
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    选择日期
+                </h3>
+            </div>
+            <div class="panel-body">
+                <input type="date" class="form-control" id="date" placeholder="选择日期" onchange="dateSelect()">
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <div class="Sort">
+            <div class="descSort">
+                <div id="descValue">--选择排序方式--</div>
+                <ul>
+                    <li data-id="descValue" data-value="asc">升序排序</li>
+                    <li data-id="descValue" data-value="desc">降序排序</li>
+                </ul>
+            </div>
+            <div class="topSort">
+                <div id="topValue">--选择筛选方式--</div>
+                <ul>
+                    <li data-id="topValue" data-value="10" data-orderBy="desc">前十</li>
+                    <li data-id="topValue" data-value="5" data-orderBy="desc">前五</li>
+                    <li data-id="topValue" data-value="3" data-orderBy="desc">前三</li>
+                    <li data-id="topValue" data-value="3" data-orderBy="asc">后三</li>
+                    <li data-id="topValue" data-value="5" data-orderBy="asc">后五</li>
+                    <li data-id="topValue" data-value="10" data-orderBy="asc">后十</li>
+                </ul>
+            </div>
+        </div>
+        <div id="show_charts"></div>
+        <div class="noData">
+            <span>当前数据为空</span>
+        </div>
+        <div class="table">
+            <table class="table table-bordered" id="table">
+                <caption>
+                    <div><span>记录总数：</span><span id="total"></span></div>
+                    <div>
+                        <input type="text" placeholder="输入关键字进行检索" class="form-control" id="searchInput" value="">
+                        <input type="button" class="btn btn-default" value="搜索" onclick="search()">
+                    </div>
+                </caption>
+                <thead>
+                <tr>
+                    <th>医生姓名</th>
+                    <th>处方条数</th>
+                    <th>处方详情</th>
+                </tr>
+                </thead>
+                <tbody id="tableData">
+
+                </tbody>
+            </table>
+            <div class="more tableMore" onclick="more()">加载更多</div>
+        </div>
+    </div>
+</div>
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="recipelId">
+                    <div class="searchInput">
+                        <span class="fa fa-search">
+                            <input type='text' placeholder="搜索姓名、日期、证型、跟诊老师">
+                        </span>
+                    </div>
+                    <div class="recipelItem"></div>
+                </div>
+                <div class="more modalMore" onclick="modalMore()">加载更多</div>
+                <div id="recipelHistory">
+
+                </div>
+            </div>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal -->
+</body>
+<script src="${request.contextPath}/metronic/js/jquery.min.js" type="text/javascript"></script>
+<script src="${request.contextPath}/metronic/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="${request.contextPath}/js/echart.js" type="text/javascript"></script>
+<script src="${request.contextPath}/bootstrap/css/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.min.js"
+        type="text/javascript"></script>
+<script type="text/javascript"
+        src="${request.contextPath}/bootstrap/css/bootstrap-datetimepicker-master/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+<script>
+    $(".Sort>div").on("click",'div',function () {
+        if($(this).parent().siblings().find("ul").css("display")=="block"){
+            $(this).parent().siblings().find("ul").css("display","none")
+        }
+        $(this).next().slideToggle();
+    });
+    $(".Sort>div").on("click","ul>li",function () {
+        var text=$(this).text();
+        var id=$(this).data("id");
+        var value=$(this).data("value");
+        $(this).parent().slideToggle();
+        $("#"+id).text(text);
+        var data={};
+        data=Object.assign({},postData);
+        if(id=="descValue"){
+            data.orderBys=value;
+        }
+        if(id=="topValue"){
+            var orderBy=$(this).data("orderBy");
+            data.orderBys=orderBy;
+            data.top=value;
+        }
+        getData(data)
+    })
+    function DataContainer() {
+        this.isSelectRender = true;
+        this.isTableRender=false;
+    }
+    var dataContainer = new DataContainer();
+    function PostData() {
+        this.groupBy="";
+        this.createTime="";
+        this.department="";
+        this.doctor="";
+        this.clinic= "";
+        this.timeInterVal="";
+    }
+    var postData=new PostData();
+
+    function Page() {
+        this.start=0;
+        this.limit=10;
+        this.currentPage=1;
+        this.pages=0;
+    }
+    var page=new Page();
+
+    var modalDataPage=new Page();
+    (function () {
+        getData();
+    })();
+    var recipels=[];
+    function getData(data) {
+        if (data == undefined || data == "") {
+            data = {}
+        }
+        $.ajax({
+            url: "${request.contextPath}/statics/chartStatic",
+            type: "POST",
+            data: data,
+            success: function (res) {
+                // console.log(res)
+                dataHandle(res);
+
+            },
+            error: function (res) {
+                console.log(res)
+            }
+        })
+    }
+
+    function dataHandle(res) {
+        var groundBy = res.data.groupBy;
+        var section = res.data.selectTime;
+        var data = res.data.tdata;
+        var tableData = res.data.tabelData;
+        var xData = [], recipelDetailNum = [], recipelNum = [];
+        for (const key in data) {
+            if (data[key][groundBy] != "" && data[key][groundBy] != undefined) {
+                xData.push(data[key][groundBy]);
+                recipelDetailNum.push(data[key].recipelDetailNum);
+                recipelNum.push(data[key].recipelNum)
+            }
+        }
+        if(dataContainer.isTableRender){
+            table(tableData,false);
+            return;
+        }
+        checkPage(tableData);
+        if (xData.length != 0) {
+            $(".table").css("display", "block");
+            $(".noData").css("display", "none");
+            $("#show_charts").css("display", "block");
+            $(".Sort").css("display", "block");
+            echart(xData, recipelNum, recipelDetailNum);
+            table(tableData,true);
+        } else {
+            $("#show_charts").css("display", "none")
+            $(".noData").css("display", "block");
+            $(".table").css("display", "none");
+            $(".Sort").css("display", "none");
+        }
+        if (groundBy == "clinic"&& dataContainer.isSelectRender) {
+            selectAppend(xData, "hospital");
+            selectAppend(section, "section")
+        }
+        if (groundBy == "department" && dataContainer.isSelectRender) {
+            selectAppend(xData, "department");
+        }
+        if (groundBy == "doctor" && dataContainer.isSelectRender) {
+            selectAppend(xData, "doctor");
+        }
+    }
+    function checkPage(res) {
+        var limit=res.limit;
+        var total=res.total;
+        var start=res.start;
+        page.currentPage=1;
+        page.pages=parseInt((total-start)/limit);
+        var numbel2=(total-start)%limit;
+        page.limit=numbel2;
+        if(numbel2>0){
+            page.pages++;
+        }
+        if(page.pages>page.currentPage){
+            page.start=start+10;
+            $(".tableMore").css("display","block")
+        }else{
+            $(".tableMore").css("display","none");
+        }
+    }
+    function table(res,isHtml) {
+        var total=res.total;
+        var data = res.table;
+        var str = "";
+        $("#total").text(total)
+        for (var i = 0; i < data.length; i++) {
+            var doctorId = "\""+data[i].doctorId+"\"";
+            str = str + "<tr>" +
+                "<td>" + data[i].doctor + "</td>" +
+                "<td>" + data[i].recipelNum + "</td>" +
+                "<td><a data-id='" + data[i].doctorId + "' href='javascript:doctorDetail("+ doctorId+","+data[i].recipelNum +")'>详情</a></td>" +
+                "</tr>"
+        }
+        if(isHtml){
+            $("#tableData").html(str);
+        }else{
+            $("#tableData").append(str);
+        }
+
+    }
+
+    function echart(xData, recipelNum, recipelDetailNum) {
+        var dom = document.getElementById("show_charts");
+        var myChart = echarts.init(dom);
+        myChart.setOption({
+            tooltip: {
+                trigger: 'item',
+            },
+            legend: {
+                data: ['处方', '处方明细']
+            },
+            grid: {
+                left: 50,
+                right: 15,
+                bottom: 100
+            },
+            xAxis: [
+                {
+                    type: 'category',
+                    data: xData,
+                    axisLabel: {
+                        interval: 0,
+                        rotate: 40
+                    }
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value'
+                }
+            ],
+            series: [
+                {
+                    name: '处方',
+                    type: 'bar',
+                    data: recipelNum,
+                    itemStyle: {
+                        color: '#4CABCE'
+                    }
+                },
+                {
+                    name: '处方明细',
+                    type: 'bar',
+                    data: recipelDetailNum,
+                    itemStyle: {
+                        color: '#006699'
+                    }
+                }
+            ]
+        })
+    }
+    function getRecipelDetail(id) {
+        $("#myModalLabel").html("<div style='text-align: center'><a href='javascript:recipelBack()' style='position: absolute;left: 20px'>返回</a><span>处方详情</span></div>");
+        $("#recipelHistory").css("display","block");
+        $("#recipelId").css("display","none");
+        $(".modalMore").css("display","none")
+        $('#myModal').modal('show');
+        var str="",dosage="",name="",unit,usage;
+        for(var i=0;i<recipels.length;i++){
+            if(id==recipels[i].id){
+                var obj=recipels[i];
+                var data=recipels[i].recipels[0];
+                str+=" <div class=\"visitNo\"><div class=\"title\">编号</div><div id=\"visitNo\">"+obj.visitNo+"</div></div>\n" +
+                    "                    <div class=\"deptName\"><div class=\"title\">科室</div><div id=\"deptName\">"+obj.deptName+"</div></div>\n" +
+                    "                    <div class=\"telephone\"><div class=\"title\">电话</div><div id=\"telephone\">"+obj.telephone+"</div></div>\n" +
+                    "                    <div class=\"patientName\"><div class=\"title\">姓名</div><div id=\"patientName\">"+obj.patientName+"</div></div>\n" +
+                    "                    <div class=\"sex\"><div class=\"title\">性别</div><div id=\"sex\">"+obj.sex+"</div></div>\n" +
+                    "                    <div class=\"age\"><div class=\"title\">年龄</div><div id=\"age\">"+obj.age+"</div></div>\n" +
+                    "                    <div class=\"createTime\"><div class=\"title\">日期</div><div id=\"createTime\">"+obj.createTime.substring(0,11)+"</div></div>\n" +
+                    "                    <div class=\"chiefComplaint\"><div class=\"title\">主诉</div><div id=\"chiefComplaint\">"+obj.chiefComplaint+"</div></div>\n" +
+                    "                    <div class=\"presentillness\"><div class=\"title\">现病史</div><div id=\"presentillness\">"+obj.presentillness+"</div></div>\n" +
+                    "                    <div class=\"pastillness\"><div class=\"title\">既往史</div><div id=\"pastillness\">"+obj.pastillness+"</div></div>\n" +
+                    "                    <div class=\"personalIllness\"><div class=\"title\">个人史</div><div id=\"personalIllness\">"+obj.personalIllness+"</div></div>\n" +
+                    "                    <div class=\"allergicHistory\"><div class=\"title\">过敏史</div><div id=\"allergicHistory\">"+obj.allergicHistory+"</div></div>\n" +
+                    "                    <div class=\"physicalExamination\"><div class=\"title\">体格检查</div><div id=\"physicalExamination\">"+obj.physicalExamination+"</div></div>\n" +
+                    "                    <div class=\"auxiliaryInspection\"><div class=\"title\">辅助检查</div><div id=\"auxiliaryInspection\">"+obj.auxiliaryInspection+"</div></div>\n" +
+                    "                    <div class=\"medicalAdvice\"><div class=\"title\">诊疗意见</div><div id=\"medicalAdvice\">"+obj.medicalAdvice+"</div></div>\n" +
+                    "                    <div class=\"disease\"><div class=\"title\">症状</div><div id=\"disease\">"+obj.disease.replace("&&&",";")+"</div></div>\n" +
+                    "                    <div class=\"symptommould\"><div class=\"title\">证型</div><div id=\"symptommould\">"+obj.symptommould+"</div></div>\n" +
+                    "                    <div class=\"symptom\"><div class=\"title\">病名</div><div id=\"symptom\">"+obj.symptom+"</div></div>\n" +
+                    "                    <div class=\"therapy\"><div class=\"title\">治法</div><div id=\"therapy\">"+data.therapy+"</div></div>\n" +
+                    "                    <div class=\"recipelName\"><div class=\"title\">处方名</div><div id=\"recipelName\">"+data.name.replace(",","")+"</div></div>\n" +
+                    "                    <div class=\"imageInfo\"><div class=\"title\">图像信息</div><div id=\"imageInfo\">";
+                for(i=0;i<obj.emrImgInfo.length;i++){
+                    str+="<div><div class='imageItem'><img src="+obj.emrImgInfo[i].imgUrl+"/><div>"+obj.emrImgInfo[i].imgName+"</div></div></div>"
+                }
+                str+="</div></div><div class=\"recipel\">\n" + "<div class=\"title\">用药信息</div>\n" + "<div id=\"recipel\">";
+                for(var j=0;j<data.recipelItems.length;j++){
+                    name=data.recipelItems[j].name||"";
+                    dosage=data.recipelItems[j].dosage||"";
+                    unit=data.recipelItems[j].unit||"";
+                    usage=data.recipelItems[j].usage||"";
+                    str+="<div><div class='item'><div class='left'>"+name+"</div><div class='right'><div class='top'>"+usage+"</div><div class='bottom'>"+dosage+unit+"</div></div></div></div>"
+                }
+                if(data.recipelItems.length==0){
+                    str+="<div style='width: 100%;height: 100px;display: flex;justify-content: center;align-items: center'>数据为空</div>"
+                }
+                str+="</div></div>\n" +
+                "                    <div class=\"jff\"><div class=\"title\">煎服法</div><div id=\"jff\">"+data.jff+"</div></div>\n" +
+                "                    <div class=\"notice\"><div class=\"title\">医嘱</div><div id=\"notice\">"+data.notice+"</div></div>\n" +
+                "                    <div class=\"js\"><div class=\"title\">剂数</div><div id=\"js\">"+data.js+"</div></div>\n" +
+                "                    <div class=\"je\"><div class=\"title\">金额</div><div id=\"je\">"+data.je+"</div></div>\n" +
+                "                    <div class=\"doctorName\"><div class=\"title\">医师</div><div id=\"doctorName\">"+obj.doctorName+"</div></div>\n" +
+                "                    <div class=\"fhdoctor_name\"><div class=\"title\">药师（复核）</div><div id=\"fhdoctor_name\">"+data.fhdoctor_name+"</div></div>"
+                break;
+            }
+        }
+
+        $("#recipelHistory").html(str);
+    }
+
+    function recipelBack() {
+        $("#myModalLabel").html("<div style='text-align: center'><span>历史处方</span></div>");
+        $("#recipelId").css("display","block")
+        $("#recipelHistory").css("display","none");
+        if(modalDataPage.pages>modalDataPage.currentPage){
+            $(".modalMore").css("display","block")
+        }
+    }
+    //关闭模态框取消
+    $('#myModal').on('hide.bs.modal', function () {
+        document.documentElement.style.position = 'static';
+        document.body.style.overflow = ''; //出现滚动条
+    })
+    function checkModalPage(doctorId,recipelNum){
+        var total=recipelNum*1;
+        var start=0;
+        var limit=10;
+        modalDataPage.currentPage=1;
+        modalDataPage.pages=parseInt((total-start)/limit);
+        modalDataPage.doctorId=doctorId;
+        var numbel2=(total-start)%limit;
+        modalDataPage.limit=numbel2;
+        if(numbel2>0){
+            modalDataPage.pages++;
+        }
+        if(modalDataPage.pages>modalDataPage.currentPage){
+            modalDataPage.start=start+10;
+            $(".modalMore").css("display","block")
+        }else{
+            $(".modalMore").css("display","none");
+        }
+    }
+    function doctorDetail(doctorId,recipelNum) {
+        var obj=Object.assign({},postData);
+        obj.doctorId=doctorId;
+        $.ajax({
+            url: "${request.contextPath}/statics/gerEmrs",
+            type: "POST",
+            data: obj,
+            success: function (res) {
+                if(res.code==0){
+                    $("#myModalLabel").html("<div style='text-align: center'><span>历史处方</span></div>");
+                    $('#myModal').modal('show');
+                    document.documentElement.style.position = 'fixed';
+                    document.body.style.overflow = 'hidden';
+                    var data=res.data.emrs;
+                    modalData(data,1);
+                    $("#recipelId").css("display","block");
+                    $("#recipelHistory").css("display","none");
+                    checkModalPage(doctorId,recipelNum);
+                }
+            },
+            error: function (res) {
+                console.log(res)
+            }
+        })
+    }
+
+    $(".panel-default>.panel-body").on('keyup', "input", function () {
+        var value = $(this).val();
+        var id = $(this).attr("id");
+        var arr = $(this).siblings();
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i].innerHTML.indexOf(value) != -1) {
+                arr[i].style.display = "block";
+            } else {
+                arr[i].style.display = "none";
+            }
+        }
+
+    });
+
+    function showModel() {
+        $(".selectContainer").slideToggle("slow");
+        $(".content").slideToggle("slow");
+    }
+
+    function selectAppend(data, id) {
+        var str = "";
+        if (id != "section") {
+            var str = "<input type='text' class='form-control' id='" + id + "Input' value='' placeholder='请输入关键字进行检索'/>";
+        }
+        for (var i = 0; i < data.length; i++) {
+            str = str + "<div data-id=" + id + ">" + data[i] + "</div>";
+        }
+        $("#" + id).html(str);
+    }
+
+    $(".panel-default>.panel-body").on("click", "div", function (e) {
+
+        if($("#descValue").text()!="--选择排序方式--"){
+            $("#descValue").text("--选择排序方式--")
+        }
+        if($("#topValue").text()!="--选择筛选方式--"){
+            $("#topValue").text("--选择筛选方式--")
+        }
+        var value = $(this).html();
+        var id = $(this).data("id");
+        if (value.length > 10) {
+            value = value.substring(0, 10) + "...";
+        }
+        $('#' + id + "Value").text(value);
+        $("." + id + "Title").css("display", "inline-block");
+        if (id == "hospital") {
+            dataContainer.isTableRender=false;
+            dataContainer.isSelectRender=true;
+            postData.groupBy="hospital";
+            postData.clinic=value;
+            postData.doctor="";
+            postData.department="";
+            postData.timeInterVal="";
+            postData.createTime="";
+            $("#department").html("");
+            $("#doctor").html("");
+            $(".departmentTitle").css("display", "none");
+            $(".doctorTitle").css("display", "none");
+            $(".sectionTitle").css("display", "none");
+            getData(postData);
+        }
+        if (id == "department") {
+            dataContainer.isTableRender=false;
+            dataContainer.isSelectRender=true;
+            postData.groupBy="department";
+            postData.department=value;
+            postData.doctor="";
+            postData.timeInterVal="";
+            postData.createTime="";
+            $("#doctor").html("");
+            $(".doctorTitle").css("display", "none");
+            $(".sectionTitle").css("display", "none");
+            getData(postData);
+        }
+        if (id == "doctor") {
+            dataContainer.isTableRender=false;
+            dataContainer.isSelectRender=true;
+            postData.groupBy="doctor";
+            postData.doctor=value;
+            getData(postData);
+        }
+        if (id == "section") {
+            dataContainer.isTableRender=false;
+            dataContainer.isSelectRender=false;
+            postData.createTime="";
+            $("#date").val("");
+            postData.timeInterVal=value;
+            getData(postData);
+        }
+    });
+
+    function dateSelect() {
+        var value = $("#date").val();
+        postData.createTime=value;
+        postData.timeInterVal="";
+        $(".sectionTitle").css("display", "none");
+        dataContainer.isTableRender=false;
+        dataContainer.isSelectRender=false;
+        getData(postData);
+    }
+    function more() {
+        var value = $("#date").val();
+        var obj=Object.assign({},postData);
+        obj.start=page.start;
+        page.currentPage++;
+        if(page.pages>page.currentPage){
+            obj.limit=10;
+            page.start+=10;
+        }else if(page.pages==page.currentPage){
+            $(".tableMore").css("display","none");
+            if(page.limit!=0){
+                obj.limit=page.limit;
+            }else{
+                obj.limit=10;
+            }
+        }
+        dataContainer.isTableRender=true;
+        getData(obj);
+    }
+    function search() {
+        var value=$("#searchInput").val();
+        var obj=Object.assign({},postData);
+        dataContainer.isTableRender=false;
+        obj.keyword=value;
+        getData(obj);
+    }
+    function modalMore() {
+        var obj=Object.assign({},postData);
+        obj.doctorId=modalDataPage.doctorId;
+        obj.start=modalDataPage.start;
+        modalDataPage.currentPage++;
+        if(modalDataPage.pages>modalDataPage.currentPage){
+            obj.limit=10;
+            modalDataPage.start+=10;
+        }else if(modalDataPage.pages==modalDataPage.currentPage){
+            $(".modalMore").css("display","none");
+            if(modalDataPage.limit!=0){
+                obj.limit=modalDataPage.limit;
+            }else{
+                obj.limit=10;
+            }
+        }
+        $.ajax({
+            url: "${request.contextPath}/statics/gerEmrs",
+            type: "POST",
+            data: obj,
+            success:function (res) {
+                console.log(res)
+                var data=res.data.emrs;
+                modalData(data,2)
+            },
+            error:function (res) {
+                console.log(res)
+            }
+        });
+    }
+    function modalData(data,type) {
+        console.log(data)
+        var str="",recipelId,patientName,sex,age,createTime,symptom,symptommould,chiefComplaint,disease,condition;
+        for (var i = 0; i < data.length; i++) {
+            recipelId = "\""+data[i].id+"\"";
+            data[i].patientName.length>5?patientName=data[i].patientName.substring(0,5)+"...":patientName=data[i].patientName;
+            sex=data[i].sex||"";
+            age=data[i].age||"";
+            if("createTime" in  data[i]){
+                createTime=data[i].createTime.substring(0,11)||"";
+            }
+            data[i].symptom!=""?symptom=data[i].symptom+";":symptom="";
+            data[i].symptommould!=""?symptommould=data[i].symptommould+";":symptommould="";
+            data[i].chiefComplaint!=""?chiefComplaint=data[i].chiefComplaint+";":chiefComplaint="";
+            data[i].disease!=""?disease=data[i].disease+";":disease="";
+            condition=symptom +symptommould+chiefComplaint+disease;
+            if(condition.length>13){
+                condition=condition.replace("&&&"," ").substring(0,12)+"..."
+            }
+            str+="<div class='doctorList' onclick='getRecipelDetail("+ recipelId+")'>" +
+                "<div><div class='patientName'>"+patientName+ "</div><div class='sex'><span>"+sex+"</span><span>"+age+"</span></div><div class='createTime'><span>"+createTime+"</span></div></div>" +
+                "<div class='condition'><div class='title'>[病情]</div><div class='value'>"+condition+"</div></div></div>";
+        }
+        if(type==1){
+            recipels=[];
+            recipels=data;
+            if(data.length==0){
+                str="<div style='width: 100%;height: 300px;display: flex;justify-content: center;align-items: center'>当前数据为空</div>"
+            }
+            $(".recipelItem").html(str);
+        }
+        if(type==2){
+            recipels.concat(data);
+            $(".recipelItem").append(str);
+        }
+        if(type==3){
+            recipels=[];
+            recipels=data;
+            if(data.length==0){
+                str="<div style='width: 100%;height: 300px;display: flex;justify-content: center;align-items: center'>当前数据为空</div>"
+            }
+            $(".recipelItem").html(str);
+        }
+    }
+    $("#recipelId").on('keyup', "input", function () {
+        var value = $(this).val();
+        var obj=Object.assign({},postData);
+        obj.doctorId=modalDataPage.doctorId;
+        obj.keyword=value;
+        if(value==""&&modalDataPage.pages>modalDataPage.currentPage){
+            $(".modalMore").css("display","block")
+        }else{
+            $(".modalMore").css("display","none")
+        }
+        $.ajax({
+            url: "${request.contextPath}/statics/gerEmrs",
+            type: "POST",
+            data: obj,
+            success:function (res) {
+                var data=res.data.emrs;
+                modalData(data,3)
+            },
+            error:function (res) {
+                console.log(res)
+            }
+        });
+    });
+</script>
+</html>

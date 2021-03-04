@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="${request.contextPath}/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <script src="${request.contextPath}/jquery/dist/jquery.js"></script>
+    <script src="${request.contextPath}/bootstrap/js/bootstrap.js"></script>
+    <title>处方信息</title>
+</head>
+<body>
+<h3 style="margin-top: 100px;text-align: center">处方笺</h3>
+<div class="container" style="margin-left: 16%;margin-right: 10%;margin-top: 40px; background-color: #e4e4e4;text-align: center">
+    <div class="row">
+        <div class="col-md-8"><span><label>门诊编号</label> ${number}</span></div>
+        <div class="col-md-4"><span><label>姓名</label> ${name}</span></div>
+    </div>
+    <div class="row">
+        <div class="col-md-4"><label>性别</label> ${sex}</div>
+        <div class="col-md-4"><label>年龄</label> ${age}</div>
+        <div class="col-md-4"><label>日期</label> ${date}</div>
+    </div>
+    <div class="row">
+        <div class="col-md-12"><label>诊断</label> ${diagnosis}</div>
+    </div>
+    <div class="row">
+        <div class="col-md-12"><label>用药信息</label></div>
+        <div>
+            @ for (c in recipel.RecipelItems){
+            <div class="col-md-3">
+                <label>${c.name}</label>
+                <sup><label>${c.usage}</label></sup>
+                <sub><label>${c.dosage}${c.unit}</label></sub>
+            </div>
+            @ }
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12"><label>煎、服法</label> ${jff}</div>
+    </div>
+    <div class="row">
+        <div class="col-md-4"><label>剂数 ${js} 付</label></div>
+        <div class="col-ma-8"><label>注意</label><u> ${attention}</u></div>
+    </div>
+    <div class="row">
+        <div class="col-md-4"><label>金额</label></div>
+        <div class="col-md-4"><label>医师</label> ${doctor}</div>
+        <div class="col-md-4"><label>药师</label> ${pharmacist}</div>
+    </div>
+</div>
+</body>
+</html>

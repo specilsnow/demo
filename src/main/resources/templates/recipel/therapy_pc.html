@@ -1,0 +1,43 @@
+<meta charset="UTF-8">
+ <ul class="feeds">
+	    <li>
+	@for(therapy in therapys){
+    @ if(strutil.length(therapy.name)>6){
+
+    @ var str0=therapy.name;
+    @ var str1="···";
+    @ var str3= strutil.subStringTo (str0,0,5);
+    @ var str2=str3+str1;
+			<label class="col-md-6" style="padding:0 5px" onclick="showitem('${therapy.id}','${therapy.name}',this)">${str2}</label>
+			<input hidden  id="thtype" value="${therapy.therapyType}">
+	@}else{
+            <label class="col-md-6" onclick="showitem('${therapy.id}','${therapy.name}',this)" style="padding:0 5px">${therapy.name}</label>
+            <input hidden  id="thtype" value="${therapy.therapyType}">
+    @}
+	@}
+	</li>
+	</ul>
+	<div style="text-align: center">
+			<span onclick="returnkeshi()" style="vertical-align: middle;background:#ffffff;border: 1px solid #cccccc;margin-right:-5px; ;padding: 2px;color: #a0a0a0;" class="fa fa-mail-reply"></span>
+			${baseRecipel.page.pageStr }
+	  </div> 
+	  <script src="${request.contextPath}/js/jquery.form.js" type="text/javascript"></script>
+	  <script>
+          loadBackground();
+	  function returnkeshi(){ 
+	
+	 		 var url="${request.contextPath}/therapyType"
+			  $.post(url,function(data){
+					$("#keshi").html(data);
+				})			
+	  }
+	  
+	   function searchNextPage(currentPage) {
+	    	 var therapyType=$("#thtype").val();
+   			 var url = contextPath + "/pageTherapy?therapyType="+therapyType
+   			 postdata={'page.currentPage':currentPage};
+					$.post(url,postdata,function(data){
+						$("#keshi").html(data);
+			});
+ }
+	  </script>

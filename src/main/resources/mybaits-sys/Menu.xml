@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdutcm.tcms.sys.mapper.MenuMapper">
+
+	<resultMap type="com.cdutcm.tcms.sys.entity.Menu" id="menuResultMap">
+		<id column="id" property="id" />
+		<result column="menu_id" property="menuId" />
+		<result column="menu_name" property="menuName" />
+		<result column="menu_url" property="menuUrl" />
+		<result column="parent_id" property="parentId" />
+	</resultMap>
+
+	<select id="listPagemenu" resultMap="menuResultMap">
+		select * from sys_menu where
+		parent_id is null
+	</select>
+	<select id="listAllParentMenu" resultMap="menuResultMap">
+		select * from sys_menu
+		where parent_id is null
+	</select>
+	<select id="listSubMenuByParentId" parameterType="int"
+		resultMap="menuResultMap">
+		select * from sys_menu where parent_id=#{parentId}
+	</select>
+	<select id="getMenuById" parameterType="int" resultMap="menuResultMap">
+		select *
+		from sys_menu where menu_id=#{menuId}
+	</select>
+	<select id="listAllSubMenu" resultMap="menuResultMap">
+		select * from sys_menu
+		where parent_id is
+		null
+	</select>
+	<!-- 通过角色id 查询资源 -->
+	<select id="selectmenubyroleid" resultMap="menuResultMap"
+		parameterType="long">
+		SELECT sys_menu.id,menu_id,menu_name,menu_url FROM sys_menu LEFT JOIN sys_role_menu
+		ON sys_menu.menu_id = sys_role_menu.menuid
+		WHERE sys_role_menu.roleid = #{roleId}
+	</select>
+
+	<insert id="insertMenu" parameterType="com.cdutcm.tcms.sys.entity.Menu"
+		useGeneratedKeys="true" keyProperty="menuId">
+		insert into sys_menu
+		(id,menu_id,menu_name,menu_url,parent_id) values
+		(#{id},#{menuId},#{menuName},#{menuUrl},#{parentId})
+	</insert>
+
+	<update id="updateMenu" parameterType="com.cdutcm.tcms.sys.entity.Menu">
+		update sys_menu set
+		menu_name=#{menuName},
+		menu_url=#{menuUrl},
+		parent_id=#{parentId}
+		where menu_id=#{menuId}
+	</update>
+
+	<delete id="deleteMenuById" parameterType="int">
+		delete from sys_menu
+		where menu_id=#{menuId} or parent_id=#{menuId}
+	</delete>
+	<select id="listendMenuid" resultMap="menuResultMap">
+		select * from sys_menu ORDER BY menu_id DESC limit 1
+	</select>
+</mapper>

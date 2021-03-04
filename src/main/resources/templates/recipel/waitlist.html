@@ -1,0 +1,36 @@
+<div class="table-scrollable" style="height: 365px;min-height:200px;">
+    <table class="table table-hover">
+        <tbody>
+        @ var count = 1;
+        @for(item in register){
+        <tr onclick="reservationData('${item.visitNo}')">
+            <td style="padding:8px 5px;width: 10px;"> ${count++}</td>
+            <td style="width:120px;"> ${item.patient.name}</td>
+            <td style="width:110px;">${item.kssj}</td>
+        </tr>
+        @}
+        </tbody>
+    </table>
+</div>
+<div style="margin-top:5px;height:30px; ">
+    ${patientRegist.page.pageStr }
+</div>
+<div style="margin-top:5px;text-align: right;height:30px;">
+
+</div>
+<script>
+
+    function searchNextPage(currentPage) {
+        var url = "${request.contextPath}/emr/waitlist";
+        postdata = {
+            'page.currentPage': currentPage,
+            'patient.name': $("#tab4name").val(),
+            'kssj': '${patientRegist.kssj}'
+        };
+        $.post(url, postdata, function (data) {
+            $("#wait-list").html(data);
+        });
+    }
+
+</script>
+

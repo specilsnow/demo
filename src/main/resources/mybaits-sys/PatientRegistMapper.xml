@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdutcm.tcms.biz.mapper.PatientRegistMapper" >
+  <resultMap id="BaseResultMap" type="com.cdutcm.tcms.biz.model.PatientRegist" >
+ 	<id column="id" property="id" jdbcType="BIGINT" />
+    <result column="ys" property="ys" jdbcType="VARCHAR" />
+    <result column="ysbm" property="ysbm" jdbcType="VARCHAR" />
+    <result column="ghks" property="ghks" jdbcType="VARCHAR" />
+    <result column="ghksbm" property="ghksbm" jdbcType="VARCHAR" />
+    <result column="patient_no" property="patientNo" jdbcType="VARCHAR" />
+    <result column="visit_no" property="visitNo" jdbcType="VARCHAR" />
+    <result column="kssj" property="kssj" jdbcType="TIMESTAMP" />
+    <result column="io" property="io" jdbcType="VARCHAR" />
+  </resultMap>
+    <resultMap id="PatientResult" type="com.cdutcm.tcms.biz.model.Patient" >
+  	 <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="apatient_no" property="patientNo" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="VARCHAR" />
+    <result column="birthday" property="birthday" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="telephone" property="telephone" jdbcType="VARCHAR" />
+    <result column="card_no" property="cardNo" jdbcType="VARCHAR" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+    <result column="ye" property="ye" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="RegistInfoResult" type="com.cdutcm.tcms.itf.model.RegistInfo">
+    <id column="id" property="id"/>
+    <result column="chief_complaint" property="chiefComplaint"/>
+    <result column="passed_illness" property="passedIllness"/>
+    <result column="present_illness" property="presentIllness"/>
+    <result column="allergic_history" property="allergicHistory"/>
+    <result column="family_history" property="familyHistory"/>
+    <result column="menstruation_history" property="menstruationHistory"/>
+    <result column="marriage_history" property="marriageHistory"/>
+    <result column="personal_illness" property="personalIllness"/>
+    <result column="symptom" property="symptom"/>
+    <result column="visit_no" property="visitNo"/>
+
+  </resultMap>
+  <resultMap id="PatinetRegistResult" type="com.cdutcm.tcms.biz.model.PatientRegist" >
+ 	<id column="id" property="id" jdbcType="BIGINT" />
+    <result column="ys" property="ys" jdbcType="VARCHAR" />
+    <result column="ysbm" property="ysbm" jdbcType="VARCHAR" />
+    <result column="ghks" property="ghks" jdbcType="VARCHAR" />
+    <result column="ghksbm" property="ghksbm" jdbcType="VARCHAR" />
+    <result column="patient_no" property="patientNo" jdbcType="VARCHAR" />
+    <result column="visit_no" property="visitNo" jdbcType="VARCHAR" />
+    <result column="kssj" property="kssj" jdbcType="TIMESTAMP" />
+    <result column="io" property="io" jdbcType="VARCHAR" />
+    <result column="disease" property="disease" jdbcType="VARCHAR" />
+    <association column="patient" property="patient"  javaType="com.cdutcm.tcms.biz.model.Patient" resultMap="PatientResult"/>
+    <association column="registInfo" property="registInfo"  javaType="com.cdutcm.tcms.itf.model.RegistInfo" resultMap="RegistInfoResult"/>
+  </resultMap>
+  
+   <sql id="Base_Column_List" >
+    id, ys, ysbm, ghks, ghksbm, patient_no, visit_no, kssj, io
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from patient_regist
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from patient_regist
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.cdutcm.tcms.biz.model.PatientRegist" >
+    insert into patient_regist (id, ys, ysbm, 
+      ghks, ghksbm, patient_no, 
+      visit_no, kssj, io
+      )
+    values (#{id,jdbcType=BIGINT}, #{ys,jdbcType=VARCHAR}, #{ysbm,jdbcType=VARCHAR}, 
+      #{ghks,jdbcType=VARCHAR}, #{ghksbm,jdbcType=VARCHAR}, #{patientNo,jdbcType=VARCHAR}, 
+      #{visitNo,jdbcType=VARCHAR}, #{kssj,jdbcType=TIMESTAMP}, #{io,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cdutcm.tcms.biz.model.PatientRegist" >
+    insert into patient_regist
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="ys != null" >
+        ys,
+      </if>
+      <if test="ysbm != null" >
+        ysbm,
+      </if>
+      <if test="ghks != null" >
+        ghks,
+      </if>
+      <if test="ghksbm != null" >
+        ghksbm,
+      </if>
+      <if test="patientNo != null" >
+        patient_no,
+      </if>
+      <if test="visitNo != null" >
+        visit_no,
+      </if>
+      <if test="kssj != null" >
+        kssj,
+      </if>
+      <if test="io != null" >
+        io,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="ys != null" >
+        #{ys,jdbcType=VARCHAR},
+      </if>
+      <if test="ysbm != null" >
+        #{ysbm,jdbcType=VARCHAR},
+      </if>
+      <if test="ghks != null" >
+        #{ghks,jdbcType=VARCHAR},
+      </if>
+      <if test="ghksbm != null" >
+        #{ghksbm,jdbcType=VARCHAR},
+      </if>
+      <if test="patientNo != null" >
+        #{patientNo,jdbcType=VARCHAR},
+      </if>
+      <if test="visitNo != null" >
+        #{visitNo,jdbcType=VARCHAR},
+      </if>
+      <if test="kssj != null" >
+        #{kssj,jdbcType=TIMESTAMP},
+      </if>
+      <if test="io != null" >
+        #{io,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cdutcm.tcms.biz.model.PatientRegist" >
+    update patient_regist
+    <set >
+      <if test="ys != null" >
+        ys = #{ys,jdbcType=VARCHAR},
+      </if>
+      <if test="ysbm != null" >
+        ysbm = #{ysbm,jdbcType=VARCHAR},
+      </if>
+      <if test="ghks != null" >
+        ghks = #{ghks,jdbcType=VARCHAR},
+      </if>
+      <if test="ghksbm != null" >
+        ghksbm = #{ghksbm,jdbcType=VARCHAR},
+      </if>
+      <if test="patientNo != null" >
+        patient_no = #{patientNo,jdbcType=VARCHAR},
+      </if>
+      <if test="visitNo != null" >
+        visit_no = #{visitNo,jdbcType=VARCHAR},
+      </if>
+      <if test="kssj != null" >
+        kssj = #{kssj,jdbcType=TIMESTAMP},
+      </if>
+      <if test="io != null" >
+        io = #{io,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cdutcm.tcms.biz.model.PatientRegist" >
+    update patient_regist
+    set ys = #{ys,jdbcType=VARCHAR},
+      ysbm = #{ysbm,jdbcType=VARCHAR},
+      ghks = #{ghks,jdbcType=VARCHAR},
+      ghksbm = #{ghksbm,jdbcType=VARCHAR},
+      patient_no = #{patientNo,jdbcType=VARCHAR},
+      visit_no = #{visitNo,jdbcType=VARCHAR},
+      kssj = #{kssj,jdbcType=TIMESTAMP},
+      io = #{io,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="updateStatusByVisitNo" parameterType="string">
+    UPDATE patient_regist SET `status` = 1 where visit_no = #{visitNo}
+  </update>
+
+  <!-- 根据visit_no 删除数据 -->
+  <delete id="deletePatientRegistByVisitNo" parameterType="string">
+  	delete from patient_regist where visit_no = #{_parameter}
+  </delete>
+
+    <select id="listPagePatientByPatientRegist"  resultMap="PatinetRegistResult" parameterType="com.cdutcm.tcms.biz.model.PatientRegist">
+		  select a.*,b.ghks,b.ghksbm,b.kssj,b.visit_no,b.ysbm,b.ys,c.disease 
+		  from patient_regist b left join patient a on a.patient_no = b.patient_no left join emr c 
+		  on c.visit_no=b.visit_no where a.id is not null and 1=1 
+      <if test="ysbm != null" >
+        and b.ysbm = #{ysbm,jdbcType=VARCHAR
+      </if>
+      <if test="patient != null" >
+       and( b.patient_no = #{patientNo,jdbcType=VARCHAR}
+       or b.visit_no = #{visitNo,jdbcType=VARCHAR}
+       or a.name  like '%${patient.name}%'
+       or a.pinyin like '%${patient.pinyin}%')
+      </if>
+      
+  </select>
+  <select id="listPagePatientByDoctorAccount" resultMap="PatinetRegistResult" parameterType="com.cdutcm.tcms.biz.model.PatientRegist">
+    SELECT a0.*,a1.name
+    FROM
+    patient_regist a0,
+    patient a1
+    WHERE
+    a0.patient_no = a1.patient_no
+    AND a0.kssj  &gt; DATE(NOW())
+    AND `status` = 0
+    AND ysbm = #{ysbm}
+    <if test="kssj !=null and kssj !=''">
+      and kssj like  '${kssj}'
+    </if>
+    <if test="patient !=null and patient !=''">
+      and a1.name like  '%${patient.name}%'
+    </if>
+    UNION ALL
+    SELECT a0.*,a1.name
+    FROM
+    patient_regist a0,
+    patient a1
+    WHERE
+    a0.patient_no = a1.patient_no
+    AND a0.kssj &lt;= DATE(NOW())
+    AND `status` = 0
+    AND ysbm = #{ysbm}
+    <if test="kssj !=null and kssj !=''">
+      and kssj like  '${kssj}'
+    </if>
+    <if test="patient !=null and patient !=''">
+      and a1.name like  '%${patient.name}%'
+    </if>
+
+  </select>
+
+  <select id="getByVisitNo" resultMap="PatinetRegistResult">
+
+    SELECT
+    a1.*,a2.telephone, a2.`name`,a2.birthday,a2.sex,a2.ye,a3.allergic_history,a3.chief_complaint,a3.family_history,a3.marriage_history,a3.menstruation_history,a3.passed_illness,a3.personal_illness,a3.present_illness,a3.symptom
+    FROM
+        patient_regist a1
+    LEFT JOIN patient a2 ON a1.patient_no = a2.patient_no
+    LEFT JOIN regist_info a3 ON a1.visit_no = a3.visit_no
+    WHERE
+        a1.visit_no = #{visitNo}
+  </select>
+</mapper>

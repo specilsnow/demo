@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdutcm.tcms.biz.mapper.BaseDataMapper" >
+	<select id="findbasematerial" parameterType="java.lang.String" resultType="com.cdutcm.tcms.biz.model.Baseselfdata">
+    select *  from base_self_data where user_id=#{userid} and ctype='yp'
+	</select>
+	<select id="findbasesysptom" parameterType="java.lang.String" resultType="com.cdutcm.tcms.biz.model.Baseselfdata">
+    select *  from base_self_data where user_id=#{userid} and ctype='zz'
+	</select>
+	<select id="findbaseusage" parameterType="java.lang.String" resultType="com.cdutcm.tcms.biz.model.Baseselfdata">
+    select *  from base_self_data where user_id=#{userid} and ctype='yf'
+	</select>
+	<select id="findbasedosage" parameterType="java.lang.String" resultType="com.cdutcm.tcms.biz.model.Baseselfdata">
+	select *  from base_self_data where user_id=#{userid} and ctype='jl'
+	</select>
+	<select id="findmedicineeighteenninteen" resultType="com.cdutcm.tcms.biz.model.MedicineEighteenNinteen">
+	select * from medicine_eighteen_ninteen
+	</select>
+	<insert id="insertData" parameterType="java.lang.String">
+	UPDATE base_data SET user_id = #{account} ; 
+	INSERT INTO base_self_data (name,pinyin,base_id,user_id,freq,ctype,gmt_create,max_dosage,min_dosage)
+	SELECT name,pinyin,base_id,user_id,freq,ctype,gmt_create,max_dosage,min_dosage from base_data
+	</insert>
+	<insert id="savabaseselfdata" parameterType="java.util.List">
+	insert into base_self_data (name,pinyin,user_id,ctype,freq) values 
+	 <foreach collection="list" item="item" separator=",">
+        (#{item.name}, #{item.pinyin},#{item.user_id},#{item.ctype},'0')
+    </foreach>
+	</insert>
+	<insert id="savabaseselfdataAndBaseId" parameterType="java.util.List">
+	insert into base_self_data (name,pinyin,base_id,user_id,ctype,freq) values
+	 <foreach collection="list" item="item" separator=",">
+        (#{item.name}, #{item.pinyin},#{item.base_id},#{item.user_id},#{item.ctype},'0')
+    </foreach>
+	</insert>
+	<update id="updatebaseselfdata">
+	update base_self_data set freq=freq+1 where name in   (
+	 <foreach collection="names" item="item" separator=",">
+      #{item}
+    </foreach>
+    ) and user_id=#{userid}
+	</update>
+	<select id="findbynameanduserid" resultType="com.cdutcm.tcms.biz.model.Baseselfdata">
+	select * from base_self_data where name=#{name} and user_id=#{userid}
+	</select>
+	
+	<select id="findupdatename" resultType="java.lang.String">
+	select name from base_self_data where name in (
+	<foreach collection="names" item="item" separator=",">
+      #{item}
+    </foreach>
+	) and user_id=#{userid} and ctype=#{ctype}
+	</select>
+</mapper>

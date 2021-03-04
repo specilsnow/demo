@@ -1,0 +1,2126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+    <title>中医处方</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <meta content="Preview page of Metronic Admin Theme #2 for statistics, charts, recent events and reports"
+          name="description"/>
+    <meta content="" name="author"/>
+    <!--H5禁止缩放-->
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport"/>
+    <!-- BEGIN GLOBAL MANDATORY STYLES -->
+    <link href="${request.contextPath}/css/fonts-googleapis.css" rel="stylesheet" type="text/css"/>
+    <link href="${request.contextPath}/metronic/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    <link href="${request.contextPath}/metronic/css/simple-line-icons.min.css" rel="stylesheet" type="text/css"/>
+    <link href="${request.contextPath}/metronic/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="${request.contextPath}/metronic/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css"/>
+    <!-- END GLOBAL MANDATORY STYLES -->
+    <!-- BEGIN THEME GLOBAL STYLES -->
+    <link href="${request.contextPath}/metronic/css/components.min.css" rel="stylesheet" id="style_components"
+          type="text/css"/>
+    <link href="${request.contextPath}/metronic/css/plugins.min.css" rel="stylesheet" type="text/css"/>
+    <!-- END THEME GLOBAL STYLES -->
+    <!-- BEGIN THEME LAYOUT STYLES -->
+    <link href="${request.contextPath}/metronic/css/layout.min.css" rel="stylesheet" type="text/css"/>
+    <link href="${request.contextPath}/metronic/css/blue.min.css" rel="stylesheet" type="text/css" id="style_color"/>
+    <link href="${request.contextPath}/metronic/css/custom.min.css" rel="stylesheet" type="text/css"/>
+    <!-- END THEME LAYOUT STYLES -->
+    <link rel="shortcut icon" href="favicon.ico"/>
+    <!-- 样式冲突CSS -->
+    <link rel="stylesheet" type="text/css" href="${request.contextPath}/css/style.css"/>
+    <!-- layer css -->
+    <link rel="stylesheet" type="text/css" href="${request.contextPath}/layui/css/layui.css">
+    <!--datetimepicker  -->
+    <link rel="stylesheet" type="text/css"
+          href="${request.contextPath}/bootstrap/css/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css"/>
+    <!-- 表单验证 -->
+    <!--     <link rel="stylesheet" href="${request.contextPath}/bootstrap/css/bootstrapValidator.css"/> -->
+    <!-- 主样式 -->
+    <script type="text/javascript">
+        if (localStorage.getItem("theme") == "red") {
+            document.write("<link rel='stylesheet' href='${request.contextPath}/css-red/index.css?time=" + new Date().valueOf() + "'>")
+        } else {
+            document.write("<link rel='stylesheet' href='${request.contextPath}/css/index_zskf.css?time=" + new Date().valueOf() + "'>")
+        }
+    </script>
+    <!--<link rel='stylesheet' href="${request.contextPath}/css/index.css">--></head>
+
+<!-- END HEAD -->
+
+<body class="page-sidebar-closed-hide-logo page-container-bg-solid">
+<div class="page-container">
+    <div class="col-md-12">
+        <div class="portlet light ">
+            <div class="row" style="margin: 0">
+                <div class="col-md-9">
+                    <div style="position: relative;">
+                        <div class="headerTitle nav nav-tabs" id="rightToolsTab">
+                            <select class="doctorname">
+                                @for(clinic in clinics){
+                                <option value="${clinic.clinicId}">${clinic.name}</option>
+                                @}
+                            </select>
+                            <ul class="nav nav-tabs" style="margin-bottom:0px;" id="rightToolsTab">
+                                <li class="active" onclick="writeRecipel()">
+                                    <a href="#tab_2_1 " data-toggle="tab" aria-expanded="false"> 处方笺</a>
+                                </li>
+                                <li class="" onclick="historypeople()">
+                                    <a href="#tab_2_2" data-toggle="tab" aria-expanded="true"> 历史处方 </a>
+                                </li>
+                                <li class="" onclick="waitlist()">
+                                    <a href="#tab_2_4" data-toggle="tab" aria-expanded="true">待诊列表</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <form id="uploadFile" enctype="multipart/form-data">
+                            <div style="text-align: center;color:#27a4b0;position:relative;">
+                                <!--2019-09-09 隐藏跟诊老师选择 cuimj-->
+                                <div class="dropdown" id="doctordropdown"
+                                     style="line-height:26px;display: none;position:absolute;font-size: 16px;text-align: left;left: 0px;">
+                                    <span class="fa fa-user-md dropdown-toggle" id="doctorchoose" data-toggle="dropdown"
+                                          aria-haspopup="true" aria-expanded="true"><a>${teacherName!''}</a></span>
+                                    <div class="dropdown-menu doctorchoose" aria-labelledby="doctorchoose">
+                                        @for(item in teachers){
+                                        <button class="btn btn-default" onclick="doctorchoose(this,'${item.id}')">
+                                            ${item.teacherName}<span
+                                                class="fa fa-close" onclick="removename(this,'${item.id}')"></span>
+                                        </button>
+                                        @}
+                                        <input class=" addDoctor" type="text" onclick="fuckcc(this)" placeholder="添加"/>
+                                    </div>
+                                </div>
+                                <div class="dropdown"
+                                     style="line-height:26px;position:absolute;font-size: 14px;text-align: left;left: 0px;">
+                                    <span><a style="color: #27a4b0;" href="${request.contextPath}/regist">去认证</a></span>
+                                    @if(userStatic==1){
+                                    <span><a style="color: #27a4b0;" href="${request.contextPath}/statics/useStatic">使用统计</a></span>
+                                    @}
+                                </div>
+                                <h3>处方笺</h3>
+                                <span style="line-height:26px;position:absolute;right:0;font-size: 16px;"
+                                      class="glyphicon glyphicon-camera">
+                                    <input type="file" name="file" id="file"
+                                           style="opacity: 0;width:30px;height: 30px;margin-top: -28px"
+                                           accept="image/*"></span>
+                            </div>
+                            <!--<input type="button" value="上传" class="">-->
+                        </form>
+                        <form role="form" id="emrform" method="post" class="form-horizontal">
+                            <input id="followTeacher" type="hidden" name="followTeacher" value="${teacherName!''}">
+                            <!--申请协助的医生-->
+                            <input id="assistAccount" type="hidden" name="assistAccount">
+                            <div class="form-body">
+                                <div class="form-group form-md-line-input has-success ">
+                                    <span class="control-label" for="form_control_1">编号 </span>
+                                    <div class="control-line">
+                                        <input type="text" name="visitNo" class="form-control"
+                                               value="${emr.visitNo!visitNoSeq}" id="visitNo" placeholder=""
+                                               readonly="readonly">
+                                        @if(emr.isregist=="是"){
+                                        <span class="index-fu">复诊</span>
+                                        @}
+                                        <input type='hidden' name='patientNo' id='patientNoSeq'
+                                               value='${emr.patientNo!patientNoSeq}'>
+                                        <div class="form-control-focus"></div>
+                                        <span class="help-block">门诊挂号序号</span>
+                                    </div>
+                                </div>
+                                <div class="form-group form-md-line-input has-success col-md-4 col-xs-6">
+                                    <span class="control-label" for="form_control_1"><i
+                                            class="glyphicon glyphicon-asterisk" style="color: red"></i>电话</span>
+                                    <div class="control-line">
+                                        <input type="text" name="telephone" class="form-control"
+                                               value="${emr.telephone!""}" id="telephone" placeholder="">
+                                    </div>
+                                </div>
+                                <div class="form-group form-md-line-input has-success col-md-4 col-xs-6">
+                                    <span class=" control-label" for="form_control_1"><i
+                                            class="glyphicon glyphicon-asterisk" style="color: red"></i>科室</span>
+                                    <div class="control-line">
+                                        @if(isEmpty(emr.deptName)){
+                                        <input type="text" name="deptName" class="form-control"
+                                               value="治未病" id="ghks" placeholder="" style="font-size: 0.9em">
+                                        @}else{
+                                        <input type="text" name="deptName" class="form-control"
+                                               value="${emr.deptName!""}" id="ghks" placeholder="" style="font-size:
+                                        0.9em">
+                                        @}
+                                    </div>
+                                </div>
+                                <div class="form-group form-md-line-input has-success col-md-4 col-xs-6">
+                                    <span class="control-label" for="form_control_1"><i
+                                            class="glyphicon glyphicon-asterisk" style="color: red"></i>姓名</span>
+                                    <div class="control-line">
+                                        <input type="text" name="patientName" id="patientName" class="form-control"
+                                               placeholder="" value="${emr.patientName!''}"
+                                               onchange="findEmrHistoryByName($(this).val(),'','index')">
+                                        <div class="form-control-focus"></div>
+                                    </div>
+                                    <!--<input type="hidden" name="telephone" id="telephone">-->
+                                </div>
+
+                                <div class="form-group form-md-line-input has-success col-md-4 col-xs-6">
+                                    <span class=" control-label" for="form_control_1"><i
+                                            class="glyphicon glyphicon-asterisk" style="color: red"></i>性别</span>
+                                    <div class="control-line">
+                                        <div class="mt-radio-inline">
+                                            <label class="mt-radio">
+                                                @ if(!isEmpty(emr.sex)&&emr.sex=="男"){
+                                                <input type="radio" name="sex" id="optionsRadios25" value="${emr.sex}"
+                                                       checked=""> 男
+                                                @}else if(isEmpty(emr.sex)){
+                                                <input type="radio" name="sex" id="optionsRadios25" value="男"
+                                                       checked=""> 男
+                                                @}else{
+                                                <input type="radio" name="sex" id="optionsRadios25" value="男"> 男
+                                                @}
+                                                <span></span>
+                                            </label>
+                                            <label class="mt-radio">
+                                                @ if(!isEmpty(emr.sex)&&emr.sex=="女"){
+                                                <input type="radio" name="sex" id="optionsRadios26" value="${emr.sex}"
+                                                       checked=""> 女
+                                                @}else{
+                                                <input type="radio" name="sex" id="optionsRadios26" value="女"> 女
+                                                @}
+                                                <span></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group form-md-line-input has-success col-md-4 col-xs-6">
+                                    <span class=" control-label" for="form_control_1"><i
+                                            class="glyphicon glyphicon-asterisk" style="color: red"></i>年龄</span>
+                                    <div class="control-line">
+                                        <input type="text" class="form-control" name="age" placeholder=""
+                                               id="patientAge"
+                                               value="${emr.age!''}" readonly>
+                                        <div class="form-control-focus"></div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group form-md-line-input has-success col-md-4 col-xs-6">
+                                    <span class="control-label" for="form_control_1">日期</span>
+                                    <div class="control-line">
+                                        <div class="control-group" style="height:  44px;">
+                                            <div class="controls input-append date form_date " data-date=""
+                                                 data-date-format="yyyy/mm/dd" data-link-field="dtp_input2"
+                                                 data-link-format="yyyy/mm/dd">
+                                                @if(!isEmpty(emr.createTime)){
+                                                <input class="form-control" type="text"
+                                                       value="${emr.createTime,' yyyy/MM/dd'}"
+                                                       id="datetostring" name="datetostring" placeholder="" readonly>
+                                                @}else{
+                                                <input class="form-control" type="text" value="" id="datetostring"
+                                                       name="datetostring" placeholder="" readonly>
+                                                @}
+                                                <div class="form-control-focus"></div>
+                                                <span class="add-on"><i class="icon-remove"></i></span>
+                                                <span class="add-on"><i class="icon-th"></i></span>
+                                            </div>
+                                            <input type="hidden" id="dtp_input2" value=""/><br/>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="form-group form-md-line-input has-success"
+                                     style="width: 100%;float: left;padding-top: 0;overflow: unset;display: none">
+                                    <span class="control-label" for="form_control_1"><i
+                                            class="glyphicon glyphicon-asterisk" style="color: red"></i>主诉</span>
+                                    <div class="control-line" style="width: calc(100% - 101px);">
+                                        <input type="text" class="form-control" name="chiefComplaint"
+                                               id="chiefComplaint" placeholder=""
+                                               value="${emr.chiefComplaint!''}">
+                                    </div>
+                                </div>
+                                <div class="pucker" style="display: none">
+
+                                    <div class="form-group form-md-line-input has-success"
+                                         style="width: calc(100% - 34px);float: left;padding-top: 0">
+                                        <!--<br/>-->
+                                        <span class="control-label " for="form_control_1" style="width: 42px">现病史</span>
+                                        <div class="control-line " style="width: calc(100% - 55px);">
+                                            <input type="text" class="form-control" name="presentillness" placeholder=""
+                                                   id="presentillness"
+                                                   value="${emr.presentillness!''}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-md-line-input has-success"
+                                         style="width: 100%;float: left;padding-top: 0">
+                                        <span class="control-label " for="form_control_1" style="width: 42px">既往史</span>
+                                        <div class="control-line " style="width: calc(100% - 101px);">
+                                            <input type="text" class="form-control" name="pastillness" placeholder=""
+                                                   id="pastillness" value="${emr.pastillness!''}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-md-line-input has-success"
+                                         style="width: 100%;float: left;padding-top: 0">
+                                        <span class="control-label " for="form_control_1" style="width: 42px">过敏史</span>
+                                        <div class="control-line " style="width: calc(100% - 101px);">
+                                            <input type="text" class="form-control" name="allergicHistory"
+                                                   placeholder=""
+                                                   id="allergicHistory" value="${emr.allergicHistory!''}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-md-line-input has-success"
+                                         style="width: 100%;float: left;padding-top: 0">
+                                        <span class="control-label " for="form_control_1" style="width: 42px">个人史</span>
+                                        <div class="control-line " style="width: calc(100% - 101px);">
+                                            <input type="text" class="form-control" name="personalIllness"
+                                                   placeholder=""
+                                                   id="personalIllness" value="${emr.personalIllness!''}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-md-line-input has-success"
+                                         style="width: 100%;float: left;padding-top: 0">
+                                        <span class="control-label " for="form_control_1"
+                                              style="width: 56px">体格检查</span>
+                                        <div class="control-line " style="width: calc(100% - 117px);">
+                                            <input type="text" class="form-control" name="physicalExamination"
+                                                   placeholder=""
+                                                   id="physicalExamination" value="${emr.physicalExamination!''}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-md-line-input has-success"
+                                         style="width: 100%;float: left;padding-top: 0">
+                                        <span class="control-label " for="form_control_1"
+                                              style="width: 56px">辅助检查</span>
+                                        <div class="control-line " style="width: calc(100% - 117px);">
+                                            <input type="text" class="form-control" name="auxiliaryInspection"
+                                                   placeholder=""
+                                                   id="auxiliaryInspection" value="${emr.auxiliaryInspection!''}">
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group form-md-line-input has-success"
+                                         style="width: 100%;float: left;padding-top: 0">
+                                        <span class="control-label menstruation" for="form_control_1"
+                                              style="width: 56px">月经史</span>
+                                        <div class="control-line menstruation" style="width: calc(100% - 117px);">
+                                            <input type="text" class="form-control menstruation"
+                                                   name="menstruationHistory" placeholder=""
+                                                   id="menstruation" value="${emr.menstruationHistory!''}">
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="form-group form-md-line-input has-success zhengzhuang"
+                                     style="float: left;padding-top: 0;">
+                                    <span class="control-label" for="form_control_1"
+                                          style="vertical-align: top;"><i class="glyphicon glyphicon-asterisk"
+                                                                          style="color: red"></i>症状(主诉)</span>
+                                    <div id="patientDiagnosis" class="control-line linchuang">
+                                        @if(!isEmpty(emr.disease)){
+                                        @ var disea=emr.disease;
+                                        @ var index = strutil.lastIndex(disea,"&");
+                                        @if(index+1==strutil.length(disea)){
+                                        <textarea type="text" class="form-control" onpropertychange="MaxMe(this)"
+                                                  name="diseasea"
+                                                  oninput="MaxMe(this)" style="overflow:hidden;height:30px;resize:none"
+                                                  onkeyup="autoPrompt(this)" data-type="0"
+                                                  id="diseaseSS" value="" placeholder="">${strutil.split (disea,'&&&')[0]}</textarea>
+                                        <p></p>
+                                        <textarea type="text" class="form-control" onpropertychange="MaxMe(this)"
+                                                  name="diseasea"
+                                                  oninput="MaxMe(this)" style="overflow:hidden;height:30px;resize:none"
+                                                  id="disease" value="" placeholder="" readonly="readonly"></textarea>
+                                        @}else{
+                                        <textarea type="text" class="form-control" onpropertychange="MaxMe(this)"
+                                                  oninput="MaxMe(this)" style="overflow:hidden;height:30px;resize:none"
+                                                  name="diseasea" onkeyup="autoPrompt(this)" data-type="0"
+                                                  id="diseaseSS" value="" placeholder="">${strutil.split (disea,'&&&')[0]}</textarea>
+                                        <p></p>
+                                        <textarea type="text" class="form-control" onpropertychange="MaxMe(this)"
+                                                  oninput="MaxMe(this)" style="overflow:hidden;height:30px;resize:none"
+                                                  name="diseasea"
+                                                  id="disease" value="" placeholder="" readonly="readonly">${strutil.split (disea,'&&&')[1]}</textarea>
+                                        @}
+                                        @}else{
+                                        <textarea type="text" class="form-control" onpropertychange="MaxMe(this)"
+                                                  name="diseasea"
+                                                  oninput="MaxMe(this)" style="overflow:hidden;height:30px;resize:none"
+                                                  onkeyup="autoPrompt(this)" data-type="0"
+                                                  id="diseaseSS" value="" placeholder="">${emr.disease!''}</textarea>
+                                        <p></p>
+                                        <textarea type="text" class="form-control" onpropertychange="MaxMe(this)"
+                                                  name="diseasea"
+                                                  oninput="MaxMe(this)" style="overflow:hidden;height:30px;resize:none"
+                                                  id="disease" value="" placeholder="" readonly="readonly">${emr.disease!''}</textarea>
+                                        @}
+                                        <input type="hidden" style="opacity: 0" class="form-control" name="disease"
+                                               id="diseasesum">
+                                    </div>
+                                </div>
+                                <div class="vtd-title1" style="margin-top: 4px;">
+                                    <label style="font-size: 16px"><span class="fa fa-chevron-down"></span></label>
+                                </div>
+                                <div class="vtd-title">
+                                    <label class="label-color"
+                                           style="border: 1px solid orange;padding: 8px;border-radius: 5px!important;">脉</label>
+                                    <label class="label-color"
+                                           style="border: 1px solid orange;padding: 8px;border-radius: 5px!important;">舌</label>
+                                    <label class="label-color"
+                                           style="border: 1px solid orange;padding: 8px;border-radius: 5px!important;">症</label>
+                                </div>
+                                <div class="form-group form-md-line-input has-success bingm"
+                                     style="width: calc(100% - 34px);float: left;padding-top: 0;">
+                                    <span class="control-label" for="form_control_1"><i
+                                            class="glyphicon glyphicon-asterisk" style="color: red"></i>病名</span>
+                                    <div class="control-line" style="width: calc(100% - 52px);">
+                                        <input type="text" class="form-control" name="symptom" placeholder=""
+                                               id="symptomdiseases" onkeyup="autoPrompt(this)" data-type="1"
+                                               value="${emr.symptom!''}">
+                                        <p></p>
+                                    </div>
+                                </div>
+                                <div class="form-group form-md-line-input has-success zhengx"
+                                     style="width: calc(100% - 34px);float: left;padding-top: 0">
+                                    <span class="control-label" for="form_control_1"><i
+                                            class="glyphicon glyphicon-asterisk" style="color: red"></i>证型</span>
+                                    <div class="control-line" style="width: calc(100% - 52px);">
+                                        <input type="text" class="form-control" name="symptommould" placeholder=""
+                                               id="symptommould" onkeyup="autoPrompt(this)" data-type="2"
+                                               value="${emr.symptommould!''}">
+                                        <p></p>
+                                    </div>
+                                </div>
+                                <div class="form-group form-md-line-input has-success"
+                                     style="width:calc(100% - 35px);float: left;padding-top: 0">
+                                    <span class="control-label " for="form_control_1"
+                                          style="width: 56px">诊疗意见</span>
+                                    <div class="control-line " style="width: calc(100% - 66px);">
+                                        <input type="text" class="form-control" name="medicalAdvice" placeholder=""
+                                               id="medicalAdvice" value="${emr.medicalAdvice!''}">
+                                    </div>
+                                </div>
+                                <div class="form-group form-md-line-input has-success"
+                                     style="width: calc(100% - 35px);float: left;padding-top: 0">
+                                    <span class="control-label" for="form_control_1"><i
+                                            class="glyphicon glyphicon-asterisk" style="color: red"></i>治法</span>
+                                    <div class="control-line" style="width: calc(100% - 52px);">
+                                        <textarea type="text" class="form-control" onpropertychange="MaxMe(this)"
+                                                  oninput="MaxMe(this)" style="overflow:hidden;height:30px;resize:none"
+                                                  name="recipels[0].therapy"
+                                                  id="therapy"
+                                                  placeholder="">${emr.recipels[0].therapy!""}</textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group form-md-line-input has-success"
+                                     style="width:calc(100% - 35px);float: left;padding-top: 0">
+                                    <span class="control-label" for="form_control_1" style="width: 56px"><i
+                                            class="glyphicon glyphicon-asterisk" style="color: red"></i>处方名</span>
+                                    <div class="control-line recipelName" style="width: calc(100% - 67px);">
+                                        <textarea hidden type="text" id="recipelName" class="form-control"
+                                                  name="recipels[0].name"
+                                                  oninput="addRecipelName(this)">${strutil.replace(emr.recipels[0].name!'',',',' ')}</textarea>
+                                        <p></p>
+                                        <!--<input class="form-control" id="recipelNames" name="recipels[0].name" value="" style="display: none">-->
+
+                                    </div>
+                                </div>
+                                <div style="clear: both"></div>
+                                <div class="recipelList">
+                                    <ul>
+                                    </ul>
+                                </div>
+
+                            </div>
+                            <div style="clear: both;"></div>
+
+                            <div class="portlet light " style="margin-top: 15px;padding: 12px 0px">
+                                <div class="portlet-title contentTitle" style="min-height: 30px">
+                                    <div class="caption" style="padding-bottom: 0;padding-top:0">
+                                        <span style="color: #27a4b0">图像信息</span>
+                                    </div>
+                                </div>
+                                <div class="portlet-body" style="overflow: hidden" id="imgList">
+                                    @if(!isEmpty(emr.emrImgInfo)){
+                                    @ for(img in emr.emrImgInfo){
+                                    <div class="imglist">
+                                        <div><img src="${img.imgUrl}" onclick='showBigImg(this)'/></div>
+                                        <span>${img.imgName}</span>
+                                    </div>
+                                    @}
+                                    @}
+
+                                </div>
+                            </div>
+                            <div hidden class="portlet light " id="xwmhData" style="margin-top: 15px;padding: 12px 0px">
+                                <div class="portlet-title contentTitle" style="min-height: 30px">
+                                    <div class="caption" style="padding-bottom: 0;padding-top:0">
+                                        <span style="color: #27a4b0">穴位敏化信息</span>
+                                    </div>
+                                    <div class="pull-right">
+                                        <span class="fa fa-angle-down" style="color: #27a4b0;font-size: 20px;"></span>
+                                    </div>
+                                </div>
+                                <div class="portlet-body" style="overflow: hidden;display: none">
+                                    <div class="chart" id="temperature"></div>
+                                    <div class="chart" id="resistance"></div>
+                                </div>
+                            </div>
+                            <div class="portlet light " style="padding-bottom: 0;padding-top:0">
+                                <div class="portlet-title contentTitle">
+                                    <div class="caption">
+                                        <b style="font-size:24px;">R</b>
+                                    </div>
+                                    <div class="btn" onclick="sortMaterial()">
+                                        <span style="width:60%; height:3px;display:block;background:#999;margin:3px 5px;"></span>
+                                        <span style="width:40%; height:3px;display:block;background:#999;margin:3px 5px;"></span>
+                                        <span style="width:20%; height:3px;display:block;background:#999;margin:3px 5px;"></span>
+                                    </div>
+                                    <!--<div class="btn sm">-->
+                                    <!--<span class="fa fa-camera"></span>-->
+                                    <!--</div>-->
+                                    <div class="btn" onclick="clearmaterial()">
+                                        <span class="fa fa-trash"></span></div>
+                                    <div class="btn sm" onclick="departmet()">
+                                        <span class="fa fa-file-text"></span></div>
+                                    <div class="btn sm" onclick="cellect()">
+                                        <span class="fa fa-star"></span></div>
+
+                                </div>
+                            </div>
+                            <div class="slimScrollDiv selectedrecipel">
+                            </div>
+                            <div class="slimScrollDiv baseRecipelHolder"
+                                 style="position: relative; overflow: hidden; width: 100%;">
+                                <div class="scroller"
+                                     style=" overflow: hidden; width: 100%;"
+                                     data-always-visible="1" data-rail-visible1="0"
+                                     data-handle-color="#D7DCE2" data-initialized="1">
+                                    <ul class="feeds">
+                                        <li>
+                                            @ for(base in bases){
+                                            @ if(strutil.length(base.name)>6){
+
+                                            @ var s=base.name;
+                                            @ var s1="···";
+                                            @ var s3= strutil.subStringTo (s,0,5);
+                                            @ var s2=s3+s1;
+
+                                            <label class="col-md-6"
+                                                   onclick="showitem('${base.id}','${base.name}',this)"
+                                                   style="padding:0 5px">
+                                                ${s2}
+                                            </label>
+                                            @}else{
+                                            <label class="col-md-6"
+                                                   onclick="showitem('${base.id}','${base.name}',this)"
+                                                   style="padding:0 5px">
+                                                ${base.name}
+                                            </label>
+                                            @}
+                                            @}
+                                            <label class="col-md-6"
+                                                   onclick=""
+                                                   style="padding:0 5px">
+                                                <span class="glyphicon glyphicon-plus"
+                                                      onclick="savebaserecipel()"></span>
+                                            </label>
+                                        </li>
+                                    </ul>
+                                    <div style="text-align: center">
+                                        ${baseRecipel.page.pageStr }
+                                    </div>
+                                    <div style="clear: both"></div>
+                                </div>
+                                <div class="slimScrollBar"
+                                     style="background: rgb(255, 255, 255); width: 1px; position: absolute; top: 0px; opacity: 0.4; display: block; border-radius: 7px; z-index: 99; right: 1px; height: 298.081px;"></div>
+                                <div class="slimScrollRail"
+                                     tyle="width: 7px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(234, 234, 234); opacity: 0.2; z-index: 90; right: 1px;"></div>
+                            </div>
+                            <div class="slimScrollDiv keshi"
+                                 style="position: relative; overflow: hidden;">
+                                <div class="scroller"
+                                     style=" overflow: hidden; width: 100%;"
+                                     data-always-visible="1" data-rail-visible1="0"
+                                     data-handle-color="#D7DCE2" data-initialized="1">
+                                </div>
+                            </div>
+
+                            <div id="materialdiv" style="min-height:305px;">
+                                @ var e=0;
+                                @if(isEmpty(emr.recipels)==false){
+                                @for(recipelitem in emr.recipels[0].recipelItems){
+                                <div class="col-md-3 col-xs-6" style="padding-top: 10px;">
+                                    <div style="float: left;width: 70%;">
+                                        <div style="width: 100%;height: 50px;border:1px solid #27A4B0;overflow:hidden;"
+                                             onclick="pop(this,event)">
+                                            @ if(strutil.length(recipelitem.name)<=3){
+                                            <lable id="${e}" style="font-size:30px;">${recipelitem.name}</lable>
+                                            @}else if(strutil.length(recipelitem.name)==4){
+                                            <lable id="${e}" style="font-size:24px;">${recipelitem.name}</lable>
+                                            @}else if(strutil.length(recipelitem.name)==5){
+                                            <lable id="${e}" style="font-size:20px;">${recipelitem.name}</lable>
+                                            @}else{
+                                            <lable id="${e}" style="font-size:16px;">${recipelitem.name}</lable>
+                                            @}
+
+                                            <input type="hidden" value="${recipelitem.name!''}" class="material_hidden"
+                                                   name="recipels[0].recipelItems[${e}].name">
+
+                                        </div>
+                                        <span class="glyphicon glyphicon-remove" aria-hidden="true"
+                                              style="font-size: 16px;color: red;    position: absolute;  top: 44px;left: 58%;"
+                                              onclick="removematerial(this)"></span>
+                                    </div>
+                                    <div style="float: left;padding-left: 5px;width: 30%;">
+                                        <div class="div-box"
+                                             style="width: 40px;height: 23px;font-size:16px;border:1px solid #27A4B0; white-space:nowrap;"
+                                             onclick="pop(this,event,'yf')">
+                                            <lable style="font-size:16px;">${recipelitem.usage!""}</lable>
+                                            <input type="hidden" value="${recipelitem.usage!''}"
+                                                   name="recipels[0].recipelItems[${e}].usage">
+                                        </div>
+                                        <div style="clear: both;"></div>
+                                        <div class="div-box"
+                                             style="width: 40px;height: 23px;margin-top: 4px;font-size:16px;border:1px solid #27A4B0;overflow:hidden;"
+                                             onclick="pop(this,event,'jl')">
+                                            <lable style="font-size:16px;">
+                                                ${recipelitem.dosage!""}${recipelitem.unit!""}
+                                            </lable>
+                                            <input type="hidden" value="${recipelitem.dosage!''}${recipelitem.unit!''}"
+                                                   name="recipels[0].recipelItems[${e}].dosage">
+                                            @e=e+1;
+                                        </div>
+                                    </div>
+                                </div>
+                                @}
+                                @}
+                                @ var end=0;
+                                @ if(e>15&&(e+1)%2!=0){
+                                @ end=e+3-((e+1)%2);
+                                @}else if(e>=15&&(e+1)%2==0){
+                                @ end=e+2;
+                                @}else{
+                                @ end=16;
+                                @}
+                                @for (var i=e;i < end;i++){
+                                <div class="col-md-3 col-xs-6" style="padding-top: 10px;">
+                                    <div style="float: left;width: 70%;">
+                                        <div class="div-box"
+                                             style="width: 100%;height: 50px;border:1px solid #27A4B0;overflow:hidden;"
+                                             onclick="pop(this,event)">
+                                            <lable id="${i}" style="font-size:30px;"></lable>
+                                            <input type="hidden" value="" class="material_hidden"
+                                                   name="recipels[0].recipelItems[${e}].name">
+                                        </div>
+                                        <span class="glyphicon glyphicon-remove" aria-hidden="true"
+                                              style="font-size: 16px;color: red;    position: absolute;  top: 44px;left: 58%;"
+                                              onclick="removematerial(this)"></span>
+                                    </div>
+                                    <div style="float: left;padding-left: 5px;width: 30%;">
+                                        <div class="div-box"
+                                             style="width: 40px;height: 23px;font-size:16px;border:1px solid #27A4B0; white-space:nowrap;"
+                                             onclick="pop(this,event,'yf')">
+                                            <lable style="font-size:16px;"></lable>
+                                            <input type="hidden" value="" name="recipels[0].recipelItems[${e}].usage">
+                                        </div>
+                                        <div style="clear: both;"></div>
+                                        <div class="div-box"
+                                             style="width: 40px;height: 23px;margin-top: 4px;font-size:16px;border:1px solid #27A4B0;overflow:hidden;"
+                                             onclick="pop(this,event,'jl')" class="">
+                                            <lable style="font-size:16px;"></lable>
+                                            <input type="hidden" value="" name="recipels[0].recipelItems[${e}].dosage">
+                                            @e=e+1;
+                                        </div>
+                                    </div>
+                                </div>
+                                @}
+
+                            </div>
+
+                            <div class="form-body jff" style="min-height:250px;">
+
+
+                                <div class="form-group form-md-line-input has-success">
+                                    <span class="control-label" for="form_control_1" style="width: 56px;float: left;"><i
+                                            class="glyphicon glyphicon-asterisk" style="color: red"></i>煎服法</span>
+                                    <div class="" style="width: calc(100% - 115px);float: left;">
+                                        @if(!isEmpty(emr.recipels[0].jff)){
+                                        <textarea type="text" class="form-control ff" onpropertychange="MaxMe(this)"
+                                                  oninput="MaxMe(this)" style="overflow:hidden;height:30px;resize:none"
+                                                  name="recipels[0].jff"
+                                                  placeholder="">${emr.recipels[0].jff!""}</textarea>
+                                        @}else{
+                                        <textarea type="text" class="form-control ff" onpropertychange="MaxMe(this)"
+                                                  oninput="MaxMe(this)" style="overflow:hidden;height:30px;resize:none"
+                                                  name="recipels[0].jff"
+                                                  placeholder="">水煎服，一日三次，一次150ml</textarea>
+                                        @}
+                                    </div>
+                                    <div class="" style="display: none">
+                                        <label class="label-color"
+                                               style="margin-left:5px;border: 1px solid orange;padding: 5px;border-radius: 5px!important;font-size: .9em"
+                                               onclick="TakeMedicine()">煎服法</label>
+                                    </div>
+                                </div>
+                                <div class="form-group form-md-line-input has-success"
+                                     style="width: 100%;float: left;padding-top:0;">
+                                    <span class="control-label" for="form_control_1"><i
+                                            class="glyphicon glyphicon-asterisk" style="color: red"></i>医嘱</span>
+                                    <div class="control-line">
+                                        @if(!isEmpty(emr.recipels[0].notice)){
+                                        <input type="text" class="form-control" value="${emr.recipels[0].notice!''}"
+                                               name="recipels[0].notice" id="form_control_1" placeholder="">
+                                        @}else{
+                                        <input type="text" class="form-control" value="忌辛辣"
+                                               name="recipels[0].notice" id="form_control_1" placeholder="">
+                                        @}
+                                        <span class="help-block"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group form-md-line-input has-success"
+                                     style="width: 50%;float: left;padding-top:0;">
+                                    <span class="control-label" for="form_control_1"><i
+                                            class="glyphicon glyphicon-asterisk" style="color: red"></i>剂数</span>
+                                    <div class="control-line" style="width: calc(100% - 100px)">
+                                        @if(!isEmpty(emr.recipels[0].js)){
+                                        <input type="text" class="form-control" title="jishu" readonly
+                                               value="${emr.recipels[0].js!''}" name="recipels[0].js"
+                                               id="form_control_1" placeholder="">
+                                        @}else{
+                                        <input type="text" class="form-control" title="jishu" readonly
+                                               value="3" name="recipels[0].js"
+                                               id="form_control_1" placeholder="">
+                                        @}
+                                        <span class="help-block"></span>
+                                    </div>
+                                    <span class="control-label">付</span>
+                                </div>
+                                <div class="form-group form-md-line-input has-success"
+                                     style="width: 50%;float: left; padding-top:0px;">
+                                    <span class="control-label" for="form_control_1">金额</span>
+                                    <div class="control-line">
+                                        <input type="text" class="form-control" value="${emr.recipels[0].je!'0'}"
+                                               name="recipels[0].je" id="je" placeholder="" onfocus>
+                                    </div>
+                                </div>
+                                <div class="form-group form-md-line-input has-success"
+                                     style="width: 50%;float: left;padding-top:0px;">
+                                    <span class="control-label" for="form_control_1">医师</span>
+                                    <div class="control-line">
+                                        <input type="text" name="doctorName" id="doctorName"
+                                               value="${user.username}"
+                                               class="form-control" id="form_control_1" placeholder="" readonly>
+                                        <input type="hidden" name="doctorId" id="doctorId"
+                                               value="${user.account}">
+                                    </div>
+                                </div>
+                                <div class="form-group form-md-line-input has-success"
+                                     style="width: 50%;float: left;padding-top:0px;">
+                                    <span class="control-label" for="form_control_1" style="width: 84px">药师（复核）</span>
+                                    <div class="control-line" style="width: calc(100% - 96px)">
+                                        <input type="text" class="form-control" name="recipels[0].fhdoctor_name"
+                                               value="${emr.recipels[0].fhdoctor_name!''}" id="form_control_1"
+                                               placeholder="">
+                                    </div>
+                                </div>
+                                <div class="form-group form-md-line-input has-success tijiao"
+                                     style="width: 100%;float: left;padding-top:0px;">
+                                    <button class="btn btn-primary" onclick="sharea()">提交</button>
+                                    <!--<button class="btn btn-primary" onclick="SaveNoVoild()">保存</button>-->
+                                </div>
+                            </div>
+                            <input type='hidden' name='recipelbyid' id='recipelbyid' value=''>
+                            <!--<input type='hidden' name='recipels[0].name' id='recipelname' value=''>-->
+                            <input type='hidden' name='visitNostr' id='visitNostr' value=''>
+                            <input type='hidden' name='materialname' id='materialname' value=''>
+                            <input type="hidden" value="" name="isUpLoad" id="isUpLoad">
+                            <button type="submit" class="btn green" id="emrFormSubmitBtn"
+                                    style="display: none;"></button>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-md-3 right" style="background-color: #eceef1">
+                    <div style="position: relative;">
+                        <div class="row">
+                            <div class="portlet light " style="margin-bottom:0;padding-top:5px;padding-bottom:0px;">
+                                <div class="portlet-title">
+                                    <div class="caption" style="width:60%;padding:0;">
+
+                                        <ul class="nav nav-tabs" style="margin-bottom:0px;" id="rightToolsTab">
+                                            <li class="active" onclick="writeRecipel()">
+                                                <a href="#tab_2_1 " data-toggle="tab" aria-expanded="false"> 开方 </a>
+                                            </li>
+                                            <li class="" onclick="historypeople()">
+                                                <a href="#tab_2_2" data-toggle="tab" aria-expanded="true"> 历史 </a>
+                                            </li>
+                                            <!--<li class="" onclick="doctorList()">-->
+                                            <!--<a href="#tab_2_3" data-toggle="tab" aria-expanded="true">远程</a>-->
+                                            <!--</li>-->
+                                            <li class="" onclick="waitlist()">
+                                                <a href="#tab_2_4" data-toggle="tab" aria-expanded="true">待诊患者</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <div style="float: right;font-size: 20px;line-height:50px;">
+                                        <span class="glyphicon glyphicon glyphicon-edit" onclick="reloadPage()"
+                                              style="cursor: pointer;"></span>
+                                        <!--<span class="glyphicon glyphicon-star-empty    "-->
+                                        <!--style="padding-left: 10px;cursor: pointer;"-->
+                                        <!--onclick="savebaserecipel()"></span>-->
+                                        <span class="fa fa-save" style="padding-left: 10px;cursor: pointer;"
+                                              onclick="SaveNoVoild()"></span>
+                                        <span class="icon-share" style="padding-left: 10px;cursor: pointer;"
+                                              onclick="sharea()"></span>
+                                    </div>
+                                </div>
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="tab_2_1">
+                                        <div class="portlet light " style="padding:5px 20px 10px;">
+                                            <div class="portlet-title">
+                                                <div class="caption">
+                                                    <i class="glyphicon glyphicon-star-empty"></i>
+                                                    <span class="caption-subject font-dark bold uppercase">已选择方剂</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="portlet-body"
+                                                 style="min-height:150px;width:230px;margin-left: -20px;overflow: hidden"
+                                                 id="selectedrecipel">
+
+                                            </div>
+                                        </div>
+
+                                        <div class="portlet light " style="padding:5px 20px 10px;">
+                                            <div class="portlet-title tabbable-line">
+                                                <div class="caption caption-md">
+                                                    <i class="icon-globe theme-font hide"></i>
+                                                    <span class="glyphicon glyphicon-folder-open"
+                                                          aria-hidden="true"></span>
+                                                    <span class="caption-subject font-dark bold uppercase">药方</span>
+                                                </div>
+                                                <ul class="nav nav-tabs">
+                                                    <li class="" onclick="departmet()">
+                                                        <a href="#tab_1_1" data-toggle="tab"
+                                                           aria-expanded="false">汤剂 </a>
+                                                    </li>
+                                                    <li class="active" onclick="cellect()">
+                                                        <a href="#tab_1_2" data-toggle="tab"
+                                                           aria-expanded="true">收藏 </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="portlet-body">
+                                                <!--BEGIN TABS-->
+                                                <div class="tab-content">
+                                                    <div class="tab-pane" id="tab_1_1">
+                                                        <div class="slimScrollDiv" id="keshi"
+                                                             style="position: relative; overflow: hidden; height: 200px;width:230px;margin-left: -20px;">
+                                                            <div class="scroller"
+                                                                 style="height: 320px; overflow: hidden; width: auto;"
+                                                                 data-always-visible="1" data-rail-visible1="0"
+                                                                 data-handle-color="#D7DCE2" data-initialized="1">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="tab-pane active" id="tab_1_2">
+                                                        <div class="slimScrollDiv" id="baseRecipelHolder"
+                                                             style="position: relative; overflow: hidden; width: 230px; height: 200px; margin-left: -20px;">
+                                                            <div class="scroller"
+                                                                 style="height: 337px; overflow: hidden; width: 270px;"
+                                                                 data-always-visible="1" data-rail-visible1="0"
+                                                                 data-handle-color="#D7DCE2" data-initialized="1">
+                                                                <ul class="feeds">
+                                                                    <li>
+                                                                        @ for(base in bases){
+                                                                        @ if(strutil.length(base.name)>6){
+
+                                                                        @ var s=base.name;
+                                                                        @ var s1="···";
+                                                                        @ var s3= strutil.subStringTo (s,0,5);
+                                                                        @ var s2=s3+s1;
+
+                                                                        <label class="col-md-6"
+                                                                               onclick="showitem('${base.id}','${base.name}',this)"
+                                                                               style="padding:0 5px">
+                                                                            ${s2}
+                                                                        </label>
+                                                                        @}else{
+                                                                        <label class="col-md-6"
+                                                                               onclick="showitem('${base.id}','${base.name}',this)"
+                                                                               style="padding:0 5px">
+                                                                            ${base.name}
+                                                                        </label>
+                                                                        @}
+                                                                        @}
+                                                                    </li>
+                                                                </ul>
+                                                                <div style="position: absolute;bottom: -12px;right: 0px;">
+                                                                    ${baseRecipel.page.pageStr }
+                                                                </div>
+                                                            </div>
+                                                            <div class="slimScrollBar"
+                                                                 style="background: rgb(255, 255, 255); width: 1px; position: absolute; top: 0px; opacity: 0.4; display: block; border-radius: 7px; z-index: 99; right: 1px; height: 298.081px;"></div>
+                                                            <div class="slimScrollRail"
+                                                                 style="width: 7px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(234, 234, 234); opacity: 0.2; z-index: 90; right: 1px;"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane " id="tab_2_2">
+                                        <div style="text-align: center;color:#27a4b0;position:relative;">
+                                            <h3>历史处方</h3>
+                                            <span class="glyphicon glyphicon-download" onclick="down()"
+                                                  style="line-height:26px;position:absolute;right:0;margin-right:15px;font-size: 16px;width: 30px"></span>
+                                        </div>
+                                        <div class="shuru">
+                                            <span class="fa fa-search"></span>
+                                            <input type="text" placeholder="搜索姓名、日期、证型、跟诊老师"
+                                                   oninput="findEmrHistoryByName($(this).val(),'history')">
+                                        </div>
+                                        <div class="histroy-list" id="histroy-list" style="min-height:396px;">
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane " id="tab_2_4">
+                                        <h3>待诊患者</h3>
+                                        <div class="shuru">
+                                            <input type="text" id="tab4name"
+                                                   oninput="findwaitByName($(this).val(),$('#tab4date').val(),'wait')" +
+                                                   placeholder="输入姓名">
+                                            <input type="text" id="tab4date"
+                                                   oninput="findwaitByName($('#tab4name').val(),$(this).val(),'wait')"
+                                                   placeholder="输入日期">
+                                        </div>
+                                        <div class="histroy-list" id="wait-list" style="min-height:396px;">
+
+                                        </div>
+                                        <div style="clear: both"></div>
+                                    </div>
+                                    <div class="tab-pane " id="tab_2_3">
+                                        <div class="shuru">
+                                            <input type="text" id="tab3name"
+                                                   oninput="findUserByName($(this).val(),$('#tab3date').val(),'doctor')"
+                                                   placeholder="输入姓名">
+                                            <input type="text" id="tab3date"
+                                                   oninput="findUserByName($('#tab3name').val(),$(this).val(),'doctor')"
+                                                   placeholder="输入特长">
+                                            <span class="fa fa-search"></span>
+                                            <input type="text" placeholder="搜索姓名、日期、证型、跟诊老师"
+                                                   oninput="findEmrHistoryByName($(this).val(),'history')">
+                                        </div>
+                                        <div class="doctor-list" id="doctor-list" style="height:230px;">
+                                        </div>
+                                        <div class="portlet light " style="padding:5px 20px 10px;">
+                                            <div class="portlet-title">
+                                                <div class="caption">
+                                                    <i class="fa fa-clock-o"></i>
+                                                    <span class="caption-subject font-dark bold uppercase">已预约</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="portlet-body"
+                                                 style="height:150px;width:230px;margin-left: -20px;"
+                                                 id="appointmentDoc">
+                                                <span></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="portlet light " style="margin-bottom:0;padding-bottom:0">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <i class="glyphicon glyphicon-info-sign"></i>
+                                            <span class="caption-subject font-dark bold uppercase">提示信息</span>
+                                        </div>
+                                    </div>
+                                    <div class="portlet-body news" id="autoscroll"
+                                         style="height: 165px;overflow:hidden;">
+                                        <div class="alert alert-success">
+                                            <strong></strong> 新版本V1.6已发布
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END CONTAINER -->
+    <!-- strat share-->
+    <div class="share-all">
+        <div style="width:100%;height:100%;z-index:1" class="close"></div>
+        <div class="share-body">
+            <div class="img" id="share-qr"><!--<img src="/img/erweima.png"/>--></div>
+            <div onclick="dyrecipel('${emr.visitNo!visitNoSeq}')">
+                <img src="/img/dy.png"/>
+                <p>打印</p>
+            </div>
+            <!--暂时隐藏-->
+            <!-- <div>
+                 <img src="/img/yf.png"/>
+                 <p>药房</p>
+             </div>
+             -->
+            <!--<div onclick="saveRecipel()">
+                <img src="/img/save.png"/>
+                <p>保存</p>
+            </div>-->
+            <div hidden id="dayin"></div>
+        </div>
+    </div>
+
+    <!-- end share-->
+    <!-- STRAT she mai zheng -->
+    <div class="VTD" id="vtd0">
+        <div style="width:100%;height:100%;z-index:1" class="close"></div>
+        <div class="vein" style="top:20%;">
+            <h2>脉象</h2>
+            <div style="width: 100%;padding: 20px;" class="form-group has-success">
+                <span class="control-label">诊断</span>
+                <textarea rows="3" class=" vein" id="vein" readonly contenteditable="true"></textarea>
+            </div>
+            <div class="nav nav-tabs">
+                <a href="#tab1" data-toggle="tab" aria-expanded="false" class="check">两侧</a>
+                <a href="#tab2" data-toggle="tab" aria-expanded="false">左</a>
+                <a href="#tab3" data-toggle="tab" aria-expanded="true">右</a>
+            </div>
+            <div class="tab-content">
+                <div class="tab-pane  active" id="tab1">
+                    <table>
+                        <tr>
+                            <td>
+                                <div><a>数</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>浮</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>弦</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>滑</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>洪</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>大</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>实</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div><a>迟</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>沉</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>缓</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>涩</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>细</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>小</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>虚</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div><a>长</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>紧</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>动</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>革</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>微</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>濡</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>芤</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div><a>短</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>散</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>弱</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>伏</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>结</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>代</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>促</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <div><a>有力</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                                <div><a>无力</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td colspan="3">
+                                <div><a>平</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="tab-pane " id="tab2">
+                    <table>
+                        <tr>
+                            <td>
+                                <div><a>数</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>浮</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>弦</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>滑</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>洪</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>大</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>实</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div><a>迟</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>沉</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>缓</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>涩</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>细</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>小</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>虚</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div><a>长</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>紧</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>动</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>革</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>微</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>濡</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>芤</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div><a>短</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>散</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>弱</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>伏</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>结</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>代</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>促</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <div><a>有力</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                                <div><a>无力</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td colspan="3">
+                                <div><a>平</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="tab-pane " id="tab3">
+                    <table>
+                        <tr>
+                            <td>
+                                <div><a>数</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>浮</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>弦</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>滑</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>洪</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>大</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>实</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div><a>迟</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>沉</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>缓</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>涩</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>细</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>小</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>虚</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div><a>长</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>紧</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>动</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>革</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>微</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>濡</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>芤</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div><a>短</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>散</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>弱</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>伏</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>结</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>代</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td>
+                                <div><a>促</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <div><a>有力</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                                <div><a>无力</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                            <td colspan="3">
+                                <div><a>平</a>
+                                    <p><span>寸</span><span>关</span><span>尺</span></p></div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="VTD" id="vtd1">
+        <div style="width:100%;height:100%;z-index:1;" class="close"></div>
+        <div class="tongue" id="tongueHolder">
+            <h2>舌象</h2>
+            <div style="width: 100%;padding:10px 20px;" class="form-group has-success">
+                <span class="control-label">诊断</span>
+                <textarea rows="3" class=" shezhi" id="shezhi" readonly contenteditable="true"></textarea>
+            </div>
+            <div class="shetai" style="border-right: 2px solid #CCCCCC;">
+                <p class="title">舌苔</p>
+                <ul>
+                    <li><a href="#">厚</a></li>
+                    <li><a href="#">薄</a></li>
+                    <li><a href="#">润</a></li>
+                    <li><a href="#">燥</a></li>
+                    <li><a href="#">腐</a></li>
+                    <li><a href="#">腻</a></li>
+                    <li><a href="#">剥落</a></li>
+                    <li><a href="#">偏全</a></li>
+                    <li><a href="#">满布</a></li>
+                    <li><a href="#">干</a></li>
+                    <li><a href="#">少</a></li>
+                    <li><a href="#">欠润</a></li>
+                    <li><a href="#">黄</a></li>
+                    <li><a href="#">白</a></li>
+                    <li><a href="#">灰黑</a></li>
+                </ul>
+            </div>
+            <div class="shezhi">
+                <p class="title">舌质</p>
+                <div class="shexzhi-title">
+                    <span>常用</span>
+                    <span>舌神</span>
+                    <span>舌色</span>
+                    <span>舌形</span>
+                    <span>舌态</span>
+                    <span>舌络</span>
+                </div>
+                <div class="shezhi-div changyong">
+                    <ul>
+                        <li><a href="#">淡红</a></li>
+                        <li><a href="#">淡白</a></li>
+                        <li><a href="#">嫩</a></li>
+                        <li><a href="#">青紫</a></li>
+                        <li><a href="#">绛紫</a></li>
+                        <li><a href="#">舌尖红</a></li>
+                        <li><a href="#">齿痕</a></li>
+                        <li><a href="#">胖</a></li>
+                        <li><a href="#">瘦</a></li>
+                        <li><a href="#">肿胀</a></li>
+                        <li><a href="#">痿软</a></li>
+                        <li><a href="#">强硬</a></li>
+                        <li><a href="#">歪斜</a></li>
+                        <li><a href="#">歪斜</a></li>
+                        <li><a href="#">颤动</a></li>
+                    </ul>
+                </div>
+                <div class="shezhi-div sheshen">
+                    <ul>
+                        <li><a href="#">荣</a></li>
+                        <li><a href="#">枯</a></li>
+                    </ul>
+                </div>
+                <div class="shezhi-div shese">
+                    <ul>
+                        <li><a href="#">淡红</a></li>
+                        <li><a href="#">淡白</a></li>
+                        <li><a href="#">红</a></li>
+                        <li><a href="#">绛</a></li>
+                        <li><a href="#">青紫</a></li>
+                        <li><a href="#">枯白</a></li>
+                        <li><a href="#">暗红</a></li>
+                        <li><a href="#">暗</a></li>
+                        <li><a href="#">舌尖红</a></li>
+                    </ul>
+                </div>
+                <div class="shezhi-div shexing">
+                    <ul>
+                        <li><a href="#">老</a></li>
+                        <li><a href="#">嫩</a></li>
+                        <li><a href="#">胖</a></li>
+                        <li><a href="#">瘦</a></li>
+                        <li><a href="#">肿胀</a></li>
+                        <li><a href="#">点</a></li>
+                        <li><a href="#">刺</a></li>
+                        <li><a href="#">裂纹</a></li>
+                        <li><a href="#">齿痕</a></li>
+                        <li><a href="#">胖大</a></li>
+                    </ul>
+                </div>
+                <div class="shezhi-div shetai">
+                    <ul>
+                        <li><a href="#">痿软</a></li>
+                        <li><a href="#">强硬</a></li>
+                        <li><a href="#">歪斜</a></li>
+                        <li><a href="#">颤动</a></li>
+                        <li><a href="#">吐弄</a></li>
+                        <li><a href="#">缩短</a></li>
+                    </ul>
+                </div>
+                <div class="shezhi-div sheluo">
+                    <ul>
+                        <li><a href="#">青紫</a></li>
+                        <li><a href="#">绛紫</a></li>
+                        <li><a href="#">紫黑色</a></li>
+                        <li><a href="#">舌下络脉曲张</a></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="VTD" id="vtd2">
+        <div style="width:100%;height:100%;z-index:1" class="close"></div>
+        <div class="tongue zheng" style="width: 64%;left:18%;padding:15px 20px;" id="symptomsHolder">
+            <h2>症状</h2>
+            <div style="width: 100%;margin-bottom: 0" class="form-group has-success">
+                <span class="control-label">诊断</span>
+                <textarea rows="3" class="symptom" id="symptom" contenteditable="true" readonly></textarea>
+            </div>
+            <div style=" overflow: hidden" class="form-group has-success classification">
+                <p style="width:65px;float:left">症状分类</p>
+                <hr style="width:86%;float:right;margin-top:-12px;"/>
+                <!--<div style="clear: both"></div>-->
+                <div id="menus" class="classification" style="width:100%;margin-top: 35px;">
+                </div>
+            </div>
+            <div class="form-group has-success" id="specific">
+                <p style="width:65px;float:left">具体症状</p>
+                <hr style="width:86%;float:right;margin-top:-12px;"/>
+                <div id="symptoms" class="specific" style="width:100%">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="VTD" id="vtd3">
+        <div style="width:100%;height:100%;z-index:1" class="close"></div>
+        <div class="tongue zheng" style="left:32%" id="qrCodeHolder">
+        </div>
+    </div>
+    <!-- 处方签预览页面 -->
+    <div id="emrhistoryPage" style=""></div>
+    <div id="doctorlistPage" style=""></div>
+    <!--END she mai zheng  -->
+    <div class="share" style="display:none;">
+        <div class="layer_notice">
+            <h3>发送中。。。</h3>
+        </div>
+    </div>
+    <div class="Make" style="display:none">
+        <div class="h" style="width:100%;height:100%;z-index:1"></div>
+        <div class="make">
+            <h2>煎服法</h2>
+            <div class="yong form-group form-md-line-input has-success row">
+                <label class="control-label" style="display:inline-block;width: 42px;">用法</label>
+                <input type="text" class="form-control yf" style="display:inline-block;width:calc(100% - 46px);">
+            </div>
+            <div class="yong form-group form-md-line-input has-success row">
+                <label class="control-label" style="display:inline-block;width: 42px;">制法</label>
+                <input type="text" class="form-control zf" style="display:inline-block;width:calc(100% - 46px);">
+            </div>
+            <div class="yong form-group form-md-line-input has-success row">
+                <label class="control-label" style="display:inline-block;width: 42px;">时间</label>
+                <textarea type="text" id="shijian" class="form-control sj"
+                          style="display:inline-block;width:calc(100% - 46px);height: 27px;overflow: hidden;vertical-align: bottom;"></textarea>
+            </div>
+            <div class="yong form-group form-md-line-input has-success row">
+                <label class="control-label" style="display:inline-block;width: 42px;">免煎</label>
+                <input type="text" class="form-control ai" style="display:inline-block;width:calc(100% - 46px);">
+            </div>
+            <div style="width: 100%;margin:10px 0;overflow:hidden;" class="form-group has-success">
+                <p style="width:65px;float:left">选项分类</p>
+                <hr style="width:86%;float:right;margin-top:-12px;"/>
+                <div class="time" style="width:100%;margin-top:30px;">
+                    <span>用法</span>
+                    <span>制法</span>
+                    <span>时间</span>
+                    <span>智能免煎</span>
+                </div>
+            </div>
+            <div style="width: 100%;overflow:hidden;min-height:120px;">
+                <p style="width:65px;float:left">具体选项</p>
+                <hr style="width:86%;float:right;margin-top:-12px;"/>
+                <div id="time0" class="time-content">
+                    <span>口服</span>
+                    <span>洗</span>
+                    <span>敷</span>
+                    <span>擦</span>
+                    <hr/>
+                    <p>
+                        <span>一日<input type="text" class="time-input" onclick="yf(this)" readonly>次</span>
+                        <span>一剂<input type="text" class="time-input" onclick="yf(this)" readonly>天</span></p>
+                </div>
+                <div id="time1" class="time-content">
+                    <span>水煎</span>
+                    <span>制膏</span>
+                    <span>打粉</span>
+                    <span>水丸</span>
+                </div>
+                <div id="time2" class="time-content">
+                    <p style="">
+                        <span>泡<input type="text" class="time-input" onclick="yf(this)" readonly>分钟</span>
+                        <i style="display:block;width:100%;height:1px;background:#ccc;margin:5px 0"></i>
+                        <span>1.<input type="text" class="time-input" onclick="yf(this)" readonly>分钟</span>
+                        <span>2.<input type="text" class="time-input" onclick="yf(this)" readonly>分钟</span>
+                        <i style="display:block;width:100%;height:1px;background:#ccc;margin:5px 0"></i>
+                        <span>先下<input type="text" class="time-input" onclick="yf(this)" readonly>分钟</span>
+                        <span>后下<input type="text" class="time-input" onclick="yf(this)" readonly>分钟</span>
+                    </p>
+                </div>
+                <div id="time3" class="time-content">
+                    <p>
+                        <span><input type="text" class="time-input" onclick="yf(this)" readonly>剂</span>
+                        <span><input type="text" class="time-input" onclick="yf(this)" readonly>袋</span></p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="ageboard">
+        <ul>
+            @var ageboardnum=["1","2","3","4","5","6","7","8","9","0"];
+            @for( c in ageboardnum){
+            <li class="agekey" onclick="chuan('${c}')">${c}</li>
+            @}
+            <li class="agekey" onclick="chuan('成人')">成人</li>
+            <li class="agekey" onclick="chuan('儿童')">儿童</li>
+            <li class="agekey" onclick="handle(this,'age')" style="width:80px">手</li>
+            <li class="agekey" onclick="chuan('del')" style="width:80px">del</li>
+        </ul>
+    </div>
+    <div id="jsboard">
+        <ul>
+            @var jsboardnum=["1","2","3","4","5","6","7","8","9","0"];
+            @for( c in jsboardnum){
+            <li class="agekey" onclick="chuan1('${c}')">${c}</li>
+            @}
+            <li class="agekey" onclick="chuan1('del')" style="width:80px">del</li>
+        </ul>
+    </div>
+    <div id="days">
+        <ul>
+            @for( c in jsboardnum){
+            <li class="agekey" onclick="chuan2('${c}')">${c}</li>
+            @}
+            <li class="agekey" onclick="chuan2('del')" style="width:80px">del</li>
+        </ul>
+    </div>
+    <div id="yfboard">
+        <ul>
+            @for( c in jsboardnum){
+            <li class="agekey" onclick="chuanyf('${c}','yf')">${c}</li>
+            @}
+            <li class="agekey" onclick="chuanyf('del','yf')" style="width:80px">del</li>
+        </ul>
+    </div>
+    <!-- BEGIN QUICK NAV -->
+    <div class="quick-nav-overlay"></div>
+</div>
+<!-- END QUICK NAV -->
+<!--[if lt IE 9]>
+<script src="../assets/global/plugins/respond.min.js"></script>
+<script src="../assets/global/plugins/excanvas.min.js"></script>
+<script src="../assets/global/plugins/ie8.fix.min.js"></script>
+<![endif]-->
+@ var characters=['q','w','e','r','t','y','u','i','o','p'];
+@ var characters1=['a','s','d','f','g','h','j','k','l'];
+@ var characters2=['z','x','c','v','b','n','m'];
+<script type='text/template' id='tipwin'>
+    <div id="ypdiv" style="width:370px">
+        <div id="material">
+            <div id="" style="height:35px;width:91%;float: left">
+                <table class="table" style="color: #DA754D;width:unset;">
+                    <tr>
+                        <td onclick="material(this)" style="font-size: 16px;padding:8px 6px;" nowrap></td>
+                    </tr>
+                </table>
+            </div>
+            <div id="matertable" style="width:8%;float:right;vertical-align:top;text-align:right;">
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+        <hr style="border: 1px solid #DA754D;"/>
+        <ul id="keyboard" style="font-size: 20px;margin-left: 5px;overflow:hidden;">
+            @ for(c in characters){
+            <li class="letter" style="margin:0px 5px 5px 0px;" onclick="keypre(this)">${c}</li>
+            @}
+        </ul>
+        <ul id="keyboard" style="font-size: 20px;width:380px; margin-left: 20px;">
+            @ for(c1 in characters1){
+            <li class="letter" style="margin:0px 5px 5px 0px;" onclick="keypre(this)">${c1}</li>
+            @}
+        </ul>
+        <ul id="keyboard" style="font-size: 20px;width:380px; margin-left: 20px;">
+            @ for(c2 in characters2){
+            <li class="letter" style="margin:0px 5px 5px 0px;" onclick="keypre(this)">${c2}</li>
+            @}
+            <li class="delete lastitem" style="margin:0px 5px 5px 0px;" onclick="keypre(this)">del</li>
+            <li class="letter" style="margin:0px 5px 5px 0px;" onclick="handle(this,'material')">手</li>
+        </ul>
+        <ul id="" style="font-size: 20px;width:380px; margin-left: 20px;">
+            <li class="" style="margin:0px 5px 5px 0px;width:94%"><input type="text" style="width:90%;height:100%"
+                                                                         oninput="fuckcm(this)"
+                                                                         onclick="fuckcc(this)"></li>
+        </ul>
+    </div>
+</script>
+<script type='text/template' id='yfTipWin'>
+    <div id="yfdiv" style="width:370px">
+        <div id="material">
+            <div id="" style="height:35px;width:91%;float: left;">
+                <table class="table" style="color: #DA754D;width:unset;">
+                    <tr>
+                        <td onclick="material(this,'yf')" style="font-size: 16px;padding:8px 6px;" nowrap></td>
+                    </tr>
+                </table>
+            </div>
+            <div id="matertable" style="width:8%;float:right;vertical-align:top;text-align:right;">
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+        <hr
+        / style="border: 1px solid #DA754D;">
+        <ul id="keyboard" style="font-size: 20px; margin-left: 5px;">
+            @ for(c in characters){
+            <li class="letter" style="margin:0px 5px 5px 0px;" onclick="keypre(this,'yf')">${c}</li>
+            @}
+        </ul>
+        <ul id="keyboard" style="font-size: 20px; margin-left: 20px;">
+            @ for(c1 in characters1){
+            <li class="letter" style="margin:0px 5px 5px 0px;" onclick="keypre(this,'yf')">${c1}</li>
+            @}
+        </ul>
+        <ul id="keyboard" style="font-size: 20px; margin-left: 20px;">
+            @ for(c2 in characters2){
+            <li class="letter" style="margin:0px 5px 5px 0px;" onclick="keypre(this,'yf')">${c2}</li>
+            @}
+            <li class="delete lastitem" style="margin:0px 5px 5px 0px;" onclick="keypre(this,'yf')">del</li>
+            <li class="letter" style="margin:0px 5px 5px 0px;" onclick="handle(this,'yf')">手</li>
+        </ul>
+        <ul id="" style="font-size: 20px;width:380px; margin-left: 20px;">
+            <li style="margin:0px 5px 5px 0px;width:94%">
+                <input type="text" style="width:90%;height:100%" onclick="fuckcc(this)">
+            </li>
+        </ul>
+    </div>
+</script>
+
+<script type='text/template' id='zzTipWin'>
+    <div id="container">
+        <div id="material">
+            <div id="" style="height:35px;float:left;"></div>
+            <div style="float:right;    margin-top: 13px;margin-right: 5px;font-size: 18px;"><span
+                    class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
+                <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+        <hr style="border: 1px solid #DA754D;"/>
+        <ul id="keyboard" style="font-size: 20px; margin-left: 5px;">
+            @ for(c in characters){
+            <li class="letter" style="margin:0px 5px 5px 0px;" onclick="keypre(this,'zz')">${c}</li>
+            @}
+        </ul>
+        <ul id="keyboard" style="font-size: 20px; margin-left: 20px;">
+            @ for(c1 in characters1){
+            <li class="letter" style="margin:0px 5px 5px 0px;" onclick="keypre(this,'zz')">${c1}</li>
+            @}
+        </ul>
+        <ul id="keyboard" style="font-size: 20px; margin-left: 20px;">
+            @ for(c2 in characters2){
+            <li class="letter" style="margin:0px 5px 5px 0px;" onclick="keypre(this,'zz')">${c2}</li>
+            @}
+            <li class="delete lastitem" style="margin:0px 5px 5px 0px;" onclick="keypre(this,'zz')">del</li>
+            <li class="letter" style="margin:0px 5px 5px 0px;" onclick="handle(this)">手</li>
+        </ul>
+        <ul id="keyboard" style="font-size: 20px;width:380px; margin-left: 20px;">
+            <li class="letter" style="margin:0px 5px 5px 0px;width:94%">
+                <input type="text" style="width:90%;height:100%" oninput="searchmaterrial(this)"
+                       onclick="this.focus()">
+            </li>
+        </ul>
+    </div>
+</script>
+@ var numberCharacters = ["1","2","3","4","5","6","7","8","9","0","."];
+<script type='text/template' id='jlTipWin'>
+    <div id="jldiv">
+        <div id="material">
+            <div id="" style="height:50px;width:100%;display:inline-block;">
+                <table class="table" style="color: #DA754D;width:100%;text-align:center;">
+                    <tr>
+                    </tr>
+                    <tr>
+                    </tr>
+                </table>
+            </div>
+            <div id="matertable" style="width:8%;display:inline-block;vertical-align:top;text-align:right;">
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+        <hr style="border: 1px solid #DA754D;"/>
+        <ul id="keyboard" style="font-size: 20px;width:380px; margin-left: 20px;">
+            @ for(c in numberCharacters){
+            <li class="letter" style="width:80px;" onclick="keypre(this,'jl')">${c}</li>
+            @}
+            <li class="delete lastitem" style="width:80px;" onclick="keypre(this,'zz')">del</li>
+            <div style="clear: both;"></div>
+        </ul>
+    </div>
+</script>
+<script type='text/template' id='materialinput'>
+    @for (var i=0;i < 16;i++){
+    <div class="col-md-3 col-xs-6" style="padding-top: 10px;">
+        <div style="float: left;width: 70%;">
+            <div class="div-box" style="width: 100%;height: 50px;border:1px solid #27A4B0;overflow:hidden;"
+                 onclick="pop(this,event)">
+                <lable id="${i}" style="font-size:30px;"></lable>
+                <input type="hidden" value="" class="material_hidden"
+                       name="recipels[0].recipelItems[${i}].name">
+            </div>
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"
+                  style="font-size: 16px;color: red;    position: absolute;  top: 44px;left: 58%;"
+                  onclick="removematerial(this)"></span>
+        </div>
+        <div style="float: left;padding-left: 5px;width: 30%;">
+            <div class="div-box"
+                 style="width: 40px;height: 23px;font-size:16px;border:1px solid #27A4B0; white-space:nowrap;"
+                 onclick="pop(this,event,'yf')">
+                <lable style="font-size:16px;"></lable>
+                <input type="hidden" value="" name="recipels[0].recipelItems[${i}].usage">
+            </div>
+            <div style="clear: both;"></div>
+            <div class="div-box"
+                 style="width: 40px;height: 23px;margin-top: 4px;font-size:16px;border:1px solid #27A4B0;overflow:hidden;"
+                 onclick="pop(this,event,'jl')" class="">
+                <lable style="font-size:16px;"></lable>
+                <input type="hidden" value="" name="recipels[0].recipelItems[${i}].dosage">
+            </div>
+        </div>
+    </div>
+
+    @}
+
+
+</script>
+<script src="${request.contextPath}/metronic/js/jquery.min.js" type="text/javascript"></script>
+<script src="${request.contextPath}/metronic/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="${request.contextPath}/metronic/js/jquery.easypiechart.min.js" type="text/javascript"></script>
+<script src="${request.contextPath}/metronic/js/app.min.js" type="text/javascript"></script>
+<script src="${request.contextPath}/bootstrap/js/bootstrapValidator.js" type="text/javascript"></script>
+<script src="${request.contextPath}/js/jquery.form.js" type="text/javascript"></script>
+<script src="${request.contextPath}/layui/layui.js" type="text/javascript"></script>
+<script src="${request.contextPath}/bootstrap/css/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.min.js"
+        type="text/javascript"></script>
+<script type="text/javascript"
+        src="${request.contextPath}/bootstrap/css/bootstrap-datetimepicker-master/js/locales/bootstrap-datetimepicker.zh-CN.js"
+        charset="UTF-8"></script>
+<!--<script type="text/javascript" src="${request.contextPath}/js/LodopFuncs.js"></script>-->
+<script type="text/javascript" src="${request.contextPath}/js/linq.js"></script>
+<script type="text/javascript" src="${request.contextPath}/js/linq.jquery.js"></script>
+<script type="text/javascript" src="${request.contextPath}/js/linq.min.js"></script>
+<script type="text/javascript" src="${request.contextPath}/js/huixian.js"></script>
+<script type="text/javascript" src="${request.contextPath}/jquery/jquery.cookie.js"></script>
+<script src="${request.contextPath}/js/devbridge-autocomplete/dist/jquery.autocomplete.js"></script>
+<script src="${request.contextPath}/js/echart.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+    document.write("<script type='text/javascript' src='${request.contextPath}/js/index.js?time=" + new Date().valueOf() + "'><\/script>")
+</script>
+<script src="${request.contextPath}/js/pinying.js" type="text/javascript"></script>
+<script src="${request.contextPath}/js/YilianYunPrint.js" type="text/javascript"></script>
+<script src="${request.contextPath}/js/redBackGround.js" type="text/javascript"></script>
+<script>
+    loadBackground();
+    var timestamp = new Date().getTime();
+    console.log(timestamp);
+    var account = "${emr.doctorId!so.getPrincipalFromClassName('com.cdutcm.tcms.sys.entity.User').account}";
+    if ($(":checked").val() == "女") {
+        $(".menstruation").css("display", "inline-block");
+        $(".menstruation").attr("disabled", false)
+    }
+
+    var url = "${request.contextPath}/getallbasedata?userid=" + account;
+    $.post(url, function (data) {
+        storage.setItem("users", "[]");
+        storage.setItem("helps", "[]");
+        storage.setItem("materials", JSON.stringify(data.materials));
+        storage.setItem("usages", JSON.stringify(data.usages));
+        storage.setItem("dosages", JSON.stringify(data.dosages));
+        storage.setItem("eighteenNinteens", JSON.stringify(data.eighteenNinteens));
+    });
+    /*提前加载二维码 todo*/
+    // window.onload = function (ev) {
+    //     console.log(account + "123")
+    //     var url = contextPath + "/interface/getQRCode?visitNo=" + visitNo + "&userName=" + doctorName + "&timestamp=" + timestamp;
+    //     $.get(url, function (qr) {
+    //         $("#qrCodeHolder").html(qr);
+    //         $("#share-qr").html(qr);
+    //     })
+    // }
+
+    // function departmet() {
+    //     var url = "${request.contextPath}/therapyType"
+    //     $.post(url, function (data) {
+    //         $("#keshi").html(data);
+    //     })
+    // }
+    //
+    // function cellect() {
+    //     var url = contextPath + "/listPageBaseRecipels";
+    //     postdata = {'page.currentPage': 1};
+    //     $.post(url, postdata, function (data) {
+    //         $("#baseRecipelHolder").html(data);
+    //     });
+    // }
+
+    function getCookie(name) {
+        var reg = RegExp(name + '=([^;]+)');
+        var arr = document.cookie.match(reg);
+        if (arr) {
+            return arr[1];
+        } else {
+            return '';
+        }
+    };
+    var doctorName = $("#doctorName").val();
+    var recipelindex = 0;
+    var qrTimmer;
+    var countindex = 16;
+    var contextPath = '${request.contextPath}';
+    $(document).ready(function () {
+        // 表单验证
+        $('#emrform').bootstrapValidator({
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                patientName: {
+                    validators: {
+                        notEmpty: {
+                            message: '姓名不能为空'
+                        }
+                    }
+                }, deptName: {
+                    validators: {
+                        notEmpty: {
+                            message: '科室不能为空'
+                        }
+                    }
+                }, symptom: {
+                    validators: {
+                        notEmpty: {
+                            message: '病名不能为空'
+                        }
+                    }
+                }, symptommould: {
+                    validators: {
+                        notEmpty: {
+                            message: '证型不能为空'
+                        }
+                    }
+                }, diseasea: {
+                    validators: {
+                        notEmpty: {
+                            message: '症状不能为空'
+                        }
+                    }
+                }, "recipels[0].therapy": {
+                    validators: {
+                        notEmpty: {
+                            message: '治法不能为空'
+                        }
+                    }
+                }, "recipels[0].name": {
+                    validators: {
+                        notEmpty: {
+                            message: '处方名不能为空'
+                        }
+                    }
+                }, "recipels[0].jff": {
+                    validators: {
+                        notEmpty: {
+                            message: '煎服法不能为空'
+                        }
+                    }
+                }, "recipels[0].notice": {
+                    validators: {
+                        notEmpty: {
+                            message: '医嘱不能为空'
+                        }
+                    }
+                }, 'recipels[0].je': {
+                    validators: {
+                        regexp: {
+                            regexp: /^[0-9_\.]+$/,
+                            message: '金额只能为数字'
+                        }
+                    }
+                }
+                , age: {
+                    validators: {
+                        notEmpty: {
+                            message: '年龄不能为空'
+                        }
+                    }
+                }
+                , 'recipels[0].js': {
+                    validators: {
+                        notEmpty: {
+                            message: '剂数不能为空'
+                        }
+                    }
+                }, telephone: {
+                    validators: {
+                        notEmpty: {
+                            message: '电话不能为空'
+                        }
+                    }
+                }
+            }
+        });
+        $('#clickmewow').click(function () {
+            $('#radio1003').attr('checked', 'checked');
+        });
+        $("#recipelPage2").css("display", "none");
+    });
+    //加载layer提示插件
+    layui.use(['layer', 'layer'], function () {
+        var layer = layui.layer
+            , layer = layui.layer;
+    });
+
+    function sharea() {
+        $("#emrform").data('bootstrapValidator').resetForm();
+        $("#isUpLoad").val("2");
+        share();
+    }
+
+    var status = true;//已登录
+    // websocket通信
+    var visitNo = $("#visitNo").val();
+
+    function saveRecipel() {
+        $.ajax({
+            url: "${request.contextPath}/saveRecipel",
+            type: "post",
+            data: {
+                visitNo: $("#visitNo").val(),
+            },
+            success: function (e) {
+                setTimeout(function () {
+                    window.open(e)
+                }, 1000);
+            }
+        })
+    }
+
+    var u = navigator.userAgent;
+    var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
+    var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+    if (isiOS) {
+        $("input[type = 'file']").removeAttr("capture");
+    }
+    ;
+
+    $("input[type = 'file']").change(function () {
+        //input框的内容改变就ajax上传
+        var patientName = $("#patientName").val();
+        if (patientName == null || patientName == "") {
+            $("input[type = 'file']").val('');
+            layer.msg("请输入患者姓名！");
+            return;
+        }
+        var filename = prompt("请输入附件名称", "");
+        if (filename == null || filename == "") {
+            $("input[type = 'file']").val('');
+            return;
+        }
+        var obj = $(this);
+        var files = obj[0].files[0];
+        var formData = new FormData();
+        formData.append("file", files);
+        formData.append("visitNo", $("#visitNo").val());
+        formData.append("filecontent", filename);
+        formData.append("patientName", patientName);
+        $.ajax({
+            type: "POST",
+            contentType: false,
+            processData: false,
+            url: "${request.contextPath}/photos/upload",
+            data: formData,
+            async: true,
+            success: function (data) {
+                if (!data.code) {
+                    layer.msg("上传成功");
+                    $("#imgList").append("<div class='imglist'> <div> <img src='" + data.data + "' onclick='showBigImg(this)'/></div><span>" + filename + "</span> </div>")
+                } else {
+                    layer.msg("上传失败");
+                }
+
+            },
+            error: function (e) {
+                alert(JSON.stringify(e));
+            }
+        });
+        $("input[type = 'file']").val('');
+    });
+
+    function down() {
+        $.get("${request.contextPath}/excel/down?account=${emr.doctorId!so.getPrincipalFromClassName('com.cdutcm.tcms.sys.entity.User').account}", function (data) {
+            console.log(data)
+            window.open("excel/" + data, '_blank')
+        })
+
+    }
+
+    $(function () {
+        $("select.doctorname").val('${clinicId}')
+    })
+</script>
+<!--<script type="text/javascript" src="${request.contextPath}/js/websocket_index.js"></script>-->
+
+</body>
+</html>

@@ -1,0 +1,918 @@
+.form-horizontal .form-group.form-md-line-input {
+    padding-top: 10px;
+    margin: 0 -1px;
+}
+
+.h1, .h2, .h3, h1, h2, h3 {
+    margin-top: 5px;
+    margin-bottom: 3px;
+}
+
+.mt-checkbox, .mt-radio {
+    display: inline-block;
+    position: relative;
+    padding-left: 30px;
+    margin-bottom: 1px;
+    cursor: pointer;
+    font-size: 14px;
+    webkit-transition: all .3s;
+    -moz-transition: all .3s;
+    -ms-transition: all .3s;
+    -o-transition: all .3s;
+    transition: all .3s;
+}
+
+.mt-checkbox-inline, .mt-radio-inline {
+    padding: 1px 0;
+}
+
+.portlet {
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+
+.alert {
+    padding: 9px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.alert > div {
+    display: inline-block;
+}
+
+.alert > div:last-child {
+    width: 60px;
+    text-align: right;
+}
+
+.alert > div:last-child button {
+    width: 55px;
+    background-color: #fff;
+    border: 1px solid #F2AC4C;
+    color: #36BAC5;
+    margin: 2px 0;
+}
+
+.alert > div:last-child button:first-child {
+    background: #F2AC4C;
+    border-radius: 3px !important;
+    color: #ffffff;
+}
+
+hr, p {
+    margin: 5px 0;
+}
+
+.layui-layer {
+    overflow: hidden;
+}
+
+/*.layui-layer-content {*/
+/*padding: 20px;*/
+/*}*/
+
+#pop {
+    -webkit-border-radius: 10px !important;
+    border-radius: 10px !important;
+}
+
+label {
+    font-size: 16px;
+    cursor: pointer;
+}
+
+span {
+    cursor: pointer;
+}
+
+.nav-tabs {
+    border: none;
+}
+
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:hover {
+    border: none;
+    border-bottom: 4px solid #36C0CC;
+}
+
+.nav-tabs > li > a, .nav-tabs > li > a:focus, .nav-tabs > li > a:hover {
+    background: none;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 10px 1px;
+}
+
+.nav-tabs > li > a:hover {
+    border-bottom: 4px solid #9fe4ea;
+}
+
+.shuru input {
+    text-align: center;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    line-height: 35px;
+    font-size: 18px;
+    color: #36BAC5;
+    padding: 10px 0;
+    width: 49%;
+}
+
+/* �����placeholder*/
+
+.shuru input::-webkit-input-placeholder {
+    color: #36BAC5;
+}
+
+.shuru input::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: #36BAC5;
+}
+
+.shuru input:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: #36BAC5;
+}
+
+.shuru input:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: #36BAC5;
+}
+
+.tab-content .portlet.light {
+    border-bottom: 5px solid #EAECEF;
+}
+
+.share-all {
+    visibility: hidden;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(80, 80, 80, 0.2);
+    /*text-align:center;*/
+}
+
+.share, .Make {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(80, 80, 80, 0.2);
+    z-index: 1;
+}
+
+.Make div.layui-layer-content {
+    padding: 20px;
+
+}
+
+.make {
+    width: 500px;
+    background: #fff;
+}
+
+.yong {
+    margin-bottom: 0px !important;
+    padding-top: 5px !important;
+}
+
+.time span {
+    display: inline-block;
+    padding: 8px 0;
+    width: 22%;
+    vertical-align: middle;
+    text-align: center;
+    background: #74D5CA;
+    margin: 10px 1%;
+    color: #fff;
+}
+
+.time span.check {
+    background: #F2AC4C;
+}
+
+.time-content {
+    margin-top: 30px;
+}
+
+.time-content > span {
+    padding: 5px 10px;
+    margin-right: 21%;
+    display: inline-block;
+    border: 2px solid #99CEF0;
+    border-radius: 5px !important;
+}
+
+.time-content > span.check {
+    color: #74D5CA;
+    border-color: #74D5CA;
+}
+
+.time-content p input {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    width: 60px;
+    padding: 3px 5px;
+}
+
+.time-content p {
+    text-align: center;
+}
+
+.time-content p span {
+    margin: 0 20px;
+}
+
+.time-content > span:nth-child(4) {
+    margin-right: 0;
+}
+
+.share-all .share-body {
+    position: absolute;
+    top: 30%;
+    left: 25%;
+    padding: 20px;
+    background: rgba(255, 255, 255, 1);
+    display: inline-block;
+    z-index: 2;
+}
+
+.share .share-body {
+    top: 38%;
+    left: 45%;
+}
+
+.share-all .share-body div {
+    display: inline-block;
+    margin: 0 20px;
+    vertical-align: middle;
+}
+
+.share-all .share-body div p {
+    text-align: center;
+}
+
+.datetimepicker table td, .datetimepicker table th {
+    font-weight: 400 !important;
+}
+
+#vtd0, #vtd1, #vtd2, #vtd3 {
+    visibility: hidden;
+    z-index: 9999;
+}
+
+.VTD {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(80, 80, 80, 0.2);
+}
+
+.VTD .tongue, .VTD > .vein,.VTD .evaluation {
+    position: absolute;
+    top: 25%;
+    left: 17%;
+    background: rgba(255, 255, 255, 1);
+    display: inline-block;
+    z-index: 2;
+    padding-bottom: 20px;
+}
+
+.VTD .tongue h2, .VTD .vein h2, .make h2 {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.VTD .tongue > div.shetai {
+    float: left;
+    width: 215px;
+    vertical-align: top;
+    margin-top: 10px;
+}
+
+.VTD .tongue div.shezhi {
+    width: 430px;
+    float: left;
+    vertical-align: top;
+    margin-top: 10px;
+}
+
+.shezhi-div {
+    width: 100%;
+
+    display: none;
+}
+
+.shezhi-div ul {
+    width: 100%;
+}
+
+.shexzhi-title {
+    text-align: center;
+}
+
+.shexzhi-title span {
+    display: inline-block;
+    background-color: #74D5CB;
+    color: #ffffff;
+    padding: 5px 15px;
+    margin: 15px 5px;
+}
+
+.shexzhi-title span.check {
+    background-color: #F2AC4C;
+
+}
+
+.VTD .tongue div p.title {
+    text-align: center;
+    background: #74D5CB;
+    color: #fff;
+    margin: 0;
+    line-height: 30px;
+}
+
+.VTD .tongue div ul {
+    padding: 10px;
+}
+
+.VTD .tongue div ul li {
+    display: inline-block;
+    margin-right: 5px;
+    border: 2px solid #0487DE;
+    border-radius: 5px !important;
+    line-height: 40px;
+    padding: 0 15px;
+    margin-bottom: 5px;
+    color: red;
+}
+
+.VTD .tongue div ul li a {
+    font-size: 16px;
+}
+
+.VTD .tongue div ul li.check {
+    border: 2px solid #F5BC71;
+}
+
+.VTD .tongue div ul li.check a {
+    color: #F5BC71;
+}
+
+.VTD .vein .nav a {
+    width: 215px;
+    display: block;
+    float: left;
+    text-align: center;
+    background: #74D5CB;
+    color: #fff;
+    line-height: 30px;
+}
+
+.VTD .vein .nav a.check {
+    background: #F3AC4C;
+    text-decoration: none;
+}
+
+.VTD .vein .nav a:nth-child(2) {
+    border-left: 2px solid #e4e4e4;
+    border-right: 2px solid #e4e4e4;
+}
+
+.VTD .vein .tab-pane table {
+    width: 90%;
+    margin: 0 auto;
+    border-collapse: unset;
+    border-spacing: 5px;
+    margin-bottom: 20px;
+}
+
+.VTD .vein .tab-pane table tr:nth-child(even) div {
+    background: #e3e3e3;
+}
+
+.VTD .vein .tab-pane table tr:last-child {
+    text-align: right;
+}
+
+.VTD .vein .tab-pane table tr:last-child td:last-child {
+    text-align: left;
+}
+
+.VTD .vein .tab-pane table tr:last-child div {
+    display: inline-block;
+}
+
+.VTD .vein .tab-pane table tr:last-child div a {
+    padding: 0 15px;
+}
+
+.VTD .vein .tab-pane table td div {
+    border: 1px solid #0487DE;
+    border-radius: 5px !important;
+    text-align: center;
+    /*padding:10px 0 10px 10px;*/
+    font-size: 18px;
+}
+
+.VTD .vein .tab-pane table td div.xuan {
+    background: #6DD0C5;;
+}
+
+.VTD .vein .tab-pane table td div.xuan a {
+    color: #fff;
+}
+
+.VTD .vein .tab-pane table td div a {
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 60px;
+    font-size: 20px;
+}
+
+.VTD .vein .tab-pane table td div p {
+    float: right;
+    margin: 0;
+}
+
+.VTD .vein .tab-pane table td div p span {
+    display: block;
+    font-size: 12px;
+    width: 20px;
+    height: 20px;
+    background: #E7E7E7;
+    margin: 0;
+    border: 1px solid #ccc;
+    color: #c5c5c5;
+}
+
+.VTD .vein .tab-pane table td div p span.ch {
+    background: #6DD0C5;
+    color: #fff;
+}
+
+.glyphicon-ok {
+    visibility: hidden;
+}
+
+a:focus, a:hover {
+    text-decoration: none !important;
+}
+
+.layui-layer-setwin .layui-layer-close2 {
+    top: -18px !important;
+    right: -18px !important;
+}
+
+#ageboard, #jsboard, #days, #yfboard {
+    display: none;
+    width: 200px;
+    padding: 10px 0 10px 10px;
+    position: absolute;
+    z-index: 20;
+    background: rgb(255, 255, 255);
+    border: 2px solid rgb(160, 194, 223);
+    box-sizing: border-box;
+    border-radius: 10px !important;
+}
+
+#ageboard ul li, #jsboard ul li, #days ul li, #yfboard ul li {
+    float: left;
+    margin: 0 10px 5px 0;
+    width: 35px;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    background: #e5f4f5;
+    border: 1px solid #f9f9f9;
+}
+
+#emrhistoryPage .form-group div {
+    margin-top: -15px;
+}
+
+.doctorname {
+    margin-left: 10px;
+    display: inline-block;
+    font-size: 20px;
+}
+
+#emrhistoryPage, #doctorlistPage {
+    overflow: hidden;
+    top: 0px;
+    position: absolute;
+    right: 25%;
+    background-color: #e4e4e4;
+    z-index: 99;
+}
+
+#doctorlistPage {
+    background-color: #fff;
+    min-height: 99.4%;
+}
+
+.symptom, textarea.shezhi, textarea.vein {
+    padding: 0;
+    border: none;
+    line-height: 25px;
+    background: url(../img/linebg.gif) top repeat;
+    overflow: auto;
+    height: 30px;
+    max-height: 75px;
+}
+
+.classification span {
+    display: inline-block;
+    padding: 8px 0;
+    width: 18%;
+    height: 70px;
+    align-items: center;
+    vertical-align: middle;
+    text-align: center;
+    background: #74D5CA;
+    margin: 10px 1%;
+    color: #fff;
+}
+
+.classification span.select {
+    background: #F2AC4C;
+}
+
+.specific > div {
+    height: 110px;
+    overflow: scroll;
+    width: 100% !important;
+}
+
+#specific {
+    opacity: 0
+}
+
+.specific > div span {
+    display: inline-block;
+    padding: 3px 0;
+    width: 21.3%;
+    text-align: center;
+    border: 2px solid #99CEF0;
+    border-radius: 5px !important;
+    margin: 5px 1%;
+}
+
+.specific > div span.icon-plus {
+    display: inline-block;
+    padding: 3px 0;
+    width: 21.3%;
+    text-align: center;
+    border: 2px solid #99CEF0;
+    border-radius: 5px !important;
+    margin: 5px 1%;
+}
+
+.specific > div span.select {
+    color: #F5BC71;
+    border-color: #F5BC71;
+}
+
+.zhen {
+    padding: 8px 10px;
+    display: none;
+    position: absolute;
+    background: #eee;
+    box-shadow: 5px 5px 10px #ccc;
+    border-radius: 5px !important;
+}
+
+.zhen span {
+    display: inline-block;
+    padding: 3px 0;
+    width: 70px;
+    text-align: center;
+    border: 1px solid #99CEF0;
+    border-radius: 5px !important;
+    margin: 5px;
+}
+
+.zhen span.select {
+    color: #74D5CA;
+    border-color: #74D5CA;
+}
+
+.zhen p {
+    text-align: center;
+}
+
+.zhen p input {
+    border: none;
+    width: 50px;
+    background: transparent;
+    border-bottom: 1px solid #99CEF0;
+}
+
+.tongue.zheng {
+    top: 13%;
+}
+
+#loginFormParent {
+    height: 100%;
+}
+
+#time0, #time1, #time2, #time3 {
+    display: none;
+}
+
+#time1 span {
+    width: 22.4%;
+    background: #74D5CA;
+    border-radius: 0px !important;
+    text-align: center;
+    margin-right: 2%;
+    color: #fff;
+    border: none;
+}
+
+#time1 span.check {
+    background: #F2AC4C;
+}
+
+.fang {
+    font-size: 12px;
+    position: absolute;
+    display: block;
+    top: -2px;
+    right: -10px;
+    width: 20px;
+}
+
+.histroy-list {
+    text-align: center;
+}
+
+.histroy-list img {
+    width: 60%;
+    margin: 50px auto 0;
+}
+
+#appointmentDoc span {
+    padding: 3px 8px;
+}
+
+
+
+.logincontent {
+    background: url("../img/login_bg.png") no-repeat #f0f0f0;
+    background-size: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+.logincontent .regist-content {
+    width: 30%;
+    position: absolute;
+    top: 40%;
+    left: 35%;
+}
+
+.logincontent .regist-content h1 {
+    text-align: center;
+    color: #ffffff;
+    letter-spacing: 0.5em;
+}
+
+.logincontent .regist-content form {
+    background: rgba(255, 255, 255, 0.35);
+    border-radius: 10px !important;
+    padding: 20px 20px 40px;
+    box-shadow: 1px 1px 3px #eeeeee inset;
+    position: relative;
+    border: 1px solid #eeeeee;
+}
+
+.logincontent .regist-content form .regist-content-item {
+    background: #ffffff;
+    border-radius: 5px !important;
+    padding: 5px 15px;
+    margin: 15px auto;
+    line-height: 30px;
+    color: #525252;
+    box-shadow: 1px 1px 3px #eeeeee inset;
+    border: 1px solid #eeeeee;
+}
+
+.logincontent .regist-content form input {
+    border: none;
+    outline: none;
+}
+
+.logincontent .regist-content form .regist-content-itemA span{
+    display: inline-block;
+    width: 49%;
+    margin-bottom: 20px;
+}
+.logincontent .regist-content form .regist-content-itemA input{
+    display: none;
+}
+.logincontent .regist-content form .regist-content-itemA span:first-child{
+    padding-left: 40px;
+}.logincontent .regist-content form .regist-content-itemA span:last-child{
+    text-align: right;
+    padding-right: 20px;
+}
+
+.logincontent .regist-content form .regist-content-itemA button {
+    width: 100%;
+}
+
+.logincontent .regist-content .er {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
+.logincontent .regist-content .erweima {
+    display: none;
+    background: rgba(255, 255, 255, 0.35);
+    border-radius: 10px !important;
+    padding: 20px 20px;
+    box-shadow: 1px 1px 3px #eeeeee inset;
+    border: 1px solid #eeeeee;
+    text-align: center;
+    position: relative;
+}
+
+.logincontent .regist-content .erweima .back-form {
+    text-align: left;
+    color: #B5D1A8;
+}
+.logincontent input[type="text"]{
+    letter-spacing: 1px;
+}
+.logincontent input[type="checkbox"] + label::before {
+    content: "\a0"; /*不换行空格*/
+    display: inline-block;
+    vertical-align: 0em;
+    width: 1em;
+    height: 1em;
+    margin-right: .2em;
+    border: 1px solid #888;
+    line-height: 1; /*行高不加单位，子元素将继承数字乘以自身字体尺寸而非父元素行高*/
+}
+
+.logincontent input:checked + label::before {
+    content: "\2713";
+}
+
+.logincontent input[type="checkbox"] {
+    opacity: 0;
+}
+
+.logincontent input[type="checkbox"]:focus + label::before {
+    box-shadow: 0 0 .1em .1em #58a;
+}
+
+.logincontent input[type="checkbox"]:disabled + label::before {
+    background-color: gray;
+    box-shadow: none;
+    color: #555;
+}
+#chooseClinics{
+    display: none;
+    padding: 20px;
+}
+#chooseClinics p{
+    font-size: 18px;
+    font-weight: bold;
+    color: #292929;
+}
+#chooseClinics span{
+    display: inline-block;
+    padding: 5px 10px;
+    border: 2px solid #0487DE;;
+    border-radius: 4px!important;
+    margin: 10px;
+}
+@media screen and (max-width: 992px) {
+    #emrhistoryPage, #doctorlistPage {
+        right: 0%;
+    }
+}
+.logincontent .logo{display: none}
+@media screen and (max-width: 640px) {
+    .doctorname {font-size: 16px;margin-left: 0}
+    .headerTitle {position: fixed;top: 0;background: #ffffff;width: 100%;padding: 15px;z-index: 100;border-bottom: 10px solid #eef1f5;}
+    .headerTitle .nav {display: inline-block;float: right}
+    .headerTitle .nav-tabs > li.active{display: none;}
+    .headerTitle .nav-tabs > li.active > a,
+    .headerTitle .nav-tabs > li.active > a:focus,
+    .headerTitle .nav-tabs > li.active > a:hover,
+    .headerTitle .nav-tabs > li > a,
+    .headerTitle .nav-tabs > li > a:focus,
+    .headerTitle .nav-tabs > li > a:hover {border: none;font-size: 14px;color: #973223;padding: 0;margin-left:10px;}
+    .control-label {display: inline-block;width: 30px;vertical-align: middle}
+    .form-group.form-md-line-input.has-success .control-line ,  .form-group.form-md-line-input.has-error .control-line{display: inline-block;width: calc(95% - 40px);margin-left:6px;vertical-align: middle;min-height: 35px;}
+    .form-group.form-md-line-input.has-success .control-line input{text-align: center}
+    .form-horizontal .form-group .mt-radio-inline {padding-top: 0;margin-top: 8px}
+    .form-group.form-md-line-input.has-success label {margin-right: 0;color: #8E2018;}
+    .form-group.form-md-line-input.has-success label.mt-radio{color: #27a4b0;}
+    .vtd-title1 label{border: 1px solid #27a4b0;  padding: 5px 6px;border-radius: 5px!important;}
+    .vtd-title1 label span{color: #27a4b0;}
+    .vtd-title label {font-size: .9em;border: 1px solid orange;padding: 5px 6px;border-radius: 5px !important;margin-bottom: 3px;}
+    .mt-checkbox > span, .mt-radio > span {width: 16px;height: 16px;}
+    .mt-radio > span:after {left: 4px;top: 4px;}
+    .mt-checkbox, .mt-radio {padding-left: 20px;}
+    .contentTitle .btn {float: right;display: inline-block;width: 35px;padding: 5px 0;border: 1px solid #ccc;border-radius: 5px !important;margin: 6px 3px 0;}
+    .contentTitle .btn span {font-size: 16px;line-height: 16px;}
+    .form-group.form-md-line-input.has-success .btn {background: #F06C2E;border-radius: 5px !important;float: right;border: none;margin-top: 20px;}
+    .col-md-3 .tab-content {position: fixed;top: 56px;left: 0;height: calc(100% - 56px);width: 100%;display: none;overflow: scroll;background: #ffffff;}
+    #tab_2_2,#tab_2_4 {width: 100%;padding: 15px 0;}
+    #tab_2_2 h3,#tab_2_4 h3 {text-align: center;color: #36BAC5}
+    .VTD .tongue, .VTD > .vein{height: 400px;bottom: 0;width: 100%;left: 0;top: unset;}
+    .VTD .vein .nav a{width: 33%}
+    .symptom, textarea.shezhi, textarea.vein{width: calc(100% - 46px);vertical-align: middle}
+    .VTD .tongue h3, .VTD .vein h3, .make h3{text-align: center}
+    .VTD .vein .tab-content{overflow: scroll;height: 242px}
+    .VTD .vein .tab-content table tr td{display: inline-block;width:20%;margin: 2.5%}
+    .VTD .vein .tab-pane table tr:last-child{text-align: left}
+    .VTD .vein .tab-pane table tr:last-child td:last-child{text-align: left}
+    .VTD .vein .tab-pane table tr:last-child div a{padding: 0}
+    .VTD .vein .tab-pane table tr:nth-child(even) div{width: 100%}
+    #pop{width: 100%}
+    #keyboard li{width: 30px;height: 30px;font-size: 15px;}
+    #material table tr td{font-size: 14px!important;}
+    .slimScrollDiv{padding: 0;background:#E9F9FC;display: none;}
+    #selectedrecipel{border-bottom: 1px solid #cccccc}
+    .feeds li{background:transparent }
+    .feeds li label,#selectedrecipel label{ color: #82949a; border: 1px solid #cccccc;background: #F7FEFE;margin: 5px;border-radius: 5px!important;font-size: 14px;padding:5px 8px!important;}
+    .slimScrollDiv .pagination>li>a,.slimScrollDiv .pagination>li>span{padding: 2px 6px;line-height: 1em;}
+    .slimScrollDiv .pagination{margin: 0;vertical-align: middle}
+    .contentTitle .btn.active{border-color: #EF6C2E;}
+    .contentTitle .btn.active span{color: #EF6C2E;}
+    .close{background-image: none!important;}
+    #tongueHolder .nav-tabs{margin-bottom: 0}
+    #tongueHolder .nav-tabs li{ width: 40%;float: left;margin:0 5%;background: #74D5CB;height: 34px;}
+    #tongueHolder .nav-tabs li a{ display: block;width: 100%;background: transparent;border: none;text-align: center;color: #ffffff;font-size: unset;font-weight: normal;padding:5px 0px}
+    #tongueHolder .nav-tabs li.active{ background: #F2AC4C;}
+    .shexzhi-title{text-align: left}
+    .shexzhi-title span{margin: 10px 0.3% ;padding: 5px 0;text-align: center;width:15%;}
+    #tongueHolder .tab-content .tab-pane ul{overflow: scroll;height: 225px;padding-bottom: 15px;}
+    .VTD .tongue div.shezhi{width: 100%}
+    .classification span,.specific > div span,.specific > div span.icon-plus{display: block;width: 99%;height: unset}
+    .classification,.specific>div{height: 250px;overflow: scroll}
+    .make {width: 100%;}
+    .Make {position: absolute;width: 100%;height: 100%}
+    .Make .layui-layer{height: 400px!important;bottom: 0!important;width: 100%!important;left: 0!important;top: unset!important;}
+    .make label{font-size: 14px;}
+    .time span{padding: 3px 0;margin: 0}
+    .time-content{margin: 0}
+    .time-content > span{margin: 0}
+    .time-content p{text-align: left}
+    .time-content p input{width: 40px}
+    .time-content p span{margin: 0}
+    #time1 span{width: unset;margin: 0}
+    #emrhistoryPage, #doctorlistPage{top:60px;background-color:#ffffff;min-height: 100%;}
+    #emrhistoryPage .buttonGroup {background: #fff2ea;overflow: hidden}
+    #emrhistoryPage .buttonGroup button{padding:6px 0;width: 20%;margin:8px 2.5%;display: block;float: left;background: #ffffff;border-radius:5px!important;border: 1px solid #EC934C;color:#993125;}
+    #emrhistoryPage .buttonGroup button:last-child{background: #f37725;border: 1px solid #FFF0E8;color: #ffffff;}
+    .share-all .share-body{top: unset;left: 0;bottom: 0;width: 100%;}
+    .share-all .share-body div{width: 50%;display: block;float: left;margin: 0;text-align: center}
+    #writeRecipelQRCode{width: 150px!important;height: 150px!important;}
+    .form-control-feedback{z-index: 0;}
+    .footer p{text-align: center;color: #8F8F8F;font-size: 14px;}
+    .logincontent{background:url("../img/bg.png")no-repeat #f0f0f0;background-size: 130%;background-position:50% 0;padding-top: 20%}
+    #go h1{display: none}
+    .logincontent .regist-content{width: 90%;position: unset;margin:0 auto;}
+    .logincontent .regist-content form{background: #ffffff;box-shadow:none}
+    .logincontent .regist-content form .regist-content-item{border: none;box-shadow:none}
+    .logincontent .regist-content form input{border-bottom: 1px solid #cccccc;width:calc(100% - 33px);margin-left: 15px}
+    #chooseClinics{width: 100%;bottom: 0}
+    .logincontent .layui-layer.layui-layer-page{width: 100% !important;left: 0!important;top: unset!important;bottom: 0}
+    .logincontent .erweima,.logincontent .er{display: none}
+    .symptom, textarea.shezhi, textarea.vein, textarea.symptom{max-height: 48px;}
+    .logincontent .logo{display: block}
+    .logincontent .logo img{ width: 80%;margin: 0 auto 20px;display: block}
+    .VTD .evaluation{width: 80% !important;border-radius: 10px!important;top: 10%;left: 10% !important;height: 80%;padding: 15px;overflow: scroll}
+    .pingxing {margin-bottom: 10px;}
+    .pingxing ul {display: inline-block;}
+    .pingxing ul li{color: #cccccc;font-size: 16px;margin: 0 5px;}
+    .pingxing ul li.light{color: #ff3131;}
+    #evaluation{width: 100%;border: 1px solid #cccccc;height: 120px;resize: none;padding: 3px;}
+    #qrCodeHolder .btn{float: right;    background: #f37725;border: 1px solid #FFF0E8;color: #ffffff;border-radius: 5px!important;}
+    .evalist{padding: 8px 0;border-bottom: 1px dashed #cccccc;}
+    .evaluationdate{color: #a3a3a3;display: block;text-align: right}
+    .form-group.form-md-line-input.has-success .control-line.menstruation,.menstruation{display: none}
+    .doctorchoose{background: rgba(39, 164, 176, 0.51);border: 0;border-radius: 5px!important;box-shadow: none;padding: 10px;min-width: 185px}
+    .doctorchoose.dropdown-menu:before {border-bottom-color: rgba(39, 164, 176, 0.51); }
+    .doctorchoose.dropdown-menu button{border-radius: 5px!important;color: #27a4b0;width: 75px;font-size: 12px;padding:5px 0;text-align: center;display: block;float: left;margin: 3px}
+    .doctorchoose.dropdown-menu button span{color: #CCCCCC;float: right;display: inline-block;padding-right: 3px;}
+    .doctorchoose.dropdown-menu input{width: 75px;border-radius: 5px!important;background: #ffffff;padding: 5px 0;text-align: center;font-size: 12px;display: block;float: left;margin: 3px}
+    #doctordropdown span a{font-size: 13px;color: #27a4b0;}
+    #tab_2_2 .shuru{width: 90%;margin: 10px auto;background: #eeeeee;border-radius: 5px!important;padding-left: 10px;}
+    #tab_2_2 .shuru input{border: 0;width: 90%;background: transparent;text-align: left;font-size: 14px;line-height:25px;margin: 0;padding: 5px 0}
+    #histroy-list .table-scrollable li{text-align: left;margin: 0 auto;border-bottom: 1px solid #CCCCCC;padding: 5px 5%}
+    .table-scrollable{border: none}
+    #histroy-list .histroyname{font-size: 18px;font-weight: 500;width: 90px;display: inline-block}
+    #histroy-list .histroysex{color: #a3a3a3;}
+    #histroy-list .histroydate{color: #a3a3a3;display: inline-block;float: right;}
+    #histroy-list .histroyzusu{overflow: hidden;white-space: nowrap;text-overflow: ellipsis;color: #666666;}
+    #histroy-list .teacher{display: inline-block;margin-left: 10px;background: #27a4b0;border-radius: 5px!important;color: #ffffff;font-size: 12px;padding: 0px 5px;}
+}

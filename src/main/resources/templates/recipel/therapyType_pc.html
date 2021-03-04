@@ -1,0 +1,41 @@
+<meta charset="UTF-8">
+
+	 <ul class="feeds">
+	    <li>
+	@for(data in datas){
+
+	<label class="col-md-6" onclick="therapylist('${data.therapyType}')" style="padding:0 5px">${data.therapyType}</label>
+				
+	@}
+               </li>
+             </ul>   
+
+	
+	 <div style="text-align: center">
+			${baseRecipel.page.pageStr }
+	  </div> 
+	
+	
+	
+	<!--   <script src="${request.contextPath}/metronic/js/jquery.min.js" type="text/javascript"></script>
+	 <script src="${request.contextPath}/js/jquery.form.js" type="text/javascript"></script> -->
+	<script>
+        loadBackground();
+	function therapylist(data){
+		var url="${request.contextPath}/pageTherapy?therapyType="+data
+				  $.post(url,data,function(result){
+   				 $("#keshi").html(result);
+ 			 });
+	}
+	
+
+ function searchNextPage(currentPage) {
+    var url = contextPath + "/therapyType";
+    postdata={'page.currentPage':currentPage};
+	$.post(url,postdata,function(data){
+		$("#keshi").html(data);
+	});
+ }
+	
+	
+	</script>

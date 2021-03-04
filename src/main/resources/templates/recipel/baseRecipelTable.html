@@ -1,0 +1,39 @@
+                    <ul class="feeds">
+                                                              <li>
+		                                	@ for(base in baseRecipels){	
+                                            @ if(strutil.length(base.name)>6){
+		                                	@ var s=base.name;
+		                                    @ var s1="···";
+		                                	@ var s3= strutil.subStringTo(s,0,5);
+		                                	@ var s2=s3+s1;
+		                                	<label class="col-md-6" onclick="showitem('${base.id}','${base.name}',this)" style="padding:0 5px">
+		                                	${s2}
+		                                	</label>
+		                                	@}else{
+		                                	<label class="col-md-6" onclick="showitem('${base.id}','${base.name}',this)" style="padding:0 5px">
+		                                	${base.name}
+		                                	</label>
+		                                	  @} 
+                                            @}
+																  <label class="col-md-6"
+																		 onclick=""
+																		 style="padding:0 5px">
+																	  <span class="glyphicon glyphicon-plus" onclick="savebaserecipel()"></span>
+																  </label>
+                                                              </li>
+                                                          </ul>           
+                                                          
+                                                     <div style="text-align: center">
+							                        		${baseRecipel.page.pageStr }
+	                                                      </div>      
+<script>
+    loadBackground();
+ function searchNextPage(currentPage) {
+    var url = contextPath + "/listPageBaseRecipels";
+    postdata={'page.currentPage':currentPage};
+	$.post(url,postdata,function(data){
+		$("#baseRecipelHolder").html(data);
+		$(".baseRecipelHolder").html(data);
+	});
+ }
+</script>

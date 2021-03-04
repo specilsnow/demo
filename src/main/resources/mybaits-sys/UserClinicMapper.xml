@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdutcm.tcms.biz.mapper.UserClinicMapper">
+    <resultMap id="UserClinicMap" type="com.cdutcm.tcms.biz.model.UserClinic">
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="account" property="account" jdbcType="VARCHAR" />
+        <result column="clinic_id" property="clinicId" jdbcType="VARCHAR" />
+        <result column="role_id" property="roleId" jdbcType="BIGINT" />
+    </resultMap>
+
+    <insert id="insert" parameterType="com.cdutcm.tcms.biz.model.UserClinic">
+        INSERT INTO sys_user_clinic
+        (id,account,clinic_id,role_id)
+        values
+        (#{id},#{account},#{clinicId},#{roleId})
+    </insert>
+
+    <delete id="deleteByAccount" parameterType="java.lang.String">
+        DELETE FROM sys_user_clinic WHERE account = #{account} and clinic_id != 1006
+    </delete>
+
+    <insert id="insertList" parameterType="java.util.List" useGeneratedKeys="true">
+        INSERT INTO sys_user_clinic
+        (id,account,clinic_id,role_id)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id},#{item.account},#{item.clinicId},#{item.roleId})
+        </foreach>
+    </insert>
+
+    <select id="findByClinicIdAndAccount" resultMap="UserClinicMap">
+        select * from sys_user_clinic where account = #{account} and clinic_id = #{clinicId} limit 1
+    </select>
+</mapper>

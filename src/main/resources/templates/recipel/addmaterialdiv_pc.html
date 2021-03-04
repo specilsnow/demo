@@ -1,0 +1,30 @@
+@ var k=recipelindex+1;
+@ for(var i=index;i<index+4;i++){
+<div class="col-md-6" style="padding-top: 10px;">
+                                  		<div style="float: left;width: 70%;">
+                                  		<div class="div-box" style="width: 100%;height: 50px;border:1px solid #27A4B0" oninput="searchmaterrial(this)"  onclick="pop(this,event)" ><lable id="${i}" style="font-size:30px;"></lable>
+                                  		<input type="hidden" class="material_hidden" value="" name="recipels[${k}].recipelItems[${i}].name">
+                                  		</div>
+                                  			<!-- <input type="password"  style="width: 100%;height: 60px;" oninput="searchmaterrial(this)"  onclick="pop(this,event)" placeholder=""> -->
+                                  			<span class="glyphicon glyphicon-remove" onclick="removematerial(this)" aria-hidden="true" style="font-size: 16px;color: red;    position: absolute;  top: 44px;left: 58%"></span>
+                                  		</div>
+                                  			<div style="float: left;padding-left: 5px;width: 30%;">
+                                  			<div class="div-box" style="width: 40px;height: 23px;font-size:16px;border:1px solid #27A4B0"  onclick="pop(this,event,'yf')">
+                                             <lable style="font-size:10px;"></lable>
+                                  			 <input type="hidden" value="" name="recipels[${k}].recipelItems[${i}].usage">
+                                  			</div>
+                                  			<div style="clear: both;"></div>
+                                  			<div class="div-box" style="width: 40px;height: 23px;margin-top: 4px;font-size:16px;border:1px solid #27A4B0"   onclick="pop(this,event,'jl')" >
+                                  		    <lable style="font-size:16px;"></lable>
+                                  			<input type="hidden" value="" name="recipels[${k}].recipelItems[${i}].dosage">
+          
+                                  		</div>
+                                    </div>
+                                    </div>
+                                    @}
+           <script>
+             recipelindex=${recipelindex+1}
+              countindex=${index+4}
+  </script>                           
+                                    
+                                    

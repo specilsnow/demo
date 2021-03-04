@@ -1,0 +1,91 @@
+<meta charst="UTF-8">
+<head>
+<title>得分详情</title>
+</head>
+
+<div class="watchScore">
+  <div class="watchScore-title">
+  <div class="watchScore-title-blank">
+   <div class="detail-title">
+     <div class="right-content-title-blank">
+     <h3 id="spacing-left">中医病例得分</h3>
+     </div>
+    </div>
+  </div>
+  </div>
+  <div class="watchScore-score">
+   <div class="watchScore-score-blank">
+     <div class="watchScore-score-circle">
+		 <div class="watchScore-score-circle-blank">
+		 <div class="inputScore"><span id="score-number">${@com.cdutcm.core.util.StringUtil.double2Int(EmrContall.allstar*20/EmrContall.allpeople)}</span><span>分</span></div>
+		   <div class="container">
+		    <div class="wave"></div>
+		   </div>
+		 </div> 
+     </div>
+     <div class="watchScore-score-text">
+       <div class="text-title"><h1>中医病例得分较低，建议立即处理！</h1></div>
+       <div class="text-content">你的未完善病例，症型缺失病例偏多，请根据系统提示修改</div>
+        <div class="text-button"><input type="submit" id="test" value="重新测评" class="text-button-input" ></div>
+     </div>
+   </div>
+  </div>
+  <div class="watchScore-detail">
+  <div class="watchScore-detail-blank">
+    <div class="detail-title">
+     <div class="right-content-title-blank">
+     <h3 id="spacing-left">中医病例详情</h3>
+     </div>
+    </div>
+    <div class="detail-content">
+     <div class="detail-content-blank">
+      <div class="detail-content-item" onclick="selectemr('star','5')">
+           <div class="detail-content-item-blank">
+             <div class="detail-content-item-icon">
+               <img src="${request.contextPath}/img/msg2.png">
+             </div>
+             <div class="detail-content-item-text" >
+               <div id="spacing"><h3>五星病例</h3></div>
+               <div><p><span id="stamp">${EmrContall.fivestar!"0"}</span>例</div>
+             </div>
+           </div>
+      </div>
+      <div class="detail-content-item" onclick="selectemr('mould','')">
+           <div class="detail-content-item-blank">
+             <div class="detail-content-item-icon">
+               <img src="${request.contextPath}/img/msg2.png">
+             </div>
+             <div class="detail-content-item-text">
+               <div id="spacing"><h3>症型缺失病例</h3></div>
+               <div><p><span id="stamp">${EmrContall.misssymptommould!"0"}</span>例</div>
+             </div>
+           </div>
+      </div>
+      <div class="detail-content-item" onclick="selectemr('jl','')">
+           <div class="detail-content-item-blank">
+             <div class="detail-content-item-icon">
+               <img src="${request.contextPath}/img/msg2.png">
+             </div>
+             <div class="detail-content-item-text">
+               <div id="spacing"><h3>剂量超标病例</h3></div>
+               <div><p><span id="stamp">${EmrContall.overdosage!"0"}</span>例</div>
+             </div>
+           </div>
+      </div>
+      <div class="detail-content-item" onclick="selectemr('pw','')">
+           <div class="detail-content-item-blank">
+             <div class="detail-content-item-icon">
+               <img src="${request.contextPath}/img/msg2.png">
+             </div>
+             <div class="detail-content-item-text" >
+               <div id="spacing"><h3>用药配伍病例</h3></div>
+               <div><p><span id="stamp" >${EmrContall.eightNine!"0"}</span>例</div>
+             </div>
+           </div>
+      </div>
+     </div>
+    </div>
+  </div>
+  </div>
+</div>
+

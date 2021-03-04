@@ -1,0 +1,751 @@
+<meta charset="UTF-8">
+<head>
+<title>智能辩证论治6.2</title>
+<link rel="stylesheet" href="${request.contextPath}/bootstrap/css/bootstrap.css">
+<link rel="stylesheet" href="${request.contextPath}/css/iconfont.css">
+<link rel="stylesheet" href="${request.contextPath}/css/wave.css">
+</head>
+<body>
+<div class="score">
+  <div class="nav">
+  @{ include("header.html")
+		        			     @{ 
+		        			     @} 
+		        		    @}
+  </div>
+  <div class="content">
+    <div class="left">
+     <div class="left-logo" onclick="watchScore()">
+       <img src="${request.contextPath}/img/logo.png">
+     </div>
+     <div class="left-search">
+	   <a href="#" onclick="patientSearch()"><img src="${request.contextPath}/img/search.png"" height="24" width="24" class="left-search-icon" ></a> 
+	   <input type="text" id="search" name="search" class="left-search-input" placeholder="综合查询">
+     </div>
+     <div id="patinetRegistTable"> 
+     <div class="left-content">
+	     @ for(patientRegist in ps) {
+	      <div class="left-content-item" onclick="clickPatientInfo('${patientRegist.visitNo}')">
+	         <div class="left-content-item-top">
+	           <div class="left-content-item-top-name">${patientRegist.patient.name}</div>
+	           <div class="left-content-item-top-disease">${patientRegist.disease}</div>
+	         </div>
+	         <div class="left-content-item-bottom">${patientRegist.kssj}</div>
+	       </div>
+	     @}
+	     
+	      </div>
+	     <div class="left-page">
+	        <div class="left-page-item"  onclick="searchNextPage('${p.page.currentPage-1}',${p.page.totalPage})">
+	            <div class="left-page-item-blank">
+	            <i class="iconfont icon-left"></i>
+	           </div>
+	        </div>
+	        <div class="left-page-CurrentPgage">
+	          <div class="left-page-CurrentPgage-blank">第${p.page.currentPage}页</div>
+	        </div>
+	        <div class="left-page-item" onclick="searchNextPage('${p.page.currentPage+1}',${p.page.totalPage})">
+	          <div class="left-page-item-blank" >
+	           <i class="iconfont icon-right"></i>
+	          </div>
+	      </div>
+<!--      	${p.page.pageStr } -->
+     </div> 
+     </div>
+    </div>
+    <div class="right">
+       <div class="right-message">
+       <div class="right-message-blank">
+         <div class="right-message-item">
+           <div class="right-message-item-blank">
+             <div class="right-message-item-icon">
+               <img src="${request.contextPath}/img/msg1.png">
+             </div>
+             <div class="right-message-item-text special">
+               <div id="spacing"><h3>站内消息</h3></div>
+               <div><p>您有<span id="stamp">100</span>封未读消息</p></div>
+             </div>
+           </div>
+         </div>
+         <div class="right-message-item">
+          <div class="right-message-item-blank">
+             <div class="right-message-item-icon">
+               <img src="${request.contextPath}/img/msg2.png">
+             </div>
+             <div class="right-message-item-text">
+               <div id="spacing"><h3>站内消息</h3></div>
+               <div><p>您有<span id="stamp">100</span>封未读消息</div>
+             </div>
+           </div>
+         </div>
+        </div>
+       </div>
+       <div class="right-mainContent" id="right-mainContent">
+      <div class="watchScore">
+  <div class="watchScore-title">
+  <div class="watchScore-title-blank">
+   <div class="detail-title">
+     <div class="right-content-title-blank">
+     <h3 id="spacing-left">中医病例得分</h3>
+     </div>
+    </div>
+  </div>
+  </div>
+  <div class="watchScore-score">
+   <div class="watchScore-score-blank">
+     <div class="watchScore-score-circle">
+		 <div class="watchScore-score-circle-blank">
+		 <div class="inputScore"><span id="score-number">${@com.cdutcm.core.util.StringUtil.double2Int(EmrContall.allstar*20/EmrContall.allpeople)}</span><span>分</span></div>
+		   <div class="container">
+		    <div class="wave"></div>
+		   </div>
+		 </div> 
+     </div>
+     <div class="watchScore-score-text">
+       <div class="text-title"><h1>中医病例得分较低，建议立即处理！</h1></div>
+       <div class="text-content">你的未完善病例，症型缺失病例偏多，请根据系统提示修改</div>
+        <div class="text-button"><input type="submit" id="test" value="重新测评" class="text-button-input" ></div>
+     </div>
+   </div>
+  </div>
+  <div class="watchScore-detail">
+  <div class="watchScore-detail-blank">
+    <div class="detail-title">
+     <div class="right-content-title-blank">
+     <h3 id="spacing-left">中医病例详情</h3>
+     </div>
+    </div>
+    <div class="detail-content">
+     <div class="detail-content-blank">
+      <div class="detail-content-item" onclick="selectemr('star','5')">
+           <div class="detail-content-item-blank">
+             <div class="detail-content-item-icon">
+               <img src="${request.contextPath}/img/wxbl.png">
+             </div>
+             <div class="detail-content-item-text" >
+               <div id="spacing"><h3>五星病例</h3></div>
+               <div><p><span id="stamp">${EmrContall.fivestar!"0"}</span>例</div>
+             </div>
+           </div>
+      </div>
+      <div class="detail-content-item" onclick="selectemr('mould','')">
+           <div class="detail-content-item-blank">
+             <div class="detail-content-item-icon">
+               <img src="${request.contextPath}/img/bzqsbl.png">
+             </div>
+             <div class="detail-content-item-text">
+               <div id="spacing"><h3>症型缺失病例</h3></div>
+               <div><p><span id="stamp">${EmrContall.misssymptommould!"0"}</span>例</div>
+             </div>
+           </div>
+      </div>
+      <div class="detail-content-item" onclick="selectemr('jl','')">
+           <div class="detail-content-item-blank">
+             <div class="detail-content-item-icon">
+               <img src="${request.contextPath}/img/jlcbbl.png">
+             </div>
+             <div class="detail-content-item-text">
+               <div id="spacing"><h3>剂量超标病例</h3></div>
+               <div><p><span id="stamp">${EmrContall.overdosage!"0"}</span>例</div>
+             </div>
+           </div>
+      </div>
+      <div class="detail-content-item" onclick="selectemr('pw','')">
+           <div class="detail-content-item-blank">
+             <div class="detail-content-item-icon">
+               <img src="${request.contextPath}/img/yybl.png">
+             </div>
+             <div class="detail-content-item-text" >
+               <div id="spacing"><h3>用药配伍病例</h3></div>
+               <div><p><span id="stamp" >${EmrContall.eightNine!"0"}</span>例</div>
+             </div>
+           </div>
+      </div>
+     </div>
+    </div>
+  </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+</div>
+<script src="${request.contextPath}/jquery/dist/jquery.js"></script>
+<script src="${request.contextPath}/bootstrap/js/bootstrap.js"></script>
+<script src="${request.contextPath}/js/load.js"></script>
+<script>
+$(function(){
+//表格奇数行添加样式
+  $("tr:odd").addClass("success");
+  //星星评分
+  $("#starGoal #stars p").each(function(){
+     var starNum = $(this).text();
+     var stars="";
+     var starA="<i class='iconfont icon-iconfontxingxing'></i>";
+     var starB="<i class='iconfont icon-star'></i>"
+     for(var i=0;i<5;i++){
+       if(i<starNum){
+         stars =stars+starA;
+       }
+       else{
+          stars =stars+starB;
+       }
+     }
+    $(this).replaceWith(stars);
+  })
+})
+function selectemr(key,value){
+  $('#right-mainContent').load("emrPage?key="+key+"&value="+value);
+}
+function watchScore(){
+  $('#right-mainContent').load("/watchScore");
+}
+function delInfo(){
+$('#right-mainContent').load("/tcmsp-np/updateInfo");
+}
+// 病人分页查询
+function searchNextPage(a,total) {
+   if(a==0){
+     alert("已经是第一页！")
+     return;
+   }
+   if(a>=total+1){
+     alert("已经是最后一页了！")
+     return;
+   }
+   var  url  = "patientRegistPage";
+   var  postdata = {'page.currentPage':a};
+   $.post(url,postdata,function(e){
+       $("#patinetRegistTable").html(e);
+   })
+}
+// 病人综合查询
+function patientSearch(a){
+  var text = $("#search").val()
+  var postdata ={'page.currentPage':a,'visitNo':text,'patientNo':text,'patient.name':text,'patient.pinyin':text}
+  var url = "patientRegistPage";
+  $.post(url,postdata,function(e){
+   $("#patinetRegistTable").html(e);
+  })
+}
+// 病历分页查询
+function searchNextEmrPage(a,total){
+  if(a==0){
+     alert("已经是第一页！")
+     return;
+   }
+   if(a>=total+1){
+     alert("已经是最后一页了！")
+     return;
+   }
+   var  url  = "emrPage";
+   var  postdata = {'page.currentPage':a};
+   $.post(url,postdata,function(e){
+       $("#right-mainContent").html(e);
+   })
+
+}
+// 点击病人查看处方详情
+function clickPatientInfo(vNo){
+	window.location.href="emr/findEmr?visitNo="+vNo;
+  /* var url = "emr/findEmr";
+  var postdata = {visitNo:vNo}
+  $.post(url,postdata,function(e){
+   $("#right-mainContent").html(e);
+  }) */
+}
+
+</script>
+</body>
+<style>
+.icon-iconfontxingxing{
+color:#FBC91A
+}
+ .zj-dignose-header{
+	    padding-left:20px;
+	    height:5%;
+	    color:#fff;
+	  }
+	  .zj-dignose-header-Chinese{
+	    font-size:20px;
+	    font-weight:400;
+	    line-height:45px;
+	    float:right;
+	    margin-right:2%
+	  }
+.skipToPage{
+  margin:0 60px 0 10px;
+  display:flex;
+  font-size:15px;
+  line-height:35px;
+}
+.skipPage{
+  margin:0 10px 0 10px;
+  display:flex;
+  font-size:15px;
+  line-height:35px;
+}
+.icon-star-yellow{
+ color:red;
+}
+body{
+-webkit-user-select:none;
+-moz-user-select:none;
+-ms-user-select:none;
+user-select:none;
+}
+#points{
+margin-top:5px;
+ font-weight:700;
+}
+.right-page ul{
+ list-style:none;
+ display:flex;
+}
+ .icon-left,.icon-right{
+  font-size:32px;
+}
+.right-page-blank{
+  height:100%;
+  width:100%;
+  background:#fff;
+}
+.right-page li{
+  
+  height:30px;
+  margin:3px;
+  width:60px;
+  font-size:16px;
+  line-height:30px;
+  text-align:center;
+  border:1px solid #eee;
+  cursor:pointer;
+}
+.right-page li:hover{
+  background:rgb(99,150,193);
+}
+.right-page li a{
+ text-decoration:none;
+ color:black;
+}
+#skipTo{
+  height:30px;
+  margin:3px;
+  width:50px;
+  font-size:16px;
+  text-align:center;
+   background:#fff;
+   line-height:25px;
+  border:1px solid #eee;
+}
+#skipTo:hover{
+ background:rgb(99,150,193);
+}
+#skip{
+  height:30px;
+  margin: 0 6px;
+  width:30px;
+  font-size:16px;
+  text-align:center;
+  border:1px solid #eee;
+}
+#ok{
+cursor:pointer;
+ margin-left:-40px;
+ border-left:1px solid #eee;
+ line-height:25px;
+ padding-left:5px;
+ height:25px;
+}
+#ok:hover{
+ color:green;
+}
+#search-left{
+ margin-left:5px;
+ width:240px;
+ height:28px;
+ padding-left:10px;
+ border:1px solid rgb(146,182,208);
+ border-radius:5px;
+ outline:none;
+}
+.icon-right,.icon-left{
+color:#fff;
+}
+.icon-you{
+ color:black;
+ font-size:15px;
+}
+.icon-zuo{
+   color:black;
+ font-size:13px;
+}
+.left-page-item-blank{
+    width:100%;
+   height:100%;
+   text-align:center;
+  /*  background:yellow; */
+}
+.right-content-title-search{
+ width:30%;
+ height:100%;
+ margin-top:15px;
+/*  background:green; */
+}
+.left-page-CurrentPgage{
+   width:40%;
+   height:100%;
+   padding:5%;
+   border-left: 1px solid rgba(192,192,192,0.3);
+   border-right: 1px solid rgba(192,192,192,0.3);
+}
+.left-page-CurrentPgage-blank{
+line-height:40px;
+text-align:center;
+font-size:16px;
+vertical-align:bottom;
+   width:100%;
+   height:100%;
+   color:#fff;
+}
+.left-page-item{
+ padding:5%;
+ width:30%;
+ height:100%;
+}
+.left-page-item:hover{
+background:rgb(66,79,88);
+}
+.left-page-blank{
+width:100%;
+height:100%;
+}
+
+.left-content-item-top-disease{
+white-space:nowrap;
+text-overflow:ellipsis;
+overflow:hidden;
+width:80px;
+}
+.right-mainContent{
+ padding-top:20px;
+ height:84%;
+ backgorund:black;
+ width:100%;
+ /* background:#eee; */
+}
+.right-page{
+  padding:0 1% 1% 1%;
+  height:10%;
+  color:black;
+  background: #ececec;
+}
+.right-content{
+height:90%;
+ /*overflow:hidden;*/
+ padding:0 1%;
+}
+.pagination{
+ float:right;
+ margin:5px 5px 5px 5px
+}
+.right-content-content-table td{
+ width:400px;
+ height:50px;
+}
+.right-content-title-blank{
+	width:100%;
+	height:60%;
+    paddding:5px;
+    margin-top:15px;
+}
+.right-content-title{
+display:flex;
+ height:10%;
+ width:98%;
+ padding:1%;
+}
+.right-content-content{
+ width:100%;
+ padding:1% 2%;
+ height:90%;
+}
+.right-content-blank{
+ height:100%;
+ width:100%;
+ background:#fff;
+}
+.right{
+height:100%;
+width:94%;
+background:#eee;
+
+}
+#spacing{
+ margin:0 0 5px 0;
+}
+#spacing-left{
+ padding-left:20px;
+ border-left:3px solid rgb(86,177,248);
+ margin-left: 30px;
+}
+#stamp{
+color:red;
+font-weight:600;
+padding:0 3px
+}
+.right-message{
+ height:16%;
+ width:100%;
+ padding: 1%;
+}
+.right-message-blank{
+ height:100%;
+ width:100%;
+ background:#fff;
+ display:flex;
+}
+.right-message-item{
+ width:25%;
+}
+.special{
+   border-right:1px solid rgba(192,192,192,0.8);
+}
+.right-message-item-blank{
+  margin-top:16px;
+  height:50%;
+  width:100%;
+  display:flex;
+}
+.right-message-item-icon{
+  width:30%;
+  padding-top:15px;
+  text-align:center;
+}
+.right-message-item-text{
+  padding:20px 0 0 15px;
+  width:70%;
+}
+body,h3,p,h1{
+ margin:0;
+}
+.score{
+ height:100%;
+ width:100%;
+ background:#eee;
+}
+.nav{
+ height:5%;
+ width:100%;
+ background:rgb(41,51,61);
+}
+.content{
+ height:95%;
+ width:100%;
+ display:flex;
+}
+.left{
+
+width:18.5%;
+background:rgb(41,51,61);
+
+}
+.left-logo{
+ text-align:center;
+ height:10%;
+}
+.left-search{
+ height:8%;
+ background:rgb(66,79,88);
+ text-align:center;
+}
+.left-search-icon{
+ position:absolute;
+ margin:23px 0 0 5px;
+}
+.left-search-input{
+ margin-top:20px;
+ height:32px;
+ width:200px;
+ border-radius:5px;
+ border:none;
+ background:rgb(122,131,138);
+ font-size:16px;
+ padding-left:30px;
+ color:#fff;
+}
+.left-content{
+ height:72%;
+ cursor:pointer;
+}
+.left-page{
+cursor:pointer;
+width:100%;
+height:7%;
+border-bottom: 1px solid rgba(192,192,192,0.3);
+display:flex;
+
+}
+.left-content-item{
+ padding:0 35px;
+ height:10%;
+ font-size:16px;
+ color:#fff;
+ border-bottom: 1px solid rgba(192,192,192,0.3);
+}
+.left-content-item:hover{
+background:rgb(66,79,88);
+}
+.left-content-item-top{
+  padding-top:5px;
+  height:50%;
+  display:flex;
+  justify-content:space-between;
+}
+.left-content-item-bottom{
+ height:50%;
+}
+.watchScore-title{
+  height:10%;
+  padding:0 1% 0 1%;
+}
+.watchScore-title-blank{
+ height:100%;
+ width:100%;
+ background:#fff;
+}
+.inputScore{
+position:absolute;
+width:200px;
+height:200px;
+left:50%;
+margin-left:-100px;
+color:#fff;
+z-index:40;
+}
+#score-number{
+ font-size:80px;
+ line-height:200px;
+}
+.watchScore-score-circle-blank{
+  height:100%;
+  width:100%;
+  text-align:center;
+  position:relative;
+}
+.container {
+    width: 200px;
+    height: 200px;
+    padding: 5px;
+    border: 5px solid rgba(255, 150, 64,.8);
+    border-radius: 50%;
+    overflow: hidden;
+}
+.wave {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    background-color: rgba(255, 150, 64, .8);
+    border-radius: 50%;
+ }
+    .wave:before,
+    .wave:after{
+        content: "";
+        position: absolute;
+        width: 360px;
+        height: 360px;
+        top: 0;
+        left: 50%;
+        background-color: rgba(255, 255, 255, .4);
+        border-radius: 45%;
+        transform: translate(-50%, -70%) rotate(0);
+        animation: rotate 6s linear infinite;
+        z-index: 10;
+    }
+    
+   .wave:after {
+        border-radius: 47%;
+        background-color: rgba(255, 255, 255, .9);
+        transform: translate(-50%, -70%) rotate(0);
+        animation: rotate 10s linear -5s infinite;
+        z-index: 20;
+    }
+.detail-content-item-text{
+  padding:20px 0 0 15px;
+  width:70%;
+}
+.detail-content-item-icon{
+  width:30%;
+  padding-top:15px;
+  text-align:center;
+}
+.detail-content-item-blank{
+ margin-top:16px;
+  height:50%;
+  width:100%;
+  display:flex;
+}
+.detail-content-item{
+width:25%;
+}
+.detail-content-blank{
+ height:100%;
+ width:100%;
+ background:#fff;
+ display:flex;
+}
+.detail-title{
+  height:30%;
+  padding-top:15px;
+}
+.detail-content{
+  height:70%;
+}
+.watchScore-detail-blank{
+  height:100%;
+  background:#fff;
+}
+.text-button-input{
+ height:60px;
+ width:240px;
+ background:rgb(86,177,248);
+ border-radius:30px;
+ outline:none;
+ border:none;
+}
+
+.text-content{
+margin:30px 0;
+}
+.text-button{
+ color:#fff;
+}
+.watchScore{
+  height:100%;
+  width:100%;
+}
+.watchScore-score{
+ height:50%;
+ padding:0 1% 1% 1%;
+}
+.watchScore-score-blank{
+ height:100%;
+ background:#fff;
+ display:flex;
+}
+.watchScore-score-circle{
+  width:35%;
+  height:100%;
+  padding:4%;
+}
+.watchScore-score-text{
+ font-size:20px;
+  width:65%;
+   height:100%;
+   padding:4% 0;
+}
+.watchScore-detail{
+ height:40%;
+ padding:1%;
+}
+</style>

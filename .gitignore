@@ -10,3 +10,20 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+.gitignore
+*.classpath
+*.project
+.settings
+.project
+.target
+.classpath
+**/.settings
+**/.classpath
+**/.eclipse
+**/target/
+target/
+bin/
+indexDir/
+/recipel/.idea
+/recipel/tcmsp-recipel.iml
+/recipel/tcmsp-recipel.iml

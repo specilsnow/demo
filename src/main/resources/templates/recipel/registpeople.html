@@ -1,0 +1,76 @@
+<div class="table-scrollable" style="min-height:360px;">
+    <ul class="">
+        @ for(emr in emrs){
+        <li onclick="showemr('${emr.visitNo}')">
+            <p>
+                <span class="histroyname"> ${emr.patientName}</span>
+                <span class="histroysex">${emr.sex}&nbsp;&nbsp;${emr.age}</span>
+                <span class="teacher">${emr.followTeacher}</span>
+                <span class="histroydate"> ${emr.createTime,'yyyy-MM-dd'}</span>
+            </p>
+            <p class="histroyzusu"><span style="width: 76px;display: inline-block;margin-left: -6px;">
+                【病情】
+                </span>
+                @if(!isEmpty(emr.symptom)){
+                ${emr.symptom}；
+                @}
+                @if(!isEmpty(emr.symptommould)){
+                ${emr.symptommould}；
+                @}
+                @if(!isEmpty(emr.chiefComplaint)){
+                ${emr.chiefComplaint}；
+                @}
+                @if(!isEmpty(emr.disease)){
+                @ var disea=emr.disease;
+                @ var index = strutil.lastIndex(disea,"&");
+                @if(index+1==strutil.length(disea)){
+                ${strutil.split (disea,'&&&')[0]}
+                @}else{
+                ${strutil.split (disea,'&&&')[0]}
+                ${strutil.split (disea,'&&&')[1]}
+                @}
+                @}else{
+                ${emr.disease!""} ${emr.disease!""}
+                @}
+            </p>
+
+        </li>
+        @}
+    </ul>
+</div>
+
+<div style="margin-top:5px;height:30px; ">
+    ${emr.page.pageStr }
+</div>
+<style>
+    /*.myPage{*/
+    /*background: red!important;*/
+    /*}*/
+</style>
+<script>
+    loadBackground();
+
+    function searchNextPage(currentPage) {
+        var url = "${request.contextPath}/emr/findlistpageemr";
+        postdata = {
+            'page.currentPage': currentPage,
+            'patientName': '${emr.patientName}',
+            'datestring': '${emr.datestring}'
+        };
+        $.post(url, postdata, function (data) {
+            $("#histroy-list").html(data);
+        });
+    }
+
+    function showemr(visitNo) {
+
+        $("#doctorlistPage").animate({width: "0",}, 500);
+        $("#emrhistoryPage").load("${request.contextPath}/emr/showemr?visitNo=" + visitNo);
+        var animateWidth = document.documentElement.clientWidth * 0.75;
+        if (document.documentElement.clientWidth < 992) {
+            animateWidth = document.documentElement.clientWidth;
+        }
+        $("#emrhistoryPage").animate({width: animateWidth}, "slow");
+        // writeRecipel()
+    }
+</script>

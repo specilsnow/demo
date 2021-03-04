@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdutcm.tcms.biz.mapper.KbMedicinalMaterialMapper" >
+  <resultMap id="BaseResultMap" type="com.cdutcm.tcms.biz.model.KbMedicinalMaterial" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="pinyin" property="pinyin" jdbcType="VARCHAR" />
+    <result column="max_dosage" property="maxDosage" jdbcType="VARCHAR" />
+    <result column="among_dosage" property="amongDosage" jdbcType="VARCHAR" />
+    <result column="min_dosage" property="minDosage" jdbcType="VARCHAR" />
+    <result column="attention" property="attention" jdbcType="VARCHAR" />
+    <result column="best_pharmacyde" property="bestPharmacyde" jdbcType="VARCHAR" />
+    <result column="fs_code" property="fsCode" jdbcType="VARCHAR" />
+    <result column="dosage_forbid" property="dosageForbid" jdbcType="VARCHAR" />
+    <result column="function_code" property="functionCode" jdbcType="VARCHAR" />
+    <result column="ingredient" property="ingredient" jdbcType="VARCHAR" />
+    <result column="pharmacyde_forbid" property="pharmacydeForbid" jdbcType="VARCHAR" />
+    <result column="usage" property="usage" jdbcType="VARCHAR" />
+    <result column="therapy" property="therapy" jdbcType="VARCHAR" />
+    <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+  </resultMap>
+ 	
+ 	<!-- 根据药材名称获取对应的id -->
+ 	<select id="findIdByName" parameterType="string" resultType="long">
+		select  id from medicinal_material where  name in 
+	 <foreach item="item" index="index" collection="list"  open="(" separator="," close=")"> 
+	 	#{item} 
+	 </foreach>
+  </select>
+ 	
+ 	
+ 	<!-- 根据id查询 -->
+  <select id="findKbMedicinalMaterialById" parameterType="long" resultMap="BaseResultMap">
+  		select * from medicinal_material where id=#{id}
+  </select>
+  
+  	<!-- 分页获取所有药材名称 -->
+  <select id="listPageAllName" parameterType="com.cdutcm.tcms.biz.model.KbMedicinalMaterial" resultMap="BaseResultMap">
+  		select  * from medicinal_material
+  		where 1=1
+  		<if test="name !=null and name !='' or pinyin !=null and pinyin !=''">
+  			and ( pinyin like '%${pinyin}%' or name like '%${name}%')
+  		</if>
+  		order by length(name)
+  </select>
+  
+  <!-- 根据处方名称查询药材表 -->
+  <select id="findKbMedicinalMaterialByRecipelName" parameterType="string" resultMap="BaseResultMap">
+  	 select  k.id,k.name,k.pinyin,k.max_dosage,k.min_dosage,k.among_dosage,k.attention
+  		 ,k.best_pharmacyde,k.fs_code,k.dosage_forbid,k.function_code,k.ingredient,k.pharmacyde_forbid,k.usage
+ 		 ,k.therapy,k.gmt_create,k.gmt_modified
+     from  medicinal_material k 
+ 	    left join base_recipel_item b on  k.name =b.name 
+  		left join base_recipel c on b.recipel_id=c.id 
+     where c.recipel_name=#{_parameter} and c.id = (select d.id from base_recipel d 
+     left join base_recipel_item e on d.id=e.recipel_id 
+     left join medicinal_material f on e.name=f.name 
+     where d.recipel_name=#{_parameter} limit 1)
+  
+  </select>
+  
+  <!-- 根据药材名称查询medicinal_material -->
+  <select id="findKbMedicinalMaterialByName" parameterType="string" resultMap="BaseResultMap">
+  	 select * from medicinal_material where name like '%${_parameter}%' order by length(name) limit 1
+  </select>
+  
+    	<!-- 根据药材名称查询对应的fscode  -->
+  <select id="findFsCodeByName" resultType="string">
+		select fs_code from tc_c.medicinal_material where  name in 
+	 <foreach item="item" index="index" collection="list"  open="(" separator="," close=")"> 
+	 	#{item} 
+	 </foreach>
+  </select> 
+</mapper>

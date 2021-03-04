@@ -1,0 +1,558 @@
+<head>
+    <title>医生认证</title>
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="css/iconfont.css">
+    <link href="metronic/css/font-awesome.min.css" rel="stylesheet"
+          type="text/css"/>
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet"
+          type="text/css"/>
+    <style>
+        #clickHover:hover {
+            color: #9d9d9d;
+        }
+
+        .btn-warning {
+            height: 40px;
+            width: 80%;
+        }
+
+        .inputCss {
+            height: 45px;
+            border: none;
+            outline: none;
+            padding-left: 20px;
+        }
+
+        .content {
+            width: 100%;
+        }
+
+        .regist-content-itemA {
+            text-align: center;
+            font-size: 20px;
+            padding-top: 1%;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        h2 {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .type {
+            text-align: center;
+            margin: 20px auto;
+            overflow: hidden;
+            width: 20%;
+        }
+
+        .type div span {
+            display: block;
+            color: #74AFE7;
+        }
+
+        .type div:nth-child(2) span {
+            color: #a3a3a3;
+        }
+
+        footer {
+            padding-top: 20px;
+            text-align: center;
+            width: 90%;
+            border-top: 1px solid #ccc;
+            letter-spacing: 0.2em;
+            color: #ababab;
+            bottom: 0;
+            left: 5%;
+            height: 80px;
+        }
+
+        .input-group-addon:first-child {
+            border: none;
+            background: transparent;
+            color: #27a4b0;
+        }
+
+        input.form-control {
+            border: none;
+            border-bottom: 1px solid #27a4b0;
+            box-shadow: none;
+            border-radius: 0;
+            outline: none;
+        }
+
+        input.form-control:focus {
+            box-shadow: none;
+        }
+
+        .btn-primary {
+            background: #27a4b0;
+            border: none;
+        }
+
+        span.adeptName {
+            background: rgb(171, 231, 237);
+            color: rgb(39, 164, 176);
+            display: inline-block;
+            padding: 0 5px;
+            border-radius: 5px !important;
+            margin: 3px;
+            height: 30px;
+            line-height: 30px;
+        }
+
+        span.adeptName i {
+            display: inline-block;
+            margin-left: 8px;
+        }
+
+        .recipelList {
+            width: 100%;
+            border: 1px solid #cccccc;
+            border-bottom-left-radius: 5px;
+            border-bottom-right-radius: 5px;
+            position: absolute;
+            box-shadow: 0 0 5px 5px #eeeeee;
+            display: none;
+            background: #ffffff;
+            z-index: 11;
+            max-height: 300px;
+            overflow: scroll;
+        }
+
+        .recipelList ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .recipelList ul li {
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .recipelList ul li:hover {
+            background: rgb(171, 231, 237);
+            color: rgb(39, 164, 176);
+        }
+
+        .recipelList ul li span {
+            float: right;
+            color: #999999;
+        }
+
+        .recipelName span {
+            background: rgb(171, 231, 237);
+            color: rgb(39, 164, 176);
+            display: inline-block;
+            padding: 0 10px;
+            border-radius: 5px !important;
+            margin: 0 3px;
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .recipelName span i {
+            display: inline-block;
+            margin-left: 8px;
+        }
+
+        /*图片上传样式*/
+        .imgbox {
+            position: relative;
+            width: 50px;
+            height: 50px;
+            border: 1px solid #cccccc;
+            overflow: hidden;
+            border-radius: 5px;
+        }
+
+        .imgbox input {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            z-index: 9;
+        }
+
+        .imgbox span {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            color: #999999;
+            font-size: 30px;
+            line-height: 50px;
+            text-align: center;
+        }
+
+        .imgbox img {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+
+        }
+
+        select {
+            padding: 5px;
+            border-radius: 5px !important;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>认证医生</h2>
+<div class="container">
+    <div class="col-md-6 col-md-offset-3">
+        <form action="${request.contextPath}/userregist" method="post"
+              id="registForm">
+            <input name="openId" value="${openId}" type="hidden"/>
+            <div class="form-group has-feedback">
+                <div class="input-group">
+                    <span class="input-group-addon">头像</span>
+                    <div class="imgbox">
+                        <input type="file" accept="image/*" style="opacity: 0">
+                        <span class="fa fa-plus"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group has-feedback">
+                <div class="input-group">
+                    <span class="input-group-addon">姓名</span>
+                    <input id="Name"
+                           class="form-control"
+                           placeholder="请输入姓名"
+                           maxlength="20"
+                           required="required"
+                           name="Name" type="text">
+                </div>
+            </div>
+            <div class="form-group has-feedback">
+                <div class="input-group">
+                    <span class="input-group-addon">机构名称</span>
+                    <input id="OrganizationName"
+                           class="form-control"
+                           placeholder="请输入机构名称"
+                           maxlength="20"
+                           value=""
+                           data-id="0"
+                           required="required"
+                           name="OrganizationName" type="text">
+                </div>
+                <div class="recipelList" id="OrganizationNameList">
+                    <ul>
+                    </ul>
+                </div>
+            </div>
+            <div class="form-group has-feedback">
+                <div class="input-group">
+                    <span class="input-group-addon">科室</span>
+                    <input id="Dept"
+                           class="form-control"
+                           placeholder="请输入科室"
+                           maxlength="20"
+                           value="治未病科"
+                           required="required"
+                           name="Dept" type="text">
+                </div>
+            </div>
+            <div class="form-group has-feedback">
+                <div class="input-group">
+                    <span class="input-group-addon">地址</span>
+                    <select id="s_province" name="s_province"></select>
+                    <select id="s_city" name="s_city"></select>
+                    <select id="s_county" name="s_county" onchange="showArea()"></select>
+                    <input id="Address"
+                           class="form-control"
+                           placeholder="详细地址"
+                           maxlength="20"
+                           required="required"
+                           name="Address" type="text">
+                </div>
+            </div>
+            <div class="form-group has-feedback" style="position: relative">
+                <label for="adept"></label>
+                <div class="input-group">
+                    <span class="input-group-addon">擅长病种</span>
+                    <input id="adept"
+                           class="form-control"
+                           placeholder="请输入擅长病种"
+                           required="required"
+                           name="dept" type="text">
+                </div>
+                <div class="recipelList" id="deptList">
+                    <ul>
+                    </ul>
+                </div>
+            </div>
+            <div class="form-group">
+                <button class="form-control btn btn-primary"
+                        onclick="goAuth()" type="button">立&nbsp;&nbsp;即&nbsp;&nbsp;认&nbsp;&nbsp;证
+                </button>
+            </div>
+
+            <div class="form-group">
+                <button id="reset" class="form-control btn btn-danger"
+                        type="reset">重置
+                </button>
+            </div>
+
+            <!--<div class="regist-content-itemA" onclick="skipToLogin()">-->
+            <!--<h4 onclick="window.location.href='login'" id="clickHover">已有账号，返回登陆</h4>-->
+            <!--</div>-->
+        </form>
+    </div>
+</div>
+<!--&lt;!&ndash; ================================================================================================== &ndash;&gt;-->
+<!--<footer>-->
+<!--<p>智能中医平台由成都中医药大学数字医药研究所研发</p>-->
+<!--</footer>-->
+<script src="metronic/js/jquery.min.js" type="text/javascript"></script>
+<script src="js/jquery.form.js" type="text/javascript"></script>
+<script src="metronic/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="layui/layui.js" type="text/javascript"></script>
+<!--<script src="layui/layui.js" type="text/javascript"></script>-->
+<script src="/js/area.js"></script>
+
+<script>
+    //加载layer提示插件
+    layui.use(['layer', 'layer'], function () {
+        var layer = layui.layer,
+            layer = layui.layer;
+    });
+    var photo = "";
+
+    function goAuth() {
+        var Name = $("input[name=Name]").val();
+        var OrganizationName = $("input[name=OrganizationName]").val();
+        var OrganizationId = $("input[name=OrganizationName]").attr("data-id");
+        var Dept = $("input[name=Dept]").val();
+        var province = $("#s_province").val();
+        var city = $("#s_city").val();
+        var county = $("#s_county").val();
+        if (province == "省份" || city == "市" || county == "区/县") {
+            layer.msg("请选择地址");
+            return
+        }
+        var Address = province + city + county + $("input[name=Address]").val();
+        var sysy = $(".adeptName");
+        var GoodAtDisease = [];
+        /*非空验证*/
+        if (Name == "") {
+            layer.msg("姓名为空");
+            return false;
+        }
+        if (OrganizationName == "") {
+            layer.msg("机构名称为空");
+            return false;
+        }
+        if (Dept == "") {
+            layer.msg("科室为空");
+            return false;
+        }
+        if (Address == "") {
+            layer.msg("地址为空");
+            return false;
+        }
+        if (sysy < 1) {
+            layer.msg("请选择擅长病种");
+            return false;
+        }
+        for (var i = 0; i < sysy.length; i++) {
+            var temp = {
+                SymptomsId: sysy[i].id,
+                SymptomsName: sysy[i].innerText
+            }
+            GoodAtDisease.push(temp);
+        }
+        // return
+        var obj = new Object({
+            Id: "",
+            OrganizationId: OrganizationId,
+            DoctorNumber: "",
+            Photo: photo,
+            Name: Name,
+            OrganizationName: OrganizationName,
+            Dept: Dept,
+            Address: Address,
+            GoodAtDisease: GoodAtDisease
+        });
+        console.log(obj);
+        $.ajax({
+            url: "${request.contextPath}/authDoctor",
+            type: "POST",
+            data: {
+                data: JSON.stringify(obj)
+            },
+            success: function (e) {
+                var data = JSON.parse(e.data)
+                console.log(data)
+                if (!data.Success) {
+                    layer.msg(data.Message)
+                } else {
+                    layer.msg(data.Message)
+                    setTimeout(function () {
+                        location.href = "/recipelIndex";
+                    }, 1000)
+                }
+            },
+            error: function (e) {
+                alert(e)
+            }
+
+        })
+
+    }
+
+    //获取云平台的擅长病种
+    function getGoodAtDisease(value) {
+        $.ajax({
+            url: "${request.contextPath}/getGoodAtDisease?keyword=" + value,
+            success: function (e) {
+                if (!e.code) {
+                    $("#deptList").show();
+                    $("#deptList ul li").remove()
+                    $(e.data).each(function (i, item) {
+                        $("#deptList ul").append("<li onclick='addRecipelName(\"" + item.id + "\",\"" + item.diseaseName + "\")'>" + item.diseaseName + "</li>")
+                    })
+                }
+            },
+            error: function (e) {
+                alert(e)
+            }
+        })
+    }
+
+    /*擅长病种*/
+    $("#adept").click(function () {
+        getGoodAtDisease($(this).val().trim());
+    }).bind("keyup", function (e) {
+        // 兼容FF和IE和Opera
+        getGoodAtDisease($(this).val().trim());
+    });
+    var selectedRecipel = [];
+
+    function addRecipelName(id, name) {
+        // var value=name;
+        if (name != "") {
+            for (var i = 0; i < selectedRecipel.length; i++) {
+                if (name == selectedRecipel[i]) {
+                    layer.msg("该病种已添加!");
+                    return
+                }
+            }
+            selectedRecipel.push(name);
+            $("#adept").before("<span class='adeptName' id='" + id + "'>" + name + "<i class='fa fa-remove'  onclick='removerecipel(\"" + name + "\",this)'></i></span>");
+            $("#adept").val("");
+        }
+        $(".recipelList").hide();
+    }
+
+    function removerecipel(value, obj) {
+        console.log(value)
+        for (var i = 0; i < selectedRecipel.length; i++) {
+            if ($(obj).parent().text() == selectedRecipel[i]) {
+                selectedRecipel.splice(i, 1);
+            }
+        }
+        $("span.adeptName").each(function (i, item) {
+            console.log(item)
+            if ($(item).attr("id") == $(obj).parent().attr("id")) {
+                // console.log(item)
+                $(item).remove();
+            }
+        })
+    }
+
+    window.addEventListener('click', function (event) {
+        $(".recipelList").hide();
+    })
+    /*图片上传*/
+    $("input[type=file]").change(function () {
+        var obj = $(this);
+        var files = obj[0].files[0],
+            imgBase64 = ''; //存储图片的base64
+        //获取文件信息
+        if (files) {
+            var reader = new FileReader();
+            if (files.size > 1024 * 1024) {
+                //调用函数,对图片进行压缩
+                reader.onload = function (e) {
+                    imgBase64 = e.target.result;
+                    // callback(imgBase64)
+                    if ($(obj).parent().find("img").length >= 1) {
+                        $(obj).parent().find("img").attr("src", imgBase64);
+                    } else {
+                        $(obj).parent().append("<img src='" + imgBase64 + "'>");
+                    }
+                    var image = new Image()     //新建一个img标签（不嵌入DOM节点，仅做canvas操作)
+                    image.src = e.target.result    //让该标签加载base64格式的原图
+                    image.onload = function () {    //图片加载完毕后再通过canvas压缩图片，否则图片还没加载完就压缩，结果图片是全黑的
+                        var canvas = document.createElement('canvas'), //创建一个canvas元素
+                            context = canvas.getContext('2d'),    //context相当于画笔，里面有各种可以进行绘图的API
+                            imageWidth = image.width / 2,    //压缩后图片的宽度，这里设置为缩小一半
+                            imageHeight = image.height / 2,    //压缩后图片的高度，这里设置为缩小一半
+                            data = ''    //存储压缩后的图片
+                        canvas.width = 100    //设置绘图的宽度
+                        canvas.height = 100    //设置绘图的高度
+
+                        //使用drawImage重新设置img标签中的图片大小，实现压缩。drawImage方法的参数可以自行查阅W3C
+                        context.drawImage(image, 0, 0, 100, 100)
+
+                        //使用toDataURL将canvas上的图片转换为base64格式
+                        photo = canvas.toDataURL('image/jpeg')
+                        console.log(photo)
+                        photo = escape(photo);
+                        // console.log(escape(photo))
+                        //将压缩后的图片显示到页面上的img标签
+                        // document.getElementById('img').src = data
+                    }
+                }
+                reader.readAsDataURL(files); //将文件读取为 DataURL(base64)
+            } else {
+                console.log("不用压缩")
+            }
+        }
+        else {
+            layer.msg("上传失败");
+        }
+    })
+    /*省市三级联动*/
+    _init_area();
+    var Gid = document.getElementById;
+    var showArea = function () {
+        Gid('show').innerHTML = "<h3>省" + Gid('s_province').value + " - 市" +
+            Gid('s_city').value + " - 县/区" +
+            Gid('s_county').value + "</h3>"
+    }
+    /*机构名称*/
+    $("#OrganizationName").click(function () {
+        getOrganizationName($(this).val().trim());
+    }).bind("keyup", function (e) {
+        // 兼容FF和IE和Opera
+        getOrganizationName($(this).val().trim());
+    });
+
+    function getOrganizationName(value) {
+        $.ajax({
+            url: "${request.contextPath}/cloudAPI/getOrganizations?name=" + value,
+            success: function (e) {
+                $("#OrganizationNameList").show();
+                $("#OrganizationNameList ul li").remove()
+                $(e).each(function (i, item) {
+                    $("#OrganizationNameList ul").append("<li onclick='selectOrganization(\"" + item.name + "\",\"" + item.id + "\")'>" + item.name + "</li>")
+                })
+            },
+            error: function (e) {
+                alert(e)
+            }
+        })
+    }
+    function selectOrganization(name,id) {
+        $("#OrganizationName").val(name).attr("data-id",id);
+    }
+</script>
+
+<script src="js/regist.js" type="text/javascript"></script>
+</body>

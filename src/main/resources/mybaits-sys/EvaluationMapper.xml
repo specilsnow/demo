@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdutcm.tcms.biz.mapper.EvaluationMapper">
+
+    <resultMap id="BaseResultMap" type="com.cdutcm.tcms.biz.model.Evaluation">
+        <id column="id" property="id"/>
+        <result column="description" property="description"/>
+        <result column="visitNo" property="visitNo"/>
+        <result column="gmt_create" property="gmtCreate"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.cdutcm.tcms.biz.model.Evaluation">
+        insert into evaluation (id, description, visitNo) values (#{id},#{description},#{visitNo})
+    </insert>
+    <select id="listByEmrId" resultMap="BaseResultMap">
+        select id,description,visitNo,DATE_FORMAT(gmt_create,'%Y-%m-%d %H:%m:%s') gmt_create from  evaluation where visitNo = #{visitNo}
+    </select>
+
+</mapper>

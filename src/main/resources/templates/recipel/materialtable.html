@@ -1,0 +1,24 @@
+<div id="height:35px;width:91%;float: left;">
+<table class="table" style="color: #DA754D;width:unset;">
+	<tr>
+	 @ var i=0;
+	 @ if(materrials!=null&&@materrials.size()>0){
+     @for(ma in materrials){
+     @if(i<10){  
+	<td onclick="material(this)" style="font-size: 16px;padding:8px 6px;" nowrap><span style="float:left;height:40px;">${i=i+1}.</span><span style="text-align:left;">${ma.name}</span></td>
+	 @}
+	 @}	
+	 @}else{
+	 <td  style="font-size: 16px;">当前字母暂无匹配药品</td>
+	 @}
+	</tr>
+</table>
+</div>
+<div style="width:8%;float:right;vertical-align:top;text-align:right;">
+@if(material.page.currentPage>1){
+<span style="padding:13px 0px;" class="glyphicon glyphicon-menu-left" aria-hidden="true" onclick="searchNextPagematerial('${material.page.currentPage-1}')" ></span>
+@}
+@if(material.page.currentPage < material.page.totalPage){
+<span style="padding:13px 0px;" class="glyphicon glyphicon-menu-right" aria-hidden="true" onclick="searchNextPagematerial('${material.page.currentPage+1}')"></span>
+@}	
+</div>

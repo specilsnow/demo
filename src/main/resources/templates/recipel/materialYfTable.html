@@ -1,0 +1,16 @@
+<div id="" style="height:35px;float:left;">
+<table class="table" style="color: #DA754D;">
+	<tr>
+	 @ var i=0;
+	 @ if(materrials!=null&&@materrials.size()>0){
+     @for(ma in materrials){
+     @if(i<10){  
+	<td ontouchstart="material(this,'yf')" style="font-size: 16px;">${i=i+1}.${ma.name}</td>
+	 @}
+	 @}	
+	 @}else{
+	 <td  style="font-size: 16px;">当前字母暂无匹配药品</td>
+	 @}
+	</tr>
+</table>
+</div>

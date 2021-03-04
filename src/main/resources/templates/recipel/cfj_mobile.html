@@ -1,0 +1,406 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title> 处方笺 </title>
+    <meta charset="UTF-8">
+    <meta name="generator" content="editplus"/>
+    <meta name="author" content=""/>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+    <!-- <script language="javascript" src="LodopFuncs.js"></script> -->
+    <!--<script language="javascript" src="${request.contextPath}/js/LodopFuncs.js"></script>-->
+    <script type="text/javascript" src="${request.contextPath}/js/html2canvas/html2canvas.js"></script>
+    <script type="text/javascript" src="${request.contextPath}/js/html2canvas/html2canvas.min.js"></script>
+    <script type="text/javascript" src="${request.contextPath}/js/html2canvas/jspdf.debug.js"
+            integrity="sha384-CchuzHs077vGtfhGYl9Qtc7Vx64rXBXdIAZIPbItbNyWIRTdG0oYAqki3Ry13Yzu"
+            crossorigin="anonymous"></script>
+    <style>
+
+    </style>
+</head>
+
+<body>
+<div style="margin: 0px auto; width: 100%; margin-bottom: 80px; " id="d2">
+    <div style=" width:100%;" class="buttonGroup">
+        <button type="button" class="btn btn-primary" onclick="dyrecipel('${fsemr.visitNo}')">
+            打印
+        </button>
+        <button type="button" class="btn btn-primary" onclick="exportToPdf('${fsemr.visitNo}')">
+            下载
+        </button>
+        <button type="button" class="btn btn-primary" onclick="findemrbyvisitNo('${fsemr.visitNo}','fz')">
+            复诊
+        </button>
+        <button type="button" class="btn btn-primary" onclick="findemrbyvisitNo('${fsemr.visitNo}','bj')">
+            修改
+        </button>
+        <button type="button" class="btn btn-primary" onclick="refuserecipel('${fsemr.visitNo}')">
+            追加
+        </button>
+        <button type="button" class="btn btn-primary" onclick="editrecipel('${fsemr.visitNo}')">
+            复用
+        </button>
+        <button type="button" class="btn btn-primary" onclick="shareRecipel('${fsemr.visitNo}','${fsemr.doctorName}')">
+            分享
+        </button>
+        <button type="button" class="btn btn-primary" onclick="getjfcode('${fsemr.visitNo}','${fsemr.doctorId}')">
+            缴费
+        </button>
+        <button type="button" class="btn btn-primary" onclick="evaluation('${fsemr.visitNo}','${fsemr.doctorId}')">
+            疗效评价
+        </button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="closeItem()">
+            关闭
+        </button>
+    </div>
+    <ul id="recipelContainer" style="padding: 15px;">
+        <div>
+            <p style="text-align:center;font-size:25px;"><a style="color: #268499;">处方笺</a></p>
+        </div>
+        <li>
+            <div class="form-group form-md-line-input has-success" style="width:100%;float: left">
+                <span class="control-label" for="form_control_1">编号</span>
+                <div class="control-line">
+                    <input type="text" name="visitNo" class="form-control" value="${fsemr.visitNo!''}" placeholder=""
+                    readonly="readonly">
+                </div>
+            </div>
+            <div class="form-group form-md-line-input has-success" style="width:50%;float: left">
+                <span class="control-label" for="form_control_1">科室</span>
+                <div class="control-line">
+                    <input type="text" name="visitNo" class="form-control" value="${fsemr.deptName!''}" placeholder=""
+                           readonly="readonly">
+                </div>
+            </div>
+            <div class="form-group form-md-line-input has-success" style="width:50%;float: left">
+                <span class="control-label" for="form_control_1">电话</span>
+                <div class="control-line">
+                    <input type="text" name="telephone" class="form-control" value="${fsemr.telephone!''}"
+                    readonly="readonly">
+                </div>
+            </div>
+            <div style="clear: both"></div>
+        </li>
+        <li>
+            <div class="form-group form-md-line-input has-success" style="width:50%;float: left">
+                <span class="control-label" for="form_control_1">姓名</span>
+                <div class="control-line">
+                    <input type="text" name="patientName" id="patientName" class="form-control" placeholder=""
+                           value="${fsemr.patientName!""}" onchange="findEmrHistoryByName($(this).val(),'','index')">
+                    <div class="form-control-focus"></div>
+                </div>
+            </div>
+            <div class="form-group form-md-line-input has-success" style="width: 50%;float: left">
+                <span class=" control-label" for="form_control_1">性别</span>
+                <div class="control-line">
+                    <input type="text" class="form-control" name="age" placeholder="" value="${fsemr.sex!""}" readonly>
+                </div>
+            </div>
+            <div style="clear: both"></div>
+        </li>
+        <li>
+            <div class="form-group form-md-line-input has-success" style="width: 50%;float: left">
+                <span class="control-label" for="form_control_1">年龄</span>
+                <div class="control-line">
+                    <input type="text" class="form-control" name="age" placeholder="" value="${fsemr.age!""}" readonly>
+                </div>
+            </div>
+            <div class="form-group form-md-line-input has-success" style="width: 50%;float: left">
+                <span class="control-label" for="form_control_1">日期</span>
+                <div class="control-line">
+                    @if(fsemr.createTime==""||fsemr.createTime==null){
+
+                    <input type="text" name="visitNo" class="form-control" value="${fsemr.createTime!""}" placeholder=""
+                    readonly="readonly">
+                    @}else{
+                    <input type="text" name="visitNo" class="form-control" value="${fsemr.createTime!"",'yyyy-MM-dd'}"
+                    placeholder="" readonly="readonly">
+                    @}
+                </div>
+            </div>
+
+            <div class="form-group form-md-line-input has-success" style="width: 100%;float: left;">
+                <span class="control-label" for="form_control_1" >主诉</span>
+                <div class="control-line">
+                    <input type="text" class="form-control" name="symptom" placeholder="" id="" value="${fsemr.chiefComplaint!''}">
+                </div>
+            </div>
+            <div class="form-group form-md-line-input has-success" style="width: 100%;float: left;">
+                <span class="control-label" for="form_control_1" style="width: 45px;">现病史</span>
+                <div class="control-line" style="width: calc(100% - 70px);">
+                    <input type="text" class="form-control" name="presentillness" placeholder="" id="" value="${fsemr.presentillness!''}">
+                </div>
+            </div>
+            <div class="form-group form-md-line-input has-success" style="width: 100%;float: left;">
+                <span class="control-label" for="form_control_1" style="width: 45px;">既往史</span>
+                <div class="control-line" style="width: calc(100% - 70px);">
+                    <input type="text" class="form-control" name="pastillness" placeholder="" id="" value="${fsemr.pastillness!''}">
+                </div>
+            </div>
+            <div class="form-group form-md-line-input has-success" style="width: 100%;float: left;">
+                <span class="control-label" for="form_control_1" style="width: 45px;">个人史</span>
+                <div class="control-line" style="width: calc(100% - 70px);">
+                    <input type="text" class="form-control" name="personalIllness" placeholder="" id="" value="${fsemr.personalIllness!''}">
+                </div>
+            </div>
+            <div class="form-group form-md-line-input has-success" style="width: 100%;float: left;">
+                <span class="control-label" for="form_control_1" style="width: 45px;">过敏史</span>
+                <div class="control-line" style="width: calc(100% - 70px);">
+                    <input type="text" class="form-control" name="allergicHistory" placeholder="" id="" value="${fsemr.allergicHistory!''}">
+                </div>
+            </div>
+            <div class="form-group form-md-line-input has-success" style="width: 100%;float: left;">
+                <span class="control-label" for="form_control_1" style="width: 45px;">月经史</span>
+                <div class="control-line" style="width: calc(100% - 70px);">
+                    <input type="text" class="form-control" name="menstruationHistory" placeholder="" id="" value="${fsemr.menstruationHistory!''}">
+                </div>
+            </div>
+            <div class="form-group form-md-line-input has-success" style="width: 100%;float: left;">
+                <span class="control-label" for="form_control_1" style="width: 56px;">体格检查</span>
+                <div class="control-line" style="width: calc(100% - 86px);">
+                    <input type="text" class="form-control" name="physicalExamination" placeholder="" id="" value="${fsemr.physicalExamination!''}">
+                </div>
+            </div>
+            <div class="form-group form-md-line-input has-success" style="width: 100%;float: left;">
+                <span class="control-label" for="form_control_1" style="width: 56px;">辅助检查</span>
+                <div class="control-line" style="width: calc(100% - 86px);">
+                    <input type="text" class="form-control" name="auxiliaryInspection" placeholder="" id="" value="${fsemr.auxiliaryInspection!''}">
+                </div>
+            </div>            <div class="form-group form-md-line-input has-success" style="width: 100%;float: left;">
+            <span class="control-label" for="form_control_1" style="width: 56px;">诊疗意见</span>
+            <div class="control-line" style="width: calc(100% - 86px);">
+                <input type="text" class="form-control" name="medicalAdvice" placeholder="" id="" value="${fsemr.medicalAdvice!''}">
+            </div>
+        </div>            <div class="form-group form-md-line-input has-success" style="width: 100%;float: left;">
+            <span class="control-label" for="form_control_1" style="width: 56px;">跟诊老师</span>
+            <div class="control-line" style="width: calc(100% - 86px);">
+                <input type="text" class="form-control" name="followTeacher" placeholder="" id="" value="${fsemr.followTeacher!''}">
+            </div>
+        </div>
+
+
+
+
+            <div class="form-group form-md-line-input has-success" style="width: 100%;float: left;">
+                <span class="control-label" for="form_control_1">病名</span>
+                <div class="control-line" >
+                    <input type="text" class="form-control" name="symptom" placeholder="" id="symptomdiseases" value="${fsemr.symptom!''}">
+                </div>
+            </div>
+            <div class="form-group form-md-line-input has-success" style="width: 100%;float: left;">
+                <span class="control-label" for="form_control_1">证型</span>
+                <div class="control-line">
+                    <input type="text" class="form-control" name="symptommould" placeholder=""
+                           id="symptommould"
+                           value="${fsemr.symptommould!''}">
+                </div>
+            </div>
+            <div style="clear: both"></div>
+        </li>
+        <li>
+            <div class="form-group form-md-line-input has-success" style="width: 100%;float: left">
+                <span class="control-label" for="form_control_1">症状</span>
+                <div class="control-line" style="height: auto">
+
+                    @if(!isEmpty(fsemr.disease)){
+
+                    <div name="visitNo" class="form-control" onclick="autosize(this)"
+                         style="min-height:30px;height: auto;margin-top: 0;"> ${
+                        strutil.replace(fsemr.disease,"&&&","")}
+                    </div>
+                    @}else{
+                    <div name="visitNo" class="form-control" onclick="autosize(this)"
+                         style="min-height:30px;height: auto;margin-top: 0;">${fsemr.disease!""}
+                    </div>
+                    @}
+                </div>
+            </div>
+            <div style="clear: both"></div>
+
+        </li>
+        <li>
+            <div class="form-group form-md-line-input has-success">
+                <span class="col-xs-12 control-label" for="form_control_1" style="width: 100%;">用药信息</span>
+            </div>
+        </li>
+        @ var i=0;
+
+        <li style=" min-height: 376px;">
+            @for (recipelitem in fsemr.recipels[0].recipelItems){
+            <span style="width: 48%;display: inline-block;margin-top:20px;">
+				<label style="text-align:left;vertical-align:bottom; padding-left:20px;font-weight: bold; font-size: 15px;word-break: break-all;width: calc(100% - 50px);">${recipelitem.name!""}</label>
+				<span style="display: inline-block;width: 35px;margin-left: 10px">
+					<sup><label style="font-size: 15px; display: block;">${recipelitem.usage!""}</label></sup>
+					<sub><label style="font-size: 15px;">${recipelitem.dosage!""}${recipelitem.unit!""}</label></sub>
+				</span>
+			</span>
+            @i=i+1;
+            @ if(i==4){
+            @i=0;
+
+            @}
+            @}
+        </li>
+        <li>
+            <div class="form-group form-md-line-input has-success" style="width: 100%;">
+                <span class=" control-label" for="form_control_1" style="width: 56px;">治法:</span>
+                <div class="control-line" style="width: calc(100% - 75px);height: auto">
+                    <div name="visitNo" id="" onclick="autosize(this)" class="form-control"
+                         style="min-height:30px;height: auto;margin-top: 0;">
+                        ${fsemr.recipels[0].therapy!""}
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="form-group form-md-line-input has-success" style="width: 100%;">
+                <span class=" control-label" for="form_control_1" style="width: 56px;">煎、服法</span>
+                <div class="control-line" style="width: calc(100% - 75px);height: auto">
+                    <div name="visitNo" id="cfjjff" onclick="autosize(this)" class="form-control"
+                         style="min-height:30px;height: auto;margin-top: 0;">${fsemr.recipels[0].jff}
+                    </div>
+                </div>
+            </div>
+        </li>
+
+        <li>
+
+            <div class="form-group form-md-line-input has-success" style="width: 100%;float: left">
+                <span class="control-label" for="form_control_1">医嘱</span>
+                <div class="control-line">
+                    <div class="form-control" name="recipels[0].notice" id="form_control_1"
+                         style="min-height:30px;height: auto;margin-top: 0;">${fsemr.recipels[0].notice!""}
+                    </div>
+                    <div class="form-control-focus"></div>
+                    <span class="help-block"></span>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="form-group form-md-line-input has-success" style="width: 50%;float: left">
+                <span class="control-label" for="form_control_1">剂数</span>
+                <div class="control-line" style="width:calc(100% - 74px);">
+                    <input type="text" name="visitNo" class="form-control" value="${fsemr.recipels[0].js}"
+                           placeholder="" readonly="readonly">
+                </div>
+                <span class="control-label">付</span>
+            </div>
+            <div class="form-group form-md-line-input has-success" style="width: 50%;float: left">
+                <span class="control-label" for="form_control_1">金额</span>
+                <div class="control-line">
+                    <input type="text" name="visitNo" class="form-control" value="${fsemr.recipels[0].je}"
+                           placeholder="" readonly="readonly">
+                </div>
+            </div>
+
+
+        </li>
+        <li>
+            <div class="form-group form-md-line-input has-success" style="width: 50%;float: left">
+                <span class="control-label" for="form_control_1">医师</span>
+                <div class="control-line">
+                    <input type="text" name="visitNo" class="form-control" value="${fsemr.doctorName}" placeholder=""
+                           readonly="readonly">
+                </div>
+            </div>
+            <div class="form-group form-md-line-input has-success" style="width: 50%;float: left">
+                <span class="control-label" for="form_control_1" style="width: 84px">药师（复核）</span>
+                <div class="control-line" style="width: calc(100% - 96px)">
+                    <input type="text" name="visitNo" class="form-control" value="${fsemr.recipels[0].fhdoctor_name!""}"
+                    placeholder="" readonly="readonly">
+                </div>
+            </div>
+        </li>
+        @ for(t in recipelImages){
+        <img src="/uploadImg/${t}" style="width: 100%;">
+        @}
+    </ul>
+</div>
+<div hidden id="dayin"></div>
+</body>
+<script>
+    function getjfcode(visitNo, doctorid) {
+        $("#qrCodeHolder").load(contextPath + "/interface/getJfQrCode?visitNo=" + visitNo + "&DoctorId=" + doctorid, function (response, status, xhr) {
+            if (status == "success") {
+                $("#vtd3").css("visibility", "visible");
+                qrTimmer = window.setInterval(refreshCount, 1000);
+            }
+        })
+
+
+    }
+
+    function evaluation(visitNo, doctorid) {
+        $("#qrCodeHolder").load(contextPath + "/emr/listEvaluation?visitNo=" + visitNo, function (response, status, xhr) {
+            if (status == "success") {
+                $("#vtd3").css("visibility", "visible");
+                qrTimmer = window.setInterval(refreshCount, 1000);
+            }
+        })
+    }
+
+
+    /*分享处方*/
+    function shareRecipel(visitNo, doctorName) {
+        // alert(timestamp)
+        $("#qrCodeHolder").load(contextPath + "/interface/getQRCode?visitNo=" + visitNo + "&userName=" + doctorName + "&timestamp=" + timestamp + "&type=" + 2, function (response, status, xhr) {
+            if (status == "success") {
+                $("#vtd3").css("visibility", "visible");
+                qrTimmer = window.setInterval(refreshCount, 1000);
+            }
+        })
+    }
+
+    function exportToPdf() {
+        html2canvas(
+            document.getElementById("recipelContainer"),
+            {
+                dpi: 172,//导出pdf清晰度
+                onrendered: function (canvas) {
+                    var contentWidth = canvas.width;
+                    var contentHeight = canvas.height;
+
+                    //一页pdf显示html页面生成的canvas高度;
+                    var pageHeight = contentWidth / 592.28 * 841.89;
+                    //未生成pdf的html页面高度
+                    var leftHeight = contentHeight;
+                    //pdf页面偏移
+                    var position = 0;
+                    //html页面生成的canvas在pdf中图片的宽高（a4纸的尺寸[595.28,841.89]）
+                    var imgWidth = 595.28;
+                    var imgHeight = 592.28 / contentWidth * contentHeight;
+
+                    var pageData = canvas.toDataURL('image/jpeg', 1.0);
+                    var pdf = new jsPDF('', 'pt', 'a4');
+
+                    //有两个高度需要区分，一个是html页面的实际高度，和生成pdf的页面高度(841.89)
+                    //当内容未超过pdf一页显示的范围，无需分页
+                    if (leftHeight < pageHeight) {
+                        pdf.addImage(pageData, 'JPEG', 0, 0, imgWidth, imgHeight);
+                    } else {
+                        while (leftHeight > 0) {
+                            pdf.addImage(pageData, 'JPEG', 0, position, imgWidth, imgHeight)
+                            leftHeight -= pageHeight;
+                            position -= 841.89;
+                            //避免添加空白页
+                            if (leftHeight > 0) {
+                                pdf.addPage();
+                            }
+                        }
+                    }
+                    pdf.save('处方笺.pdf');
+                },
+                //背景设为白色（默认为黑色）
+                background: "#fff"
+            })
+    }
+
+</script>
+<style>
+    .form-group.form-md-line-input {
+        overflow: hidden;
+        margin-bottom: 10px;
+    }
+</style>
+</html>

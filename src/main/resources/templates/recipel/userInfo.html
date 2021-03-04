@@ -1,0 +1,180 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title> 医生信息 </title>
+  <meta charset="UTF-8">
+  <meta name="generator" content="editplus"/>
+  <meta name="author" content=""/>
+  <meta name="keywords" content=""/>
+  <meta name="description" content=""/>
+</head>
+<body>
+<div style="margin: 0px auto; width: 80%; margin-bottom: 80px;" id="d2">
+  <div>
+    <h1 style="text-align:center;margin:30px 0;">医生档案</h1>
+  </div>
+  <div class="form-group form-md-line-input row">
+    <div class="doctorImg"><img src="${request.contextPath}${userInfo.icon}" width="100%"
+                                height="100%"/></div>
+    <div class="doctorName">
+      <p>${userInfo.name}</p>
+      <p>${userInfo.title}</p>
+    </div>
+    <div class="doctorInfo">
+      ${userInfo.description}
+    </div>
+    <div class="pingji">
+      <P>五星医师
+        @for(var star=0;star<5;star++){
+        <i class="fa fa-star" style="color:#FEC356"></i>
+        @}
+      </P>
+      <p style="text-align:right">收费：100.00元</p>
+    </div>
+    <div class="appointment">
+      <button ontouchstart="appointment()">预约</button>
+    </div>
+  </div>
+</div>
+</body>
+<script src="${request.contextPath}/metronic/js/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+  var storage = window.localStorage;
+  var user = new Object();
+
+  /*点击预约医生*/
+  function appointment() {
+    var helper = "${userInfo.account}";
+    var item = storage.getItem("users");
+    if (item != null) {
+      var obj2 = eval("(" + item + ")");
+      var users = obj2
+    }
+    console.log(users);
+    for (i = 0; i < users.length; i++) {
+      if (helper == users[i].account) {
+        alert("该医生已预约")
+        return;
+      }
+    }
+    /*websocket 给后台发送信息，后台在给helper发信息*/
+    sendMessage()
+    user.account = '${userInfo.account}';
+    user.name = '${userInfo.name}';
+    users[users.length] = user;
+    storage.setItem("users", JSON.stringify(users))
+    $("#appointmentDoc").empty()
+    for (i = 0; i < users.length; i++) {
+      $("#appointmentDoc").append("<span>" + users[i].name + "</span>")
+    }
+  }
+
+  /**
+   * 发送信息给后台
+   */
+  function sendMessage() {
+    if (ws == null) {
+      layer.msg("连接未开启!", {offset: 0, shift: 6});
+      return;
+    }
+
+    var assist = {
+      /**
+       * 协助医生
+       */
+      helper: "${userInfo.account}",
+      /**
+       * 申请医生
+       */
+      proposer: "${user.username}",
+      proposerId: "${user.account}",
+      /**
+       * 所在诊所
+       */
+      clinicName: "${user.clinicName}",
+      /**
+       * facetime 账号
+       */
+      appleid: "${user.appleid}",
+      /**
+       * 病人姓名、性别、年龄、临床诊断(2个字段)
+       */
+      patientName: $("#patientName").val(),
+      patientSex: $('input[name="sex"]:checked').val(),
+      patientAge: $("#patientAge").val(),
+      diseaseSS: $("#diseaseSS").val(),
+      disease: $("#disease").val()
+    };
+    console.log(assist)
+    ws.send(JSON.stringify(assist));
+  }
+
+  /**
+   * 解析后台传来的消息
+   * "massage" : {
+   *              "from" : "xxx",
+   *              "to" : "xxx",
+   *              "content" : "xxx",
+   *              "time" : "xxxx.xx.xx"
+   *          },
+   * "type" : {notice|message},
+   * "list" : {[xx],[xx],[xx]}
+   */
+  function analysisMessage(data) {
+    data = JSON.parse(data);
+    if (data.type == "message") {      //会话消息
+      showChat(data.message);
+    }
+    if (data.type == "notice") {       //提示消息
+      showNotice(data.message.content);
+    }
+    if (data.list != null && data.list != undefined) {      //在线列表
+      showOnline(data.list);
+    }
+  }
+
+</script>
+<style type="text/css">
+  .doctorImg {
+    margin: 0 auto;
+    width: 260px;
+    border-radius: 50% !important;
+    overflow: hidden;
+    height: 260px;
+    border: 3px solid #abe7ed;
+  }
+
+  .doctorName {
+    margin: 30px 0 50px;
+    text-align: center;
+    font-size: 20px;
+  }
+
+  .doctorInfo {
+    margin: 0 0 40px;
+  }
+
+  .pingji p {
+    display: inline-block;
+    width: 48%;
+  }
+
+  .appointment {
+    margin: 30px 0;
+    text-align: center;
+  }
+
+  .appointment button {
+    border: 1px solid #ffc356;
+    color: #24a2ae;
+    background: none;
+    padding: 10px 30px;
+  }
+
+  .appointment button:hover {
+    background: #24a2ae;
+    color: #ffc356;
+  }
+</style>
+</html>

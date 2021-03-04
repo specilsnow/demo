@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdutcm.tcms.sys.mapper.RoleMapper">
+
+    <resultMap type="com.cdutcm.tcms.sys.entity.Role" id="baseResultMap">
+        <id column="id" property="roleId" jdbcType="BIGINT"/>
+        <result column="role_name" property="roleName"/>
+        <result column="description" property="description"/>
+        <collection column="clinic" property="clinic" ofType="com.cdutcm.tcms.sys.entity.Clinic">
+            <result column="name" property="name" jdbcType="VARCHAR"/>
+            <result column="clinic_id" property="clinicId" jdbcType="VARCHAR"/>
+            <result column="province" property="province" jdbcType="VARCHAR"/>
+            <result column="city" property="city" jdbcType="VARCHAR"/>
+            <result column="tel" property="tel" jdbcType="VARCHAR"/>
+            <result column="address" property="address" jdbcType="VARCHAR"/>
+            <result column="machine_id" property="machineId" jdbcType="VARCHAR"/>
+            <result column="qr" property="qr" jdbcType="VARCHAR"/>
+            <result column="leader" property="leader" jdbcType="VARCHAR"/>
+        </collection>
+    </resultMap>
+
+    <resultMap type="com.cdutcm.tcms.sys.entity.Role" id="roleResultMap">
+        <id column="id" property="roleId" jdbcType="BIGINT"/>
+        <result column="role_name" property="roleName"/>
+        <result column="description" property="description"/>
+    </resultMap>
+
+    <select id="listAllRoles" resultMap="roleResultMap">
+		select * from sys_role
+	</select>
+    <select id="listPageRoles" resultMap="roleResultMap">
+		select * from sys_role
+	</select>
+    <select id="getIdByName" resultMap="roleResultMap">
+		select * from sys_role where role_name='患者'
+	</select>
+
+    <select id="getRoleByName" parameterType="long" resultMap="roleResultMap">
+		select * from sys_role where id=#{roleId}
+	</select>
+    <select id="getRoleById" parameterType="long" resultMap="roleResultMap">
+		select * from sys_role where id=#{roleId}
+	</select>
+
+
+    <select id="getCountByName" parameterType="com.cdutcm.tcms.sys.entity.Role" resultType="int">
+        select count(id) from sys_role where role_name=#{roleName}
+        <if test="roleId!=null or roleId>0">
+            and id!=#{roleId}
+        </if>
+    </select>
+
+    <!--获取用户角色信息-->
+    <select id="getRoleByAccount" resultMap="baseResultMap">
+    select
+    b.id id,b.role_name role_name,b.description description,c.clinic_id clinic_id,c.name name,c.province province,c.city city,c.tel tel,c.address address,c.machine_id machine_id,c.qr qr,c.leader learder
+    from sys_user_clinic a,sys_role b,clinic c
+    WHERE a.role_id = b.id AND a.clinic_id = c.clinic_id AND account = #{account}
+	</select>
+
+    <insert id="insertRole" parameterType="com.cdutcm.tcms.sys.entity.Role">
+		insert into sys_role (id,rights,description,role_name) values (#{roleId},#{rights},#{description},#{roleName})
+	</insert>
+
+    <update id="updateRoleBaseInfo" parameterType="com.cdutcm.tcms.sys.entity.Role">
+		update sys_role set role_name=#{roleName},description=#{description}where id=#{roleId}
+	</update>
+    <update id="updateRoleRights" parameterType="com.cdutcm.tcms.sys.entity.Role">
+		update sys_role set rights=#{rights} where id=#{roleId}
+	</update>
+    <delete id="deleteRoleById" parameterType="long">
+		delete from sys_role where id=#{roleId}
+	</delete>
+</mapper>

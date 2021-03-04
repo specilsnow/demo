@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdutcm.tcms.biz.mapper.kbKnowledgeXMapper" >
+
+    <select id="findDiseaseByDiseaseList" resultType="com.cdutcm.tcms.biz.model.ForRecommend">
+        SELECT a.disease as diseasename,a.symptommould as symptommouldname ,a.symptom as symptomname,y.name as recipelname,y.id as recipelid,COUNT(a.id) AS countid ,(COUNT(a.id )/(LENGTH(disease)-LENGTH(REPLACE(disease,',',''))+1) )as countpercent from (
+        <foreach collection="list" index="index" item="item" separator="union ALL" >
+            (SELECT *  FROM  knowledge_x where disease LIKE concat('%',#{item},'%')  )
+        </foreach>
+        )
+        as a ,knowledge_y y WHERE a.id=y.emr_id  GROUP BY a.id ORDER BY countid DESC,countpercent DESC limit 100
+    </select>
+
+    <select id="findDiseaseBySymptommouldList" resultType="com.cdutcm.tcms.biz.model.ForRecommend">
+        SELECT a.disease as diseasename,a.symptommould as symptommouldname ,a.symptom as symptomname,y.name as recipelname,y.id as recipelid,COUNT(a.id) AS countid ,(COUNT(a.id )/(LENGTH(symptommould)-LENGTH(REPLACE(symptommould,',',''))+1) )as countpercent from (
+        <foreach collection="list" index="index" item="item" separator="union ALL" >
+            (SELECT *  FROM  knowledge_x where symptommould LIKE concat('%',#{item},'%') )
+        </foreach>
+        )
+        as a ,knowledge_y y WHERE a.id=y.emr_id  GROUP BY a.id ORDER BY countid DESC,countpercent DESC limit 100
+    </select>
+
+    <select id="findDiseaseBySymptomList" resultType="com.cdutcm.tcms.biz.model.ForRecommend">
+        SELECT a.disease as diseasename,a.symptommould as symptommouldname ,a.symptom as symptomname,y.name as recipelname,y.id as recipelid,COUNT(a.id) AS countid ,(COUNT(a.id )/(LENGTH(symptom)-LENGTH(REPLACE(symptom,',',''))+1) )as countpercent from (
+        <foreach collection="list" index="index" item="item" separator="union ALL" >
+            (SELECT *  FROM  knowledge_x where symptom LIKE concat('%',#{item},'%') GROUP BY symptom )
+        </foreach>
+        )
+        as a ,knowledge_y y WHERE a.id=y.emr_id and a.disease !='' and a.symptommould !='' and y.name !='' GROUP BY a.id ORDER BY countid DESC,countpercent DESC limit 100
+    </select>
+</mapper>

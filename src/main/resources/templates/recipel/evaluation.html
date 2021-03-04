@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>疗效评价</title>
+</head>
+<body>
+<div>
+    <div class="pingxing">
+        <span>疗效评价：</span>
+        <ul style="display: none">
+            <li class="fa fa-star"></li>
+            <li class="fa fa-star"></li>
+            <li class="fa fa-star"></li>
+            <li class="fa fa-star"></li>
+            <li class="fa fa-star"></li>
+        </ul>
+    </div>
+    <textarea id="evaluation" type="text" placeholder="说说该处方的优点和美中不足的地方吧">
+    </textarea>
+    <button class="btn btn-info" onclick="submit()" value="提交">提交</button>
+    <div style="clear: both"></div>
+    <div>
+        历史评价：
+        @for (evaluation in evaluations){
+        <div class="evalist"><p>${evaluation.description}</p>
+        <span class="evaluationdate">${evaluation.gmtCreate}</span></div>
+        @}
+    </div>
+</div>
+
+</body>
+</html>
+<script>
+    function submit() {
+        if($("#evaluation").val()!=""){
+            var data = {
+                description: $("#evaluation").val(),
+                visitNo: '${visitNo}'
+            };
+            var url = "${request.contextPath}/emr/evaluation"
+            $.post(url, data, function (msg) {
+                if(msg.status=="T"){
+                    $("#vtd3").css("visibility", "hidden");
+                }
+            })
+        }
+    }
+    $(".pingxing ul li").click(function () {
+        var index = $(this).index()+1;//评星得分
+        for (var i = 0; i < 5; i++) {
+            if (i < index) {
+                $(".pingxing ul li").eq(i).addClass('light');
+            } else {
+                $(".pingxing ul li").eq(i).removeClass('light');
+            }
+        };
+    })
+    $(function (ev) {
+      $("#evaluation").val("")//不知道为什么textarea默认有两个空格 设置默认值为空
+    })
+</script>
